@@ -44,7 +44,7 @@ html:not(.recording) .rec-dot { background: #3a1512; box-shadow: none; animation
 /* ---------- altyazılar ---------- */
 #subtitles {
   position: fixed; z-index: 11; left: 0; right: 0;
-  bottom: calc(var(--deck-h) + max(16px, 2.4vh));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + max(18px, 4.5vh));
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 0 var(--gutter); pointer-events: none; text-align: center;
 }
@@ -59,7 +59,7 @@ html:not(.recording) .rec-dot { background: #3a1512; box-shadow: none; animation
   opacity: 0; transition: opacity .12s; text-wrap: balance;
 }
 #subtitles.on #sub-line, #subtitles.on #sub-speaker { opacity: 1; }
-#subtitles.subject #sub-line { color: #efd9b0; font-style: italic; }
+#subtitles.you #sub-line { color: #efd9b0; font-style: italic; }
 #subtitles.intercom #sub-line { font: 400 clamp(14px, 1.5vw, 19px)/1.45 var(--f-mono); color: #bfe6dc; letter-spacing: .02em; }
 #subtitles.narration #sub-line { font: 300 clamp(16px, 1.8vw, 23px)/1.45 var(--f-sub); color: #dfe7e3; }
 html.sub-large #sub-line { font-size: clamp(21px, 2.6vw, 32px); }
@@ -127,3 +127,26 @@ input[type="checkbox"] { accent-color: #8fc8bd; width: 16px; height: 16px; }
 :focus-visible { outline: 1px solid var(--amber); outline-offset: 2px; }
 html.reduce *, html.reduce *::before, html.reduce *::after { animation-duration: 0s !important; transition-duration: 0s !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- cevap seçenekleri ---------- */
+#shade { position: fixed; left: 0; right: 0; bottom: 0; height: 62%; z-index: 10; pointer-events: none; opacity: 0; transition: opacity .6s;
+  background: linear-gradient(to top, rgba(0, 0, 0, .86), rgba(0, 0, 0, .42) 48%, rgba(0, 0, 0, 0)); }
+#shade.on { opacity: 1; }
+#answer {
+  position: fixed; z-index: 12; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + max(18px, 4.5vh) + 4.2em);
+  display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 var(--gutter); pointer-events: none;
+}
+#choices { display: flex; flex-direction: column; align-items: center; gap: 2px; opacity: 0; transform: translateY(8px); transition: opacity .5s, transform .5s; pointer-events: none; }
+#choices.on { opacity: 1; transform: none; pointer-events: auto; }
+.ch {
+  font: 600 clamp(15px, 1.55vw, 21px)/1.3 var(--f-sub); color: rgba(236, 240, 232, .6); background: transparent; border: 0; border-radius: 3px;
+  padding: 6px 14px; cursor: pointer; text-align: center; max-width: 44em;
+  text-shadow: 0 0 2px #000, 0 1px 7px rgba(0, 0, 0, .9); transition: color .15s, background .15s;
+}
+.ch .num { font: 400 .66em/1 var(--f-mono); color: var(--amber); opacity: .8; margin-right: .9em; vertical-align: .14em; }
+.ch:hover, .ch:focus-visible, .ch.picked { color: #fff; background: rgba(0, 0, 0, .32); outline: none; }
+.ch:focus-visible { box-shadow: 0 0 0 1px rgba(232, 191, 122, .55); }
+#timer { width: min(220px, 40vw); height: 1px; background: rgba(255, 255, 255, .12); opacity: 0; transition: opacity .3s; }
+#timer.on { opacity: 1; }
+#timer i { display: block; height: 100%; background: rgba(232, 191, 122, .85); transform-origin: center; }
+html.sub-large .ch { font-size: clamp(18px, 2vw, 25px); }

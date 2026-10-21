@@ -168,7 +168,7 @@ export class RightMonitor {
     // 3) tepki süresi
     label(t('channels.latency'), 248);
     big(s.latency != null ? `${s.latency.toFixed(2)} ${t('units.sec')}` : '— ', 16, 276);
-    if (dev && s.latency != null && s.base) big(`Δ ${sgn(s.latency - s.base.latency, 2)}`, W - 16, 276, 'right');
+    if (dev && s.latency != null && s.base?.latency != null) big(`Δ ${sgn(s.latency - s.base.latency, 2)}`, W - 16, 276, 'right');
     x.fillStyle = faint; x.fillRect(0, 298, W, 1);
 
     // 4) parçacık (körükten)

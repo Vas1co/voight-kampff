@@ -3,8 +3,7 @@ import './styles/fonts.css';
 import './styles/base.css';
 import './styles/typography.css';
 import './styles/ui.css';
-import './styles/controls.css';
-import './styles/report.css';
+import './styles/result.css';
 
 import { Stage } from './scene/stage.js';
 import { Loop } from './core/loop.js';
@@ -13,7 +12,6 @@ import { save } from './core/save.js';
 import { brand } from './core/strings.js';
 import { initInput } from './core/input.js';
 import { Game } from './core/game.js';
-import { Controls } from './machine/controls.js';
 import { Subtitles } from './ui/subtitles.js';
 import { hud } from './ui/overlay.js';
 import { settingsUI } from './ui/settings.js';
@@ -36,9 +34,8 @@ const applyClasses = () => {
 applyClasses();
 
 const stage = new Stage(document.getElementById('scene'), { quality: s.quality, reduceMotion: s.reduceMotion });
-const controls = new Controls();
 const subs = new Subtitles();
-const game = new Game({ stage, controls, subs });
+const game = new Game({ stage, subs });
 
 hud.init({
   onSound: () => { s.muted = !s.muted; save.write(); audio.apply(s); hud.sound(!s.muted); },
@@ -53,17 +50,17 @@ bus.on('settings', ({ key }) => {
   applyClasses();
 });
 
-// Alt panel yüksekliği değişince sahne görüntüsü yukarı kayar.
-const hudH = () => (document.getElementById('hud').hidden ? 0 : 40);
-bus.on('deck:resize', (hgt) => stage.setInsets(hudH(), hgt));
-bus.on('state', () => requestAnimationFrame(() => stage.setInsets(hudH(), document.getElementById('deck').hidden ? 0 : parseFloat(getComputedStyle(root).getPropertyValue('--deck-h')) || 0)));
+// Altyazı ve seçenekler için görüntünün altı boş kalır; sahne yukarı kayar.
+const insets = () => stage.setInsets(40, Math.round(Math.min(260, Math.max(120, innerHeight * 0.24))));
+insets();
+addEventListener('resize', insets);
 
 initInput();
 
 const loop = new Loop();
 loop.add((dt, t) => {
   game.frame(dt);
-  stage.update(dt, t, { stress: game.session?.stress.value ?? 0, recording: game.session?.recording ?? false });
+  stage.update(dt, t, { recording: game.machine.recording });
   stage.render();
 });
 loop.start();
@@ -72,7 +69,7 @@ game.start();
 document.addEventListener('visibilitychange', () => { if (!document.hidden) audio.resume(); });
 
 if (import.meta.env.DEV) {
-  window.__sapma = { stage, game, controls, save };
+  window.__sapma = { stage, game, save };
   // Geliştirme: ?hizli ile altyazılar hızlanır (test için).
   if (new URLSearchParams(location.search).has('hizli')) subs.speed = 5;
 }

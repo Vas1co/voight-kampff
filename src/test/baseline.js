@@ -1,10 +1,10 @@
-// Temel ölçüm: nötr ısınma sorularının ham değerlerinin ortalaması.
+// Temel ölçüm: dinlenim örneklerinin ortalaması.
 // O anki kalibrasyon hatası da temele girer; sonraki tüm sapmalar buna göredir.
-import { CHANNELS } from './readings.js';
+const CH = ['pupil', 'blush', 'pulse', 'resp', 'particles'];
 
-export function computeBaseline(readings) {
-  if (!readings.length) return null;
-  const base = {};
-  for (const ch of CHANNELS) base[ch] = readings.reduce((s, r) => s + r.raw[ch], 0) / readings.length;
+export function computeBaseline(samples) {
+  if (!samples.length) return null;
+  const base = { latency: null };
+  for (const ch of CH) base[ch] = samples.reduce((s, r) => s + r[ch], 0) / samples.length;
   return base;
 }

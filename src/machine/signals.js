@@ -39,7 +39,7 @@ export class Signals {
   at(delay, fn) { this.events.push({ t: this.clock + delay, fn }); }
 
   // Okumayı canlı olarak oynat. callbacks: onBellows, onPupil, onAnswerTime, onDone
-  sample(reading, cb = {}) {
+  sample(reading, cb = {}, { answerAt = null } = {}) {
     this.events = [];
     this.status = 'bellows';
     this.sampleT = 0;
@@ -57,9 +57,9 @@ export class Signals {
     });
     this.at(reading.onset, () => { this.target.pupil = r.pupil; this.onset = reading.onset; cb.onPupil?.(); });
     this.at(reading.onset + 0.35, () => { this.target.blush = r.blush; });
-    this.at(r.latency, () => { this.latency = r.latency; cb.onAnswer?.(); });
+    this.at(answerAt ?? r.latency, () => { this.latency = r.latency; cb.onAnswer?.(); });
     if (reading.anomaly) this.at(1.2 + Math.random() * 2, () => { this.anomaly = reading.anomaly; this.anomalyT = 3.5; cb.onAnomaly?.(reading.anomaly); });
-    const end = Math.max(3.4, reading.onset + 1.6, r.latency + 0.4);
+    const end = Math.max(3.4, reading.onset + 1.6, (answerAt ?? r.latency) + 0.4);
     this.at(end, () => cb.onSettled?.());
   }
 

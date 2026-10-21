@@ -1,4 +1,4 @@
-// Üst bilgi (HUD), amir talimatı satırı, sahne başlıkları, kararma ve sinema bantları.
+// Üst bilgi (HUD), sahne başlıkları, kararma ve sinema bantları.
 import { $, h } from './dom.js';
 import { t } from '../core/strings.js';
 import { sleep } from '../core/async.js';
@@ -26,12 +26,6 @@ export const hud = {
     const e = (performance.now() - this.start) / 1000, p = (v) => String(Math.floor(v)).padStart(2, '0');
     $('#hud-tc').textContent = `${p(e / 3600)}:${p((e / 60) % 60)}:${p(e % 60)}:${p((e * 24) % 24)}`;
   },
-};
-
-export const hint = {
-  el: $('#hint'),
-  show(text) { this.el.textContent = `${t('controls.hintPrefix')} ${text}`; this.el.hidden = false; },
-  hide() { this.el.hidden = true; },
 };
 
 export const screen = {

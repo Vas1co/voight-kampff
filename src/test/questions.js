@@ -1,18 +1,27 @@
-// Soru deposu: kartlar, alt sorular ve nötr temel soruları.
+// Soru deposu. İlk soru sabit, diğerleri her oyunda karışır; cevap seçeneklerinin sırası da karışır.
 import data from '../../data/questions.json';
-import { t, lines, has } from '../core/strings.js';
+import { t, lines } from '../core/strings.js';
 
-const cards = new Map(data.cards.map((c) => [c.id, c]));
-const subs = new Map();
-for (const c of data.cards) for (const s of c.subs) subs.set(s.id, { ...s, theme: c.theme, card: c.id });
-for (const b of data.baseline) subs.set(b.id, { ...b, card: null, pair: null });
+const byId = new Map(data.questions.map((q) => [q.id, q]));
+
+function shuffle(arr, rng) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rng.next() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
 
 export const questions = {
-  card: (id) => cards.get(id),
-  sub: (id) => subs.get(id),
-  cardTitle: (id) => t(`cards.${id}`),
-  // Sorgucunun okuduğu satırlar
-  text: (id) => lines(`questions.${id}`),
-  // Deneğin cevabı (denek bazlı)
-  answer: (subjectId, id) => (has(`subjects.${subjectId}.answers.${id}`) ? t(`subjects.${subjectId}.answers.${id}`) : '…'),
+  timeLimit: data.timeLimit,
+  get: (id) => byId.get(id),
+  // Bu oyunun soru sırası
+  order(rng) {
+    const rest = data.questions.filter((q) => q.id !== data.first);
+    return [byId.get(data.first), ...shuffle(rest, rng)];
+  },
+  options(q, rng) {
+    return shuffle(q.options, rng).map((o) => ({ ...o, text: t(`questions.${q.id}.options.${o.id}`) }));
+  },
+  lines: (id) => lines(`questions.${id}.lines`),
+  prompt: (id) => t(`questions.${id}.prompt`),
+  short: (id) => t(`questions.${id}.short`),
 };

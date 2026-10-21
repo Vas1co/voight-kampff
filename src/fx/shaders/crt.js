@@ -5,8 +5,8 @@ import { NOISE } from './common.js';
 
 export function crtMaterial(map, opts = {}) {
   const o = {
-    curvature: 3.4, scan: 0.55, lines: 240, chroma: 1.2, noise: 0.06, roll: 0.07,
-    tint: '#d6ffe6', bright: 1.35, mask: 0.12, reflect: 0.06, ...opts,
+    curvature: 3.4, scan: 0.55, lines: 240, chroma: 1.2, noise: 0.04, roll: 0.07,
+    tint: '#e4f7e8', bright: 1.3, mask: 0.12, reflect: 0.06, ...opts,
   };
   return new THREE.ShaderMaterial({
     uniforms: {

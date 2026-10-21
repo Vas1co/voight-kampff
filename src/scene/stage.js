@@ -1,4 +1,4 @@
-// Three.js sahnesi: renderer, oda, makine, kamera, post-processing ve tıklama seçimi.
+// Three.js sahnesi: renderer, oda, makine, kamera ve post-processing.
 import * as THREE from 'three';
 import { Room } from './room.js';
 import { CameraRig } from './camera.js';
@@ -7,7 +7,6 @@ import { BODY } from '../machine/layout.js';
 import { createPost } from '../fx/post.js';
 import { crtUniforms } from '../fx/materials.js';
 import { setPointScale } from './particles.js';
-import { bus } from '../core/events.js';
 
 export class Stage {
   constructor(canvas, { quality = 'high', reduceMotion = false } = {}) {
@@ -37,10 +36,6 @@ export class Stage {
     this.film = this.post.film.uniforms;
     this.setReduceMotion(reduceMotion);
 
-    this.raycaster = new THREE.Raycaster();
-    canvas.addEventListener('click', (e) => this.pick(e));
-    canvas.addEventListener('pointermove', (e) => this.hover(e));
-
     this.insets = { top: 0, bottom: 0 };
     this.resize();
     addEventListener('resize', () => this.resize());
@@ -66,26 +61,6 @@ export class Stage {
     this.renderer.setSize(w, h, false);
     this.post.setSize(w, h, pr);
     this.rig.resize(w, h);
-  }
-
-  ndc(e) {
-    const r = this.canvas.getBoundingClientRect();
-    return new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-  }
-
-  hit(e) {
-    this.raycaster.setFromCamera(this.ndc(e), this.rig.camera);
-    const hits = this.raycaster.intersectObjects(this.room.pickables, false);
-    return hits[0]?.object?.userData?.pick ?? null;
-  }
-
-  pick(e) {
-    const what = this.hit(e);
-    if (what) bus.emit('pick', what);
-  }
-
-  hover(e) {
-    this.canvas.style.cursor = this.hit(e) ? 'pointer' : '';
   }
 
   update(dt, t, ctx = {}) {
