@@ -5,15 +5,16 @@ Dosya adları oyunun beklediği adlarla aynıdır.
 
 ## Akış
 
-1. `tasarim/` içinden bir dosyayı Photoshop'ta aç (ör. `oda/machine.png`).
-2. Düzenle. Rehber gerekiyorsa `_rehber/machine-rehber.png`'yi en üste katman olarak sürükle,
-   işin bitince gizle/sil.
-3. **Aynı adla** oyunun klasörüne PNG olarak kaydet:
-   - `oda/*.png` → `assets/images/room/`
-   - `goz/*.png` → `assets/images/eye/`
+1. Oyunu aç (`baslat.bat` ya da `npm run dev`). Sunucu açık kalsın.
+2. `tasarim/` içinden bir dosyayı Photoshop'ta aç (ör. `oda/machine.png`), düzenle ve **aynı yere,
+   aynı adla** kaydet (PNG, saydamlık açık). Rehber gerekiyorsa `_rehber/machine-rehber.png`'yi
+   üste katman olarak sürükle, kaydetmeden önce gizle.
+3. Kaydettiğin anda dosya oyuna kopyalanır (`oda/` → `assets/images/room/`, `goz/` → `assets/images/eye/`)
+   ve tarayıcı kendiliğinden yenilenir. Sunucu kapalıyken kaydettiysen, bir sonraki açılışta uygulanır.
 
-   Photoshop: *Dosya → Dışa Aktar → Farklı Dışa Aktar… → PNG*, **Saydamlık açık**, boyut %100.
-4. Oyunu tarayıcıda yenile. Dosya varsa oyun çizimi bırakıp senin dosyanı kullanır.
+Yalnızca **senin değiştirdiğin** dosyalar oyuna geçer; dokunmadıkların kodla çizilmeye devam eder.
+`machine-grisiyah.png` / `machine-krem.png` karşılaştırma içindir, oyuna geçmez; birini kullanmak
+istersen `machine.png` adıyla kaydet.
 
 Geri almak için dosyayı `assets/images/...` klasöründen sil; oyun çizime döner.
 
@@ -27,7 +28,8 @@ istersen: `http://localhost:5173/?disa-aktar&uzerine` (önce düzenlediklerini y
 - **Saydam alanlar saydam kalmalı** (makine, sandalyeler, klasör, küllük, kaset, kalemlik, iris).
 - Renk profili **sRGB**.
 - Makinede rehberdeki **mor alanlar** oyunda canlı parçalarla örtülür:
-  ekranlar ve LED çubuğu koyu kalsın; **körük alanı saydam** kalsın (körük gövdenin arkasında ayrı katman).
+  ekranlar, LED çubuğu ve CRT'nin sağındaki üç tuş oyunda canlı katmanla kaplanır (oraya çizdiklerin görünmez);
+  **körük alanı saydam** kalsın (körük gövdenin arkasında ayrı katman). Tuşların görünüşü için `machine-key*.png`.
   Kasayı, çerçeveleri, üst kapakları, eğimleri, yazıları serbestçe değiştirebilirsin.
 - Masa (`desk`) tepeden düz bir dokudur; perspektifi oyun verir. Üst kenar = masanın uzak ucu.
 
