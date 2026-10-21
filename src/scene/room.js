@@ -140,7 +140,7 @@ export class Room {
   }
 
   attack() { this.subjectAttack = 0; }
-  resetSubject() { this.subjectAttack = -1; this.subject.position.copy(this.subjectHome); this.subject.scale.set(1, 1, 1); this.subjectMat.uniforms.uOpacity.value = 1; }
+  resetSubject() { this.subject.visible = true; this.subjectAttack = -1; this.subject.position.copy(this.subjectHome); this.subject.scale.set(1, 1, 1); this.subjectMat.uniforms.uOpacity.value = 1; }
 
   update(dt, t, { stress = 0, recording = false } = {}) {
     const motion = this.reduce ? 0.35 : 1;
