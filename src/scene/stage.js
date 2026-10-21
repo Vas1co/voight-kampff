@@ -23,7 +23,8 @@ export class Stage {
     this.scene.add(this.room.group);
 
     this.machine = new Machine();
-    this.machine.group.position.set(-0.1, 0.76 + BODY.worldH / 2, -0.45);
+    // makine masanın ortasında: ne dibimizde ne arka uçta
+    this.machine.group.position.set(0, 0.76 + BODY.worldH / 2, 0.35);
 
 
     this.scene.add(this.machine.group);
