@@ -5,13 +5,19 @@ Tarayıcıda çalışan, sinematik bir empati sorgusu oyunu. Makine yalan ölçm
 
 ## Çalıştırma
 
+**En kolayı:** klasördeki `baslat.bat` dosyasına çift tıkla. Tarayıcı kendiliğinden açılır
+(`http://localhost:5173`). **Kapatmak için** açılan siyah pencereyi kapat (ya da içinde Ctrl+C, sonra `E`).
+
+Komut satırından:
+
 ```bash
-npm install
 npm run dev
 ```
 
-Tarayıcıda `http://localhost:5173` adresini aç. Aynı ağdaki telefondan açmak için terminalde
-görünen `Network:` adresini kullan.
+Sunucu yalnızca bu bilgisayardan erişilebilir. Aynı ağdaki telefondan açmak için
+`npm run dev:telefon` kullan ve terminalde görünen `Network:` adresini aç.
+
+Yayımlanabilir statik sürüm:
 
 ```bash
 npm run build
