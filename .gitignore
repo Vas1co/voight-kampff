@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.vite/
+*.log
+.DS_Store
+Thumbs.db
+
+# Film kareleri: yalnızca stil referansı, depoya ve yayına girmez
+/v*.JPG
+/v*.jpg
+# İlk tek dosyalık prototip (yerelde referans olarak duruyor)
+/Voight-Kampff Testi.html
