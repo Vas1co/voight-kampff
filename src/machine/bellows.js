@@ -20,7 +20,7 @@ export class Bellows {
     // menteşe sağ altta; plaka boyu tuvale sığacak şekilde
     this.hx = w - 40; this.hy = h - 28;
     this.len = w - 100;
-    this.minA = 8 * DEG; this.maxA = 42 * DEG;
+    this.minA = 7 * DEG; this.maxA = 34 * DEG;
     this.ext = 0.25;      // 0: kapalı, 1: tam açık
     this.target = 0.25;
     this.t = 0;
