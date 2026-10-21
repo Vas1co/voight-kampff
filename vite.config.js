@@ -39,5 +39,6 @@ export default defineConfig({
   base: './',
   plugins: [assetExport()],
   build: { target: 'es2022', assetsInlineLimit: 0, chunkSizeWarningLimit: 1200 },
-  server: { port: 5173, host: true, watch: { ignored: ['**/tasarim/**'] } },
+  // Varsayılan: yalnızca bu bilgisayar. Telefondan açmak için: npm run dev:telefon
+  server: { port: 5173, watch: { ignored: ['**/tasarim/**'] } },
 });

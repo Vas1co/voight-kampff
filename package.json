@@ -6,6 +6,7 @@
   "description": "Sinematik empati sorgusu oyunu",
   "scripts": {
     "dev": "vite",
+    "dev:telefon": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
