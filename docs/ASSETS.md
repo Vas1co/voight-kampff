@@ -33,7 +33,19 @@ Boyutlar önerilen en az değerlerdir; oran korunmalı. Renk uzayı sRGB.
 | `chair-left`, `chair-right` | 768 × 2048 | evet | 0.62 × 1.65 | Ön plandaki boş yüksek sırtlı sandalyeler. |
 | `machine` | 4096 × 2560 | **evet** | 1.0 × 0.625 | Makine ön yüzü (90'lar krem plastik kasalar). **Ekran, LED ve körük alanları boş/koyu bırakılmalı**; dinamik katmanlar üstüne oturur. |
 
+| `machine-key`, `machine-key-lit` | 256 × 256 | hayır | — | CRT'nin sağındaki tuşlar (normal / amber yanan). |
+
 > Tavan pervanesi ilk prototipteki çizimle her karede kodla çizilir (`src/scene/fan.js`); dosyayla değiştirilmez.
+
+> **Düzenlemeye başlamak için:** geliştirme sunucusu açıkken `http://localhost:5173/?disa-aktar`
+> adresi tüm prosedürel dokuları 2× çözünürlükte `tasarim/` klasörüne yazar (makine için rehber
+> katmanı dahil). Akış: `tasarim/OKU.md`.
+
+### Göz — `assets/images/eye/`
+| Dosya | Boyut (px) | Alfa | Not |
+|---|---|---|---|
+| `iris` | 1024 × 1024 | **evet** | İris, merkezde daire. Göz bebeği, yansımalar ve kapaklar oyunda üstüne çizilir. |
+| `sclera` | 1440 × 1120 | hayır | Göz akı ve damarlar; göz bakışla birlikte hafifçe kayar. |
 
 ### Makine yerleşimi (2048 × 1280 ölçeği, 4096'lık dosyada 2× ile çarp)
 | Alan | x | y | g | y |

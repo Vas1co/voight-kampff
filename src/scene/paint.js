@@ -1,7 +1,16 @@
 // Canvas2D yardımcıları (prosedürel yer tutucu dokular için).
+// Çizim ölçeği: dışa aktarımda dokular 2× çözünürlükte, aynı mantıksal koordinatlarla çizilir.
+let SCALE = 1;
+export function withScale(s, fn) {
+  const prev = SCALE;
+  SCALE = s;
+  try { return fn(); } finally { SCALE = prev; }
+}
+
 export const mk = (w, h) => {
   const c = document.createElement('canvas');
-  c.width = w; c.height = h;
+  c.width = Math.round(w * SCALE); c.height = Math.round(h * SCALE);
+  if (SCALE !== 1) c.getContext('2d').scale(SCALE, SCALE);
   return c;
 };
 
@@ -43,7 +52,8 @@ export function seeded(seed = 1) {
 // Mevcut piksellere ince gren ekler (yalnızca opak/yarı opak alanlara).
 export function grain(x, w, h, amount = 14, seed = 3) {
   const R = seeded(seed);
-  const id = x.getImageData(0, 0, w, h), d = id.data;
+  // gerçek piksel boyutu (ölçekli çizimde mantıksal w/h'den büyük olabilir)
+  const id = x.getImageData(0, 0, x.canvas.width, x.canvas.height), d = id.data;
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3]) continue;
     const n = (R() - 0.5) * amount;

@@ -83,8 +83,7 @@ export class Machine {
     const kw = (L.keySize.w / BODY.W) * BODY.worldW, kh = (L.keySize.h / BODY.H) * BODY.worldH;
     this.keys = L.keys.map((k, i) => {
       const lit = i === 2;
-      const tx = new THREE.CanvasTexture(paintKey(lit));
-      tx.colorSpace = THREE.SRGBColorSpace;
+      const tx = textureOr('images/room', lit ? 'machine-key-lit' : 'machine-key', () => paintKey(lit));
       const mat = new THREE.MeshBasicMaterial({ map: tx, color: lit ? new THREE.Color(2.2, 2.0, 1.7) : new THREE.Color(0.72, 0.72, 0.66) });
       const m = new THREE.Mesh(new THREE.PlaneGeometry(kw, kh), mat);
       place(m, { x: k.x, y: k.y, w: L.keySize.w, h: L.keySize.h });
