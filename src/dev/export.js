@@ -3,7 +3,7 @@
 // Dosyalar 2× çözünürlükte çizilir; adları oyunun beklediği adlarla aynıdır.
 import * as P from '../scene/procedural.js';
 import { withScale, mk, seeded } from '../scene/paint.js';
-import { paintBody, paintKey, SCHEME_NAME } from '../machine/body.js';
+import { paintBody, paintKey, SCHEMES } from '../machine/body.js';
 import { makeIris, makeSclera } from '../machine/eye.js';
 import { BODY, L } from '../machine/layout.js';
 import { t } from '../core/strings.js';
@@ -26,8 +26,8 @@ const JOBS = [
   ['oda', 'chair-left', () => withScale(S, () => P.paintChairBack(false))],
   ['oda', 'chair-right', () => withScale(S, () => P.paintChairBack(true))],
   ['oda', 'machine', () => withScale(S, paintBody)],
-  // seçili renk şeması ayrıca kendi adıyla (karşılaştırma için)
-  ['oda', `machine-${SCHEME_NAME}`, () => withScale(S, paintBody)],
+  // renk şeması sürümleri (karşılaştırma için)
+  ...Object.keys(SCHEMES).map((k) => ['oda', `machine-${k}`, () => withScale(S, () => paintBody(k))]),
   ['oda', 'machine-key', () => withScale(4, () => paintKey(false))],
   ['oda', 'machine-key-lit', () => withScale(4, () => paintKey(true))],
   ['goz', 'iris', () => makeIris(1024, { fleck: '#ead08a', ...player.eye }, player.eye.seed)],

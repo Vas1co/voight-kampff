@@ -39,7 +39,8 @@ export const SCHEMES = {
 };
 export const SCHEME_NAME = 'grisiyah';
 export const SCHEME = SCHEMES[SCHEME_NAME];
-const pal = (part) => PALETTES[SCHEME[part]];
+let active = SCHEME; // çizim sırasında kullanılan şema (dışa aktarımda değişebilir)
+const pal = (part) => PALETTES[active[part]];
 
 function label(x, p, text, px, py, { size = 18, align = 'left', spacing = 0.22, weight = 600 } = {}) {
   x.save();
@@ -130,7 +131,8 @@ function casingSmall(x, p, px, py, w, h) {
   x.strokeStyle = p.edge; x.lineWidth = 2; rr(x, px, py, w, h, 16); x.stroke();
 }
 
-export function paintBody() {
+export function paintBody(name = SCHEME_NAME) {
+  active = SCHEMES[name];
   const { W, H } = BODY;
   const c = mk(W, H), x = c.getContext('2d');
   const PB = pal('base'), PS = pal('sides'), PC = pal('center'), PA = pal('arm');
@@ -217,6 +219,7 @@ export function paintBody() {
   }
   x.globalCompositeOperation = 'source-over';
   grain(x, W, H, 8, 41);
+  active = SCHEME;
   return c;
 }
 
