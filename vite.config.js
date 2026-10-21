@@ -18,9 +18,17 @@ function assetExport() {
         req.on('data', (c) => chunks.push(c));
         req.on('end', () => {
           const out = path.join(root, rel);
-          fs.mkdirSync(path.dirname(out), { recursive: true });
-          fs.writeFileSync(out, Buffer.concat(chunks));
-          res.end('ok');
+          // Var olan dosyanın (düzenlenmiş olabilir) üzerine yalnızca açıkça istenirse yaz.
+          const overwrite = new URL(req.url, 'http://x').searchParams.get('uzerine') === '1';
+          if (fs.existsSync(out) && !overwrite) { res.statusCode = 409; res.end('var'); return; }
+          try {
+            fs.mkdirSync(path.dirname(out), { recursive: true });
+            fs.writeFileSync(out, Buffer.concat(chunks));
+            res.end('ok');
+          } catch (e) {
+            // ör. dosya Photoshop'ta açık ve kilitli
+            res.statusCode = 423; res.end(String(e.code || e.message));
+          }
         });
       });
     },

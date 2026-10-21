@@ -3,7 +3,7 @@
 // Dosyalar 2× çözünürlükte çizilir; adları oyunun beklediği adlarla aynıdır.
 import * as P from '../scene/procedural.js';
 import { withScale, mk, seeded } from '../scene/paint.js';
-import { paintBody, paintKey } from '../machine/body.js';
+import { paintBody, paintKey, SCHEME_NAME } from '../machine/body.js';
 import { makeIris, makeSclera } from '../machine/eye.js';
 import { BODY, L } from '../machine/layout.js';
 import { t } from '../core/strings.js';
@@ -26,6 +26,8 @@ const JOBS = [
   ['oda', 'chair-left', () => withScale(S, () => P.paintChairBack(false))],
   ['oda', 'chair-right', () => withScale(S, () => P.paintChairBack(true))],
   ['oda', 'machine', () => withScale(S, paintBody)],
+  // seçili renk şeması ayrıca kendi adıyla (karşılaştırma için)
+  ['oda', `machine-${SCHEME_NAME}`, () => withScale(S, paintBody)],
   ['oda', 'machine-key', () => withScale(4, () => paintKey(false))],
   ['oda', 'machine-key-lit', () => withScale(4, () => paintKey(true))],
   ['goz', 'iris', () => makeIris(1024, { fleck: '#ead08a', ...player.eye }, player.eye.seed)],
@@ -46,7 +48,8 @@ function machineGuide() {
     x.setLineDash([]);
     x.font = '600 20px "Plex Mono", monospace';
     x.fillStyle = '#fff'; x.strokeStyle = '#000'; x.lineWidth = 4;
-    x.strokeText(label, r.x + 8, r.y + 26); x.fillText(label, r.x + 8, r.y + 26);
+    const ly = Math.max(r.y, 0) + 26;
+    x.strokeText(label, r.x + 8, ly); x.fillText(label, r.x + 8, ly);
   };
   const dot = (p, r, label) => box({ x: p.x - r, y: p.y - r, w: r * 2, h: r * 2 }, label);
   box(L.crt, G('crt'));
@@ -72,19 +75,21 @@ export async function runExport() {
   Object.assign(box.style, { position: 'fixed', left: '16px', bottom: '16px', zIndex: 99, padding: '10px 14px', background: '#000c', color: '#e8bf7a', font: '12px monospace' });
   box.textContent = t('dev.exportTitle');
   document.body.append(box);
-  let n = 0;
-  try {
-    for (const [dir, name, make] of JOBS) {
+  // ?disa-aktar&uzerine ile var olan dosyaların üzerine yazılır; yoksa atlanır.
+  const overwrite = new URLSearchParams(location.search).has('uzerine');
+  const done = { n: 0, s: 0, k: 0 };
+  for (const [dir, name, make] of JOBS) {
+    try {
       const canvas = make();
       const blob = await toBlob(canvas);
-      const res = await fetch(`/__disa-aktar?yol=${encodeURIComponent(`${dir}/${name}.png`)}`, { method: 'POST', body: blob });
-      if (!res.ok) throw new Error(`${name}: ${res.status}`);
-      n++;
-      box.textContent = `${t('dev.exportTitle')} ${n}/${JOBS.length} · ${name} (${canvas.width}×${canvas.height})`;
-    }
-    box.textContent = t('dev.exportDone', { n });
-  } catch (e) {
-    box.textContent = t('dev.exportFail', { msg: e.message });
+      const q = `yol=${encodeURIComponent(`${dir}/${name}.png`)}${overwrite ? '&uzerine=1' : ''}`;
+      const res = await fetch(`/__disa-aktar?${q}`, { method: 'POST', body: blob });
+      if (res.status === 409) done.s++;
+      else if (!res.ok) done.k++;
+      else done.n++;
+    } catch { done.k++; }
+    box.textContent = `${t('dev.exportTitle')} ${done.n + done.s + done.k}/${JOBS.length} · ${name}`;
   }
-  return n;
+  box.textContent = t('dev.exportDone', done);
+  return done;
 }
