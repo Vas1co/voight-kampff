@@ -1,0 +1,25 @@
+/* Tipografi: göstergelerde monospace, raporda daktilo, başlıklarda ince ve geniş aralıklı harfler. */
+.t-title {
+  font-family: var(--f-title);
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.34em;
+  padding-left: 0.34em;
+}
+.t-kicker {
+  font-family: var(--f-title);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+  font-size: clamp(11px, 1.05vw, 13px);
+  color: var(--teal-dim);
+}
+.t-mono {
+  font-family: var(--f-mono);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+}
+.t-type { font-family: var(--f-type); }
