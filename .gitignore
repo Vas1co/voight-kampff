@@ -10,3 +10,6 @@ Thumbs.db
 /v*.jpg
 # İlk tek dosyalık prototip (yerelde referans olarak duruyor)
 /Voight-Kampff Testi.html
+
+# Dışa aktarılan düzenlenebilir dokular (yeniden üretilebilir: /?disa-aktar)
+/tasarim/**/*.png

@@ -7,7 +7,6 @@
     "machine": "EMPATİ ANALİZ ÜNİTESİ",
     "model": "MK·VI"
   },
-
   "title": {
     "kicker": "Empati ölçüm birimi · {era}",
     "note": "Yedi soru. Göz bebeğin, kızarman, nabzın ve tepki süren ölçülecek. Makine hüküm vermez; kararı karşındaki verir.",
@@ -16,7 +15,6 @@
     "settings": "Ayarlar",
     "hint": "Kulaklık önerilir. Ses, odaya girdiğinde açılır. Cevaplar: 1–4 ya da tıkla."
   },
-
   "hud": {
     "rec": "KAYIT",
     "subject": "DENEK {n}",
@@ -27,18 +25,15 @@
     "soundOff": "KAPALI",
     "settings": "AYARLAR"
   },
-
   "speakers": {
     "interrogator": "",
     "you": "SEN",
     "narration": ""
   },
-
   "choices": {
     "aria": "Cevabın",
     "none": "…"
   },
-
   "channels": {
     "resp": "SOLUNUM",
     "pulse": "NABIZ",
@@ -47,14 +42,12 @@
     "latency": "TEPKİ SÜRESİ",
     "particles": "PARÇACIK"
   },
-
   "units": {
     "resp": "n/dk",
     "pulse": "at/dk",
     "sec": "sn",
     "mm": "mm"
   },
-
   "machine": {
     "baseline": "TEMEL",
     "anomaly": "ANOMALİ",
@@ -72,7 +65,6 @@
     "panelRight": "TEPKİ ANALİZİ",
     "stress": "GERG"
   },
-
   "report": {
     "title": "SORGU RAPORU",
     "subject": "Denek",
@@ -104,7 +96,6 @@
     },
     "again": "Tekrar otur"
   },
-
   "settings": {
     "title": "AYARLAR",
     "audio": "SES",
@@ -127,20 +118,27 @@
     "subtitlesAlways": "Altyazılar her zaman açıktır.",
     "keysTitle": "KLAVYE",
     "keys": [
-      ["1–4", "cevap seç"],
-      ["Boşluk", "altyazıyı geç"],
-      ["Esc", "ayarlar / kapat"]
+      [
+        "1–4",
+        "cevap seç"
+      ],
+      [
+        "Boşluk",
+        "altyazıyı geç"
+      ],
+      [
+        "Esc",
+        "ayarlar / kapat"
+      ]
     ],
     "reset": "Kaydı sil ve baştan başla",
     "resetConfirm": "Emin misin? Tekrar bas.",
     "close": "Kapat"
   },
-
   "intro": {
     "card1": "{unit}",
     "card2": "{era}"
   },
-
   "lines": {
     "sit": "Otur lütfen.",
     "relax": "Rahat ol. Birkaç soru soracağım, o kadar.",
@@ -148,7 +146,12 @@
     "speed": "Ne kadar çabuk cevap verdiğin de ölçülüyor. Dikkatini topla.",
     "baseline": "Önce bir ölçüm alacağım. Bir şey söyleme. Sadece ekrana bak.",
     "baselineDone": "Tamam. Başlıyoruz.",
-    "next": ["Devam ediyoruz.", "Sonraki.", "Bir tane daha.", "Peki."],
+    "next": [
+      "Devam ediyoruz.",
+      "Sonraki.",
+      "Bir tane daha.",
+      "Peki."
+    ],
     "noAnswer": "Cevap vermedin.",
     "fast": "Düşünmeden cevap verdin.",
     "end": "Teşekkürler. Bu kadarı yeterli.",
@@ -158,7 +161,6 @@
       "unsure": "Kesin bir şey söyleyemem. Daha fazla soru gerekecek."
     }
   },
-
   "questions": {
     "q1": {
       "short": "Kaplumbağa",
@@ -260,14 +262,30 @@
       }
     }
   },
-
   "pairs": {
     "hayvan-aci": "Çaresiz bir hayvan",
     "hayvan-kullanim": "Hayvanın nesneye dönüşmesi",
     "cocukluk": "Çocuk ve masumiyet"
   },
-
   "end": {
     "again": "Tekrar otur"
+  },
+  "dev": {
+    "exportTitle": "Dokular dışa aktarılıyor…",
+    "exportDone": "Bitti: {n} dosya tasarim/ klasörüne yazıldı.",
+    "exportFail": "Dışa aktarma başarısız: {msg}",
+    "guide": {
+      "crt": "ANA CRT — göz burada görünür (koyu bırak)",
+      "left": "SOL EKRAN — solunum/nabız (koyu bırak)",
+      "right": "SAĞ EKRAN — tepki analizi (koyu bırak)",
+      "led": "LED ÇUBUĞU",
+      "bellows": "KÖRÜK — ayrı katman, gövdenin arkasında (saydam bırak)",
+      "keys": "TUŞLAR (ayrı dosya)",
+      "alarm": "ANOMALİ LED'leri",
+      "stress": "GERGİNLİK lambası",
+      "cal": "KAL lambası",
+      "rec": "KAYIT lambası",
+      "note": "Mor alanlar oyunda canlı parçalarla örtülür. Kasayı ve çerçeveleri serbestçe çizebilirsin."
+    }
   }
 }

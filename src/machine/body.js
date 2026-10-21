@@ -118,7 +118,7 @@ export function paintBody() {
   // sol modül
   casing(x, 40, 540, 620, 610);
   screenBezel(x, L.left);
-  label(x, t('machine.panelLeft'), L.left.x - 4, L.left.y + L.left.h + 58, { size: 18 });
+  label(x, t('machine.panelLeft'), 300, 567, { size: 18 });
   slots(x, 80, 556, 200, 20, 10, false);
   screw(x, 66, 566); screw(x, 634, 566); screw(x, 66, 1124); screw(x, 634, 1124);
   // alarm LED yuvası
@@ -130,7 +130,7 @@ export function paintBody() {
   // sağ modül
   casing(x, 1388, 540, 620, 610);
   screenBezel(x, L.right);
-  label(x, t('machine.panelRight'), L.right.x - 4, L.right.y + L.right.h + 58, { size: 18 });
+  label(x, t('machine.panelRight'), 1436, 567, { size: 18 });
   slots(x, 1760, 556, 200, 20, 10, false);
   screw(x, 1414, 566); screw(x, 1982, 566); screw(x, 1414, 1124); screw(x, 1982, 1124);
   x.fillStyle = '#211f1a'; x.beginPath(); x.arc(L.calLamp.x, L.calLamp.y, 17, 0, Math.PI * 2); x.fill();

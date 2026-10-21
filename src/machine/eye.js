@@ -5,6 +5,7 @@
 // sakkad, kırpma ve hippus (doğal titreşim) eklenir.
 import { mk, seeded } from '../scene/paint.js';
 import { clamp, lerp } from '../core/rng.js';
+import { assets } from '../core/assets.js';
 
 const IRIS_MM = 11.7;
 const TAU = Math.PI * 2;
@@ -29,7 +30,7 @@ function periodicNoise(seed) {
   };
 }
 
-function makeIris(size, p, seed) {
+export function makeIris(size, p, seed) {
   const c = mk(size, size), x = c.getContext('2d');
   const img = x.createImageData(size, size), d = img.data;
   const N = periodicNoise(seed), R = seeded(seed * 7 + 1);
@@ -72,7 +73,7 @@ function makeIris(size, p, seed) {
   return c;
 }
 
-function makeSclera(w, h, R) {
+export function makeSclera(w, h, R) {
   const c = mk(w, h), x = c.getContext('2d'), cx = w / 2, cy = h / 2;
   let g = x.createRadialGradient(cx, cy, h * 0.18, cx, cy, w * 0.6);
   g.addColorStop(0, '#ece4d8'); g.addColorStop(0.35, '#d9cbbd'); g.addColorStop(0.65, '#b8968a'); g.addColorStop(1, '#7a4c44');
@@ -145,6 +146,17 @@ export class Eye {
     this.lash = Array.from({ length: 150 }, () => { const u = 0.08 + R() * 0.84; return { u, len: (30 + R() * 46) * (1 - Math.abs(u - 0.55) * 1.05), w: 1.3 + R() * 1.7, curl: 0.2 + R() * 0.35, jit: (R() - 0.5) * 0.25 }; });
     this.llash = Array.from({ length: 46 }, () => ({ u: 0.15 + R() * 0.72, len: 7 + R() * 15, w: 0.9 + R() * 0.9 }));
     this.ruff = Array.from({ length: 64 }, () => 0.85 + R() * 0.3);
+    // assets/images/eye/iris.png ve sclera.png varsa prosedürel çizimin yerine geçer
+    this.useFile('iris', (img) => { this.iris = img; });
+    this.useFile('sclera', (img) => { this.sclera = img; });
+  }
+
+  useFile(name, set) {
+    const url = assets.image('images/eye', name);
+    if (!url) return;
+    const img = new Image();
+    img.onload = () => set(img);
+    img.src = url;
   }
 
   setPupil(mm, rate = 2.2) { this.targetMM = mm; this.rate = rate; }
@@ -181,7 +193,7 @@ export class Eye {
     x.globalAlpha = 1;
 
     // göz küresi
-    x.drawImage(this.sclera, this.gx * 0.45 - 40, this.gy * 0.45 - 40);
+    x.drawImage(this.sclera, this.gx * 0.45 - 40, this.gy * 0.45 - 40, W + 80, H + 80);
     // irisin etrafındaki hafif gölge (kornea kenarı)
     let g = x.createRadialGradient(cx, cy, R * 0.96, cx, cy, R * 1.25);
     g.addColorStop(0, 'rgba(60,40,30,0.35)'); g.addColorStop(1, 'rgba(60,40,30,0)');
