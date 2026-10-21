@@ -81,20 +81,24 @@ export class Room {
     // 8) masa objeleri
     const prop = (name, painter, w, h, opts = {}) => litMaterial(textureOr('images/room', name, painter), { ambient: 0.55, beam: 0.85, crt: 1.6, alphaTest: 0.02, ...opts });
     this.folder = add(flat(plane(0.3, 0.39, prop('folder', () => P.paintFolder())) ), 22);
-    this.folder.position.set(-0.86, DESK_Y + 0.002, -0.05); this.folder.rotation.z = 0.12;
+    this.folder.position.set(-0.98, DESK_Y + 0.002, -0.3); this.folder.rotation.z = 0.14;
     this.report = add(flat(plane(0.25, 0.34, prop('report', P.paintReportPaper))), 23);
-    this.report.position.set(-0.5, DESK_Y + 0.003, 0.32); this.report.rotation.z = -0.08;
+    this.report.position.set(-0.78, DESK_Y + 0.003, 0.78); this.report.rotation.z = -0.1;
+    // küllük: sağ önde, oyuncunun eli altında
+    const ASH = new THREE.Vector3(0.6, DESK_Y + 0.048, 1.05);
     const ash = add(plane(0.2, 0.1, prop('ashtray', P.paintAshtray)), 24);
-    ash.position.set(0.74, DESK_Y + 0.048, -0.05);
+    ash.position.copy(ASH);
+    // kaset çalar: sağ arkada, sorgucunun tarafında
+    const CAS = new THREE.Vector3(0.88, DESK_Y + 0.05, -0.55);
     const cas = add(plane(0.27, 0.105, prop('cassette', P.paintCassettePlayer)), 24);
-    cas.position.set(0.52, DESK_Y + 0.05, 0.3);
+    cas.position.copy(CAS);
     this.cassetteRec = add(plane(0.03, 0.03, glowMaterial('#ff3a2a', 0)), 25);
-    this.cassetteRec.position.set(0.52 - 0.135 + 0.27 * (343 / 512), DESK_Y + 0.05 + 0.105 * (0.5 - 80 / 200), 0.302);
+    this.cassetteRec.position.set(CAS.x - 0.135 + 0.27 * (343 / 512), CAS.y + 0.105 * (0.5 - 80 / 200), CAS.z + 0.002);
     const pens = add(plane(0.09, 0.135, prop('pencup', P.paintPenCup)), 22);
-    pens.position.set(-0.62, DESK_Y + 0.066, -0.6);
+    pens.position.set(-0.62, DESK_Y + 0.066, -0.75);
 
     // sigara közü + duman
-    const tip = new THREE.Vector3(0.74 + 0.2 * (206 / 256 - 0.5), DESK_Y + 0.048 + 0.1 * (0.5 - 57 / 128), -0.048);
+    const tip = new THREE.Vector3(ASH.x + 0.2 * (206 / 256 - 0.5), ASH.y + 0.1 * (0.5 - 57 / 128), ASH.z + 0.002);
     this.ember = add(plane(0.05, 0.05, glowMaterial('#ff8a3a', 1.2)), 26);
     this.ember.position.copy(tip).add(new THREE.Vector3(0, 0, 0.003));
     this.smoke = new Smoke(tip, { max: quality === 'high' ? 80 : 40 });
