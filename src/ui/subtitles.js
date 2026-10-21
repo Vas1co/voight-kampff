@@ -1,4 +1,4 @@
-// Altyazılar (her zaman açık). Konuşan: memur (oyuncu), denek, hoparlör (amir), anlatım.
+// Altyazılar (her zaman açık). Konuşan: sorgucu (karşıdan), sen (oyuncu), anlatım.
 // Satırın seslendirmesi varsa (assets/audio/voice) çalar, süre ona göre uzar.
 // Boşluk / tıklama satırı erken geçer.
 import { $ } from './dom.js';
@@ -21,17 +21,17 @@ export class Subtitles {
   // Okuma süresi: Türkçe için kelime başına ~0.3 sn, en az 1.6 sn.
   duration(text) { return Math.max(1600, 700 + text.length * 52) / this.speed; }
 
-  show(text, speaker = 'officer') {
+  show(text, speaker = 'interrogator') {
     this.root.className = `on ${speaker}`;
-    const label = speaker === 'officer' ? '' : t(`speakers.${speaker}`);
+    const label = t(`speakers.${speaker}`);
     this.speakerEl.textContent = label;
-    this.lineEl.textContent = speaker === 'officer' || speaker === 'subject' ? `– ${text}` : text;
+    this.lineEl.textContent = speaker === 'narration' ? text : `– ${text}`;
   }
 
   hide() { this.root.className = ''; }
 
   // Bir satırı göster, süre dolunca ya da geçilince kapat.
-  async say(text, { speaker = 'officer', voiceId = null, token, hold = false, min = 0, extra = 0 } = {}) {
+  async say(text, { speaker = 'interrogator', voiceId = null, token, hold = false, min = 0, extra = 0 } = {}) {
     this.show(text, speaker);
     const vd = await voice.play(voiceId);
     const ms = Math.max(min, vd ? vd * 1000 + 250 : this.duration(text)) + extra;

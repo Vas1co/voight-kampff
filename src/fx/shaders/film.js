@@ -6,18 +6,19 @@ export const FilmShader = {
     tDiffuse: { value: null },
     uTime: { value: 0 },
     uGrain: { value: 0.085 },
-    uVignette: { value: 0.55 },
+    uVignette: { value: 0.65 },
     uChroma: { value: 0.0008 },
     uFlicker: { value: 0.025 },
     uFade: { value: 0 },
     uMotion: { value: 1 },
-    uLift: { value: new THREE.Vector3(0.010, 0.022, 0.028) },
+    uLift: { value: new THREE.Vector3(0.004, 0.012, 0.016) },
+    uContrast: { value: 0.32 },
     uRedFlash: { value: 0 },
   },
   vertexShader: /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
   fragmentShader: /* glsl */ `
     uniform sampler2D tDiffuse;
-    uniform float uTime, uGrain, uVignette, uChroma, uFlicker, uFade, uMotion, uRedFlash;
+    uniform float uTime, uGrain, uVignette, uChroma, uFlicker, uFade, uMotion, uRedFlash, uContrast;
     uniform vec3 uLift;
     varying vec2 vUv;
     float h(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
@@ -35,6 +36,9 @@ export const FilmShader = {
       col = mix(col, col * vec3(0.93, 1.02, 1.04), 0.6);
       col += uLift * (1.0 - smoothstep(0.0, 0.35, l));
       col = mix(vec3(l), col, 0.88);
+      // S eğrisi: siyahlar derinleşir, ışık alan yerler parlak kalır
+      vec3 sc = clamp(col, 0.0, 1.0);
+      col = mix(col, sc * sc * (3.0 - 2.0 * sc), uContrast) + max(col - 1.0, 0.0);
 
       float vig = smoothstep(0.95, 0.18, sqrt(r2) * (1.0 + uVignette * 0.6));
       col *= mix(1.0, vig, uVignette);

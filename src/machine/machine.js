@@ -40,7 +40,7 @@ export class Machine {
 
     // gövde
     const bodyTex = textureOr('images/room', 'machine', paintBody);
-    this.bodyMat = litMaterial(bodyTex, { ambient: 0.62, beam: 0.55, crt: 1.4, alphaTest: 0.02 });
+    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: '#fff0d6' });
     this.body = new THREE.Mesh(new THREE.PlaneGeometry(BODY.worldW, BODY.worldH), this.bodyMat);
     this.group.add(this.body);
 
@@ -85,7 +85,7 @@ export class Machine {
       const lit = i === 2;
       const tx = new THREE.CanvasTexture(paintKey(lit));
       tx.colorSpace = THREE.SRGBColorSpace;
-      const mat = new THREE.MeshBasicMaterial({ map: tx, color: lit ? new THREE.Color(2.2, 2.0, 1.7) : new THREE.Color(0.55, 0.6, 0.58) });
+      const mat = new THREE.MeshBasicMaterial({ map: tx, color: lit ? new THREE.Color(2.2, 2.0, 1.7) : new THREE.Color(0.72, 0.72, 0.66) });
       const m = new THREE.Mesh(new THREE.PlaneGeometry(kw, kh), mat);
       place(m, { x: k.x, y: k.y, w: L.keySize.w, h: L.keySize.h });
       return m;
@@ -153,7 +153,7 @@ export class Machine {
     }
     // ölçüm sırasında orta tuş yanıp söner
     const blink = this.crt.measuring && Math.floor(this.t * 5) % 2 === 0;
-    this.keys[1].material.color.setScalar(blink ? 1.8 : 0.58);
+    this.keys[1].material.color.setRGB(blink ? 1.8 : 0.72, blink ? 1.8 : 0.72, blink ? 1.7 : 0.66);
 
     // lambalar
     const st = this.stress;

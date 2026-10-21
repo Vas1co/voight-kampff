@@ -1,5 +1,5 @@
 // Çapraz referans: aynı duygusal çekirdeğe (pair) ait okumaları yan yana toplar.
-// Yalnızca ham veri ve aralık (max − min) döner; yorum yapmaz.
+// Yalnızca ham veri ve göz bebeği aralığı (max − min) döner; yorum yapmaz.
 export function crossReference(readings) {
   const groups = new Map();
   for (const r of readings) {

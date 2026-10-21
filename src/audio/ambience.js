@@ -25,10 +25,10 @@ export class Ambience {
     // pervane: kanat geçişiyle dalgalanan hava
     const fs = audio.loopNoise(audio.white);
     const ff = ctx.createBiquadFilter(); ff.type = 'bandpass'; ff.frequency.value = 650; ff.Q.value = 0.6;
-    this.fanGain = ctx.createGain(); this.fanGain.gain.value = 0.012;
+    this.fanGain = ctx.createGain(); this.fanGain.gain.value = 0.010;
     fs.connect(ff); ff.connect(this.fanGain); this.fanGain.connect(out);
-    this.fanLfo = ctx.createOscillator(); this.fanLfo.frequency.value = (5.6 * 5) / (Math.PI * 2);
-    const lg = ctx.createGain(); lg.gain.value = 0.008;
+    this.fanLfo = ctx.createOscillator(); this.fanLfo.frequency.value = (1.05 * 5) / (Math.PI * 2);
+    const lg = ctx.createGain(); lg.gain.value = 0.007;
     this.fanLfo.connect(lg); lg.connect(this.fanGain.gain); this.fanLfo.start();
 
     // CRT vızıltısı + makine motoru (güçle açılır)
@@ -63,7 +63,6 @@ export class Ambience {
   fan(speed) {
     if (!this.fanLfo) return;
     this.fanLfo.frequency.setTargetAtTime((speed * 5) / (Math.PI * 2), audio.now, 0.5);
-    this.fanGain.gain.setTargetAtTime(0.012 * (speed / 5.6), audio.now, 0.5);
   }
 
   recording(on) { this.tape?.gain.setTargetAtTime(on ? 0.008 : 0, audio.now, 0.1); }

@@ -75,107 +75,6 @@ export function paintMirror() {
   return c;
 }
 
-// Pervane kanatları (üstten görünüş, saydam zemin).
-export function paintFan() {
-  const S = 1024, c = mk(S, S), x = c.getContext('2d'), C = S / 2;
-  x.translate(C, C);
-  for (let b = 0; b < 5; b++) {
-    x.save();
-    x.rotate((b * Math.PI * 2) / 5);
-    x.fillStyle = lg(x, 0, -30, 0, 30, [[0, '#0e1516'], [0.5, '#1b2425'], [1, '#0a0f10']]);
-    x.beginPath();
-    x.moveTo(60, -16);
-    x.lineTo(C - 14, -36);
-    x.quadraticCurveTo(C, 0, C - 14, 36);
-    x.lineTo(60, 16);
-    x.closePath();
-    x.fill();
-    // kanat kolu
-    x.fillStyle = '#2a2116';
-    x.fillRect(40, -9, 120, 18);
-    x.restore();
-  }
-  x.fillStyle = rg(x, 0, 0, 10, 0, 0, 72, [[0, '#6b5233'], [0.6, '#3b2d1b'], [1, '#140f09']]);
-  x.beginPath(); x.arc(0, 0, 72, 0, Math.PI * 2); x.fill();
-  return c;
-}
-
-// Pervane gövdesi (yandan görünüş, billboard).
-export function paintFanMotor() {
-  const W = 256, H = 256, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = '#0a1011';
-  x.fillRect(W / 2 - 5, 0, 10, 150);
-  x.fillStyle = lg(x, 40, 0, 216, 0, [[0, '#120d08'], [0.35, '#5b4428'], [0.55, '#7a5c36'], [1, '#100b07']]);
-  rr(x, 40, 150, 176, 46, 10); x.fill();
-  x.fillStyle = '#0c0a07';
-  x.beginPath(); x.ellipse(W / 2, 196, 88, 12, 0, 0, Math.PI * 2); x.fill();
-  x.fillStyle = '#3b2d1b';
-  x.beginPath(); x.ellipse(W / 2, 150, 88, 10, 0, 0, Math.PI * 2); x.fill();
-  return c;
-}
-
-// Denek silueti: sandalyede oturan figür, arkadan ve yukarıdan gelen ışıkla kenar parlaması.
-export function paintSubject(params = {}) {
-  const { shoulder = 0.56, head = 0.115 } = params;
-  const W = 512, H = 768, c = mk(W, H), x = c.getContext('2d');
-  const cx = W / 2;
-  // yüksek sırtlı deri sandalye
-  x.fillStyle = lg(x, 0, 0, W, 0, [[0, '#050c0d'], [0.85, '#0b1718'], [1, '#162728']]);
-  rr(x, cx - W * 0.4, H * 0.42, W * 0.8, H * 0.6, 30); x.fill();
-  x.strokeStyle = 'rgba(160,205,200,0.10)';
-  x.lineWidth = 3;
-  x.beginPath(); x.moveTo(cx + W * 0.39, H * 0.45); x.lineTo(cx + W * 0.39, H); x.stroke();
-  // dikiş çizgileri
-  x.strokeStyle = 'rgba(0,0,0,0.35)';
-  x.lineWidth = 2;
-  for (const f of [-0.18, 0.18]) { x.beginPath(); x.moveTo(cx + W * f, H * 0.45); x.lineTo(cx + W * f, H); x.stroke(); }
-
-  // gövde
-  const sw = W * shoulder, hr = W * head, neckY = H * 0.36, headY = neckY - hr * 1.15;
-  x.fillStyle = '#081011';
-  x.beginPath();
-  x.moveTo(cx - sw / 2, H);
-  x.lineTo(cx - sw / 2 - 6, neckY + hr * 1.3);
-  x.quadraticCurveTo(cx - sw / 2, neckY + hr * 0.45, cx - hr * 0.55, neckY + hr * 0.25);
-  x.lineTo(cx - hr * 0.42, neckY - hr * 0.2);
-  x.lineTo(cx + hr * 0.42, neckY - hr * 0.2);
-  x.lineTo(cx + hr * 0.55, neckY + hr * 0.25);
-  x.quadraticCurveTo(cx + sw / 2, neckY + hr * 0.45, cx + sw / 2 + 6, neckY + hr * 1.3);
-  x.lineTo(cx + sw / 2, H);
-  x.closePath();
-  x.fill();
-  // ceket yakaları
-  x.strokeStyle = 'rgba(150,190,185,0.07)';
-  x.lineWidth = 3;
-  x.beginPath();
-  x.moveTo(cx - hr * 0.4, neckY + hr * 0.3); x.lineTo(cx - hr * 0.1, H * 0.7);
-  x.moveTo(cx + hr * 0.4, neckY + hr * 0.3); x.lineTo(cx + hr * 0.1, H * 0.7);
-  x.stroke();
-  // baş
-  x.fillStyle = '#091213';
-  x.beginPath(); x.ellipse(cx, headY, hr * 0.86, hr * 1.08, 0, 0, Math.PI * 2); x.fill();
-  // kulak
-  x.beginPath(); x.ellipse(cx + hr * 0.84, headY + hr * 0.1, hr * 0.14, hr * 0.26, 0, 0, Math.PI * 2); x.fill();
-
-  // kenar ışığı (pencere arkadan-yukarıdan)
-  x.globalCompositeOperation = 'source-atop';
-  x.strokeStyle = 'rgba(200,232,226,0.5)';
-  x.lineWidth = 5;
-  x.beginPath(); x.ellipse(cx + 2, headY - 2, hr * 0.86, hr * 1.08, 0, -Math.PI * 0.95, -Math.PI * 0.05); x.stroke();
-  x.strokeStyle = 'rgba(200,232,226,0.28)';
-  x.lineWidth = 6;
-  x.beginPath();
-  x.moveTo(cx + hr * 0.6, neckY + hr * 0.28);
-  x.quadraticCurveTo(cx + sw / 2, neckY + hr * 0.45, cx + sw / 2 + 4, neckY + hr * 1.3);
-  x.moveTo(cx - hr * 0.6, neckY + hr * 0.28);
-  x.quadraticCurveTo(cx - sw / 2, neckY + hr * 0.45, cx - sw / 2 - 4, neckY + hr * 1.3);
-  x.stroke();
-  x.fillStyle = lg(x, 0, neckY, 0, H, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.5)']]);
-  x.fillRect(0, neckY, W, H - neckY);
-  x.globalCompositeOperation = 'source-over';
-  return c;
-}
-
 // Masa üstü: açık gri-teal laminat, ortada ek yeri, çizikler, fincan izi.
 export function paintDesk() {
   const W = 1024, H = 1024, c = mk(W, H), x = c.getContext('2d');
@@ -211,7 +110,7 @@ export function paintDeskEdge() {
 }
 
 // Vaka dosyası (masada kapalı duran manila klasör).
-export function paintFolder(label = 'DENEK 01') {
+export function paintFolder(label = 'DENEK 04') {
   const W = 512, H = 660, c = mk(W, H), x = c.getContext('2d');
   // içerden taşan kâğıtlar
   x.fillStyle = '#d7d3c4';

@@ -35,7 +35,10 @@ const synth = {
   switchOff() { noise(0.05, 0.3, 'lowpass', 700, 0.8); tone(60, 0.1, 0.1, 'triangle'); },
   key() { noise(0.02, 0.14, 'bandpass', 2400, 1.5); tone(220, 0.03, 0.02, 'square'); },
   button() { noise(0.03, 0.22, 'lowpass', 1200, 0.9); tone(110, 0.05, 0.05, 'triangle'); },
-  dialTick() { noise(0.008, 0.07, 'bandpass', 5200, 4); },
+  dialTick({ loud = false } = {}) { noise(0.008, loud ? 0.07 : 0.025, 'bandpass', 2600, 3); },
+  warm() { tone(523.25, 1.2, 0.016); tone(783.99, 1.4, 0.014, 'sine', 0.18); },
+  buzz() { tone(68, 0.7, 0.03, 'sawtooth'); tone(71, 0.7, 0.026, 'sawtooth'); },
+  analyze() { for (let i = 0; i < 16; i++) tone(400 + Math.random() * 1400, 0.05, 0.01, 'square', i * 0.13); noise(2.4, 0.02, 'bandpass', 900, 0.5); },
   crtOn() {
     noise(0.08, 0.2, 'lowpass', 400, 0.7);
     const ctx = A(), t = ctx.currentTime;

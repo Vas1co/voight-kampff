@@ -1,77 +1,117 @@
 // Makro göz görüntüsü (prosedürel). CRT dokusu olarak her karede yeniden çizilir.
-// Göz bebeği çapı milimetre olarak sürülür; sakkad, kırpma ve hippus (doğal
-// titreşim) eklenir. Denek başına iris rengi ve tohum data/subjects/*.json'dan gelir.
-import { mk, rr, seeded } from '../scene/paint.js';
+// İris piksel piksel üretilir: açısal periyodik gürültüden radyal lifler, kriptler,
+// kollaret halkası, kasılma çizgileri ve koyu limbal halka. Korneada odadaki
+// pencerenin yansıması görünür. Göz bebeği çapı milimetre olarak sürülür;
+// sakkad, kırpma ve hippus (doğal titreşim) eklenir.
+import { mk, seeded } from '../scene/paint.js';
 import { clamp, lerp } from '../core/rng.js';
 
 const IRIS_MM = 11.7;
 const TAU = Math.PI * 2;
 
-function makeIris(size, p, R) {
-  const c = mk(size, size), x = c.getContext('2d'), Rr = size / 2, C = Rr;
-  const pal = p.iris;
-  let g = x.createRadialGradient(C, C, Rr * 0.1, C, C, Rr);
-  [[0, pal[0]], [0.3, pal[1]], [0.5, pal[2]], [0.75, pal[3]], [1, pal[4]]].forEach(([o, cl]) => g.addColorStop(o, cl));
-  x.fillStyle = g; x.beginPath(); x.arc(C, C, Rr, 0, TAU); x.fill();
-  x.lineCap = 'round';
-  for (let i = 0; i < 3200; i++) {
-    const a = R() * TAU, r0 = Rr * (0.16 + R() * 0.2), r1 = Rr * (0.5 + R() * 0.48), tn = R();
-    x.strokeStyle = tn < 0.35 ? `rgba(232,200,120,${0.08 + R() * 0.2})`
-      : tn < 0.6 ? `rgba(160,172,92,${0.1 + R() * 0.2})`
-      : tn < 0.86 ? `rgba(30,36,16,${0.12 + R() * 0.26})` : `rgba(250,232,172,${0.06 + R() * 0.14})`;
-    x.lineWidth = (0.5 + R() * 1.6) * size / 600;
-    x.beginPath();
-    let aa = a;
-    for (let k = 0; k <= 5; k++) {
-      const r = r0 + (r1 - r0) * k / 5; aa += (R() - 0.5) * 0.025;
-      const px = C + Math.cos(aa) * r, py = C + Math.sin(aa) * r;
-      k ? x.lineTo(px, py) : x.moveTo(px, py);
+const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+const mix3 = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+const sstep = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+
+// Açıda periyodik (P hücre) 2B değer gürültüsü.
+function periodicNoise(seed) {
+  const h = (i, j) => {
+    let n = (Math.imul(i, 374761393) + Math.imul(j, 668265263) + Math.imul(seed, 2147483647)) | 0;
+    n = Math.imul(n ^ (n >>> 13), 1274126177);
+    return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+  };
+  return (u, v, P) => {
+    const i = Math.floor(u), j = Math.floor(v), fu = u - i, fv = v - j;
+    const su = fu * fu * (3 - 2 * fu), sv = fv * fv * (3 - 2 * fv);
+    const i0 = ((i % P) + P) % P, i1 = (i0 + 1) % P;
+    const a = h(i0, j), b = h(i1, j), c = h(i0, j + 1), d = h(i1, j + 1);
+    return a + (b - a) * su + (c - a) * sv + (a - b - c + d) * su * sv;
+  };
+}
+
+function makeIris(size, p, seed) {
+  const c = mk(size, size), x = c.getContext('2d');
+  const img = x.createImageData(size, size), d = img.data;
+  const N = periodicNoise(seed), R = seeded(seed * 7 + 1);
+  const pal = p.iris.map(hex), fleck = hex(p.fleck);
+  const half = size / 2;
+  for (let py = 0; py < size; py++) {
+    for (let px = 0; px < size; px++) {
+      const dx = (px + 0.5 - half) / half, dy = (py + 0.5 - half) / half;
+      const r = Math.hypot(dx, dy);
+      const k = (py * size + px) * 4;
+      if (r > 1) { d[k + 3] = 0; continue; }
+      const th = (Math.atan2(dy, dx) + Math.PI) / TAU; // 0..1
+      // radyal lifler: açıda yüksek, yarıçapta düşük frekans
+      const f1 = N(th * 180, r * 3, 180), f2 = N(th * 360 + 17, r * 5, 360), f3 = N(th * 90 + 5, r * 2, 90);
+      const fib = f1 * 0.45 + f2 * 0.35 + f3 * 0.2;
+      // kollaret: dalgalı halka
+      const rc = 0.4 + 0.035 * Math.sin(th * TAU * 7 + 1.3) + 0.02 * (N(th * 24, 3.5, 24) - 0.5);
+      const coll = Math.exp(-Math.pow((r - rc) / 0.028, 2));
+      // kriptler: orta bölgede koyu boşluklar
+      const crypt = sstep(0.66, 0.86, N(th * 64 + 9, r * 9, 64) * 0.7 + N(th * 128 + 3, r * 14, 128) * 0.3) * sstep(0.44, 0.52, r) * (1 - sstep(0.76, 0.86, r));
+      // temel renk: iç bölge sıcak, dış bölge yeşilimsi gri
+      let col = r < rc ? mix3(pal[0], pal[1], sstep(0.15, rc, r)) : mix3(pal[2], pal[3], sstep(rc, 0.86, r));
+      col = col.map((v) => v * (0.35 + Math.pow(fib, 1.4) * 1.45));
+      col = mix3(col, [255, 236, 190], coll * 0.32);
+      col = col.map((v) => v * (1 - crypt * 0.38));
+      // kasılma çizgileri
+      const furrow = 0.92 + 0.08 * Math.sin(r * 88 + N(th * 40, r * 2, 40) * 6);
+      col = col.map((v) => v * furrow);
+      // pigment benekleri
+      if (r > 0.3 && r < 0.84 && N(th * 140 + 31, r * 22, 140) > 0.86) col = mix3(col, fleck, 0.45);
+      // limbal halka
+      const limb = sstep(0.8, 0.97, r);
+      col = mix3(col, pal[4], limb * 0.92);
+      const n = (R() - 0.5) * 14;
+      d[k] = clamp(col[0] + n, 0, 255); d[k + 1] = clamp(col[1] + n, 0, 255); d[k + 2] = clamp(col[2] + n, 0, 255);
+      d[k + 3] = 255 * (1 - sstep(0.975, 1, r));
     }
-    x.stroke();
   }
-  // kollaret halkası
-  x.beginPath();
-  for (let k = 0; k <= 180; k++) {
-    const a = k / 180 * TAU, r = Rr * (0.41 + 0.035 * Math.sin(a * 9 + 1) + 0.02 * Math.sin(a * 23) + (R() - 0.5) * 0.02);
-    const px = C + Math.cos(a) * r, py = C + Math.sin(a) * r;
-    k ? x.lineTo(px, py) : x.moveTo(px, py);
-  }
-  x.closePath();
-  x.strokeStyle = p.fleck + '73'; x.lineWidth = Rr * 0.024; x.stroke();
-  // kriptler
-  for (let i = 0; i < 60; i++) {
-    const a = R() * TAU, r = Rr * (0.3 + R() * 0.36);
-    x.save(); x.translate(C + Math.cos(a) * r, C + Math.sin(a) * r); x.rotate(a);
-    x.fillStyle = `rgba(24,18,8,${0.22 + R() * 0.3})`;
-    x.beginPath(); x.ellipse(0, 0, Rr * (0.02 + R() * 0.05), Rr * (0.008 + R() * 0.015), 0, 0, TAU); x.fill();
-    x.restore();
-  }
-  g = x.createRadialGradient(C, C, Rr * 0.8, C, C, Rr);
-  g.addColorStop(0, 'rgba(10,14,6,0)'); g.addColorStop(0.75, 'rgba(10,14,6,.55)'); g.addColorStop(1, 'rgba(10,14,6,.95)');
-  x.fillStyle = g; x.beginPath(); x.arc(C, C, Rr, 0, TAU); x.fill();
+  x.putImageData(img, 0, 0);
   return c;
 }
 
 function makeSclera(w, h, R) {
   const c = mk(w, h), x = c.getContext('2d'), cx = w / 2, cy = h / 2;
-  const g = x.createRadialGradient(cx, cy, h * 0.3, cx, cy, w * 0.62);
-  g.addColorStop(0, '#ece4da'); g.addColorStop(0.45, '#d8c4b6'); g.addColorStop(1, '#9a6a5e');
+  let g = x.createRadialGradient(cx, cy, h * 0.18, cx, cy, w * 0.6);
+  g.addColorStop(0, '#ece4d8'); g.addColorStop(0.35, '#d9cbbd'); g.addColorStop(0.65, '#b8968a'); g.addColorStop(1, '#7a4c44');
   x.fillStyle = g; x.fillRect(0, 0, w, h);
+  // ince damarlar köşelerden içeri
   x.lineCap = 'round';
   const vein = (px, py, a, wid, len, depth) => {
-    x.strokeStyle = `rgba(${150 + R() * 40 | 0},${30 + R() * 25 | 0},35,${0.2 + R() * 0.25})`;
+    x.strokeStyle = `rgba(${165 + R() * 40 | 0},${35 + R() * 30 | 0},${40 + R() * 20 | 0},${0.18 + R() * 0.3})`;
     x.lineWidth = wid; x.beginPath(); x.moveTo(px, py);
     for (let i = 0; i < len; i++) {
-      a += (R() - 0.5) * 0.5; px += Math.cos(a) * 6; py += Math.sin(a) * 6; x.lineTo(px, py);
-      if (depth < 3 && R() < 0.07) { x.stroke(); vein(px, py, a + (R() - 0.5) * 1.6, wid * 0.6, len * 0.5 | 0, depth + 1); x.beginPath(); x.moveTo(px, py); }
+      a += (R() - 0.5) * 0.45; px += Math.cos(a) * 5; py += Math.sin(a) * 5; x.lineTo(px, py);
+      if (depth < 3 && R() < 0.08) { x.stroke(); vein(px, py, a + (R() - 0.5) * 1.7, wid * 0.62, len * 0.55 | 0, depth + 1); x.beginPath(); x.moveTo(px, py); }
     }
     x.stroke();
   };
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < 46; i++) {
     const left = R() < 0.5;
-    const px = left ? R() * w * 0.14 : w - R() * w * 0.14, py = cy + (R() - 0.5) * h * 0.5;
-    vein(px, py, left ? (R() - 0.5) * 0.8 : Math.PI + (R() - 0.5) * 0.8, 1 + R() * 1.6, 18 + R() * 26 | 0, 0);
+    const px = left ? R() * w * 0.2 : w - R() * w * 0.2, py = cy + (R() - 0.5) * h * 0.55;
+    vein(px, py, left ? (R() - 0.5) * 0.7 : Math.PI + (R() - 0.5) * 0.7, 0.8 + R() * 1.8, 16 + R() * 30 | 0, 0);
   }
+  // nem: yumuşak lekeli parlaklık
+  g = x.createRadialGradient(cx * 0.7, cy * 0.75, 0, cx * 0.7, cy * 0.75, w * 0.3);
+  g.addColorStop(0, 'rgba(255,255,255,0.12)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, w, h);
+  return c;
+}
+
+// Cilt için lekeli doku (göz kapakları).
+function makeSkin(w, h, R) {
+  const c = mk(w, h), x = c.getContext('2d');
+  const img = x.createImageData(w, h), d = img.data;
+  const N = periodicNoise(91);
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    const k = (py * w + px) * 4;
+    const v = N(px / 9, py / 9, 4096) * 0.5 + N(px / 3, py / 3, 4096) * 0.3 + R() * 0.2;
+    const g = 128 + (v - 0.5) * 70;
+    d[k] = g; d[k + 1] = g; d[k + 2] = g; d[k + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
   return c;
 }
 
@@ -83,9 +123,9 @@ export class Eye {
     this.W = width; this.H = height;
     this.canvas = mk(width, height);
     this.x = this.canvas.getContext('2d');
-    this.R = Math.round(height * 0.4);
+    this.R = Math.round(height * 0.34);
     this.setSubject(params);
-    this.pupilMM = 3.4; this.targetMM = 3.4; this.rate = 2.2;
+    this.pupilMM = 3.6; this.targetMM = 3.6; this.rate = 2.2;
     this.gx = 0; this.gy = 0; this.gxT = 0; this.gyT = 0; this.sacAt = 0;
     this.open = 1; this.blinkAt = 2.5; this.blinkT = -1;
     this.focus = 1; this.reduce = false; this.overlay = '';
@@ -94,18 +134,19 @@ export class Eye {
 
   setSubject(p) {
     this.p = {
-      seed: 7, iris: ['#5a3a14', '#b07a2c', '#9c8c3e', '#6c7b3a', '#1a2010'], fleck: '#ecce84',
-      skin: ['#7d4b3c', '#3a2119'], blinkEvery: [3, 7], ...p,
+      seed: 23, iris: ['#5a3818', '#a07436', '#8c7a44', '#636443', '#17160d'], fleck: '#ead08a',
+      skin: ['#a8705c', '#4a2a20'], blinkEvery: [3, 7], ...p,
     };
     const R = seeded(this.p.seed);
     this.rand = seeded(this.p.seed * 31 + 5);
-    this.iris = makeIris(512, this.p, R);
-    this.sclera = makeSclera(this.W + 60, this.H + 60, R);
-    this.lash = Array.from({ length: 110 }, () => { const u = 0.12 + R() * 0.76; return { u, len: (26 + R() * 38) * (1 - Math.abs(u - 0.5) * 1.1), w: 1.4 + R() * 1.4 }; });
-    this.llash = Array.from({ length: 36 }, () => ({ u: 0.2 + R() * 0.6, len: 8 + R() * 12, w: 1 + R() }));
+    this.iris = makeIris(512, this.p, this.p.seed);
+    this.sclera = makeSclera(this.W + 80, this.H + 80, R);
+    this.skin = makeSkin(this.W, this.H, R);
+    this.lash = Array.from({ length: 150 }, () => { const u = 0.08 + R() * 0.84; return { u, len: (30 + R() * 46) * (1 - Math.abs(u - 0.55) * 1.05), w: 1.3 + R() * 1.7, curl: 0.2 + R() * 0.35, jit: (R() - 0.5) * 0.25 }; });
+    this.llash = Array.from({ length: 46 }, () => ({ u: 0.15 + R() * 0.72, len: 7 + R() * 15, w: 0.9 + R() * 0.9 }));
+    this.ruff = Array.from({ length: 64 }, () => 0.85 + R() * 0.3);
   }
 
-  // Göz bebeği hedefi (mm). rate: genişleme hızı (1/sn).
   setPupil(mm, rate = 2.2) { this.targetMM = mm; this.rate = rate; }
   snapPupil(mm) { this.pupilMM = this.targetMM = mm; }
 
@@ -114,11 +155,11 @@ export class Eye {
     this.time += dt;
     const t = this.time;
     if (t > this.sacAt) {
-      const amp = measuring ? 4 : 16;
-      this.gxT = (R() - 0.5) * 2 * amp; this.gyT = (R() - 0.5) * amp;
-      this.sacAt = t + 0.7 + R() * 2.6;
+      const amp = measuring ? 4 : 14;
+      this.gxT = (R() - 0.5) * 2 * amp; this.gyT = (R() - 0.5) * amp * 0.7;
+      this.sacAt = t + 0.6 + R() * 2.6;
     }
-    const ks = 1 - Math.pow(0.0005, dt);
+    const ks = 1 - Math.pow(0.0004, dt);
     this.gx += (this.gxT - this.gx) * ks; this.gy += (this.gyT - this.gy) * ks;
     const hip = this.reduce ? 0 : 0.05 * Math.sin(t * 1.3) + 0.03 * Math.sin(t * 3.7 + 1);
     this.pupilMM += (this.targetMM + hip - this.pupilMM) * (1 - Math.exp(-this.rate * dt));
@@ -126,63 +167,139 @@ export class Eye {
       if (this.blinkT < 0 && t > this.blinkAt) this.blinkT = 0;
       if (this.blinkT >= 0) {
         this.blinkT += dt;
-        const p = this.blinkT / 0.17;
-        this.open = p < 1 ? 1 - p : p < 2 ? p - 1 : 1;
-        if (p >= 2) { this.open = 1; this.blinkT = -1; const [a, b] = this.p.blinkEvery; this.blinkAt = t + a + R() * (b - a); }
+        const p = this.blinkT / 0.15;
+        this.open = p < 1 ? 1 - p : p < 2.4 ? (p - 1) / 1.4 : 1;
+        if (p >= 2.4) { this.open = 1; this.blinkT = -1; const [a, b] = this.p.blinkEvery; this.blinkAt = t + a + R() * (b - a); }
       }
     }
   }
 
   render() {
     const x = this.x, W = this.W, H = this.H, R = this.R;
-    const cx = W / 2 + this.gx, cy = H / 2 + 8 + this.gy;
+    const cx = W / 2 + this.gx, cy = H / 2 + 10 + this.gy;
     x.globalCompositeOperation = 'source-over';
     x.globalAlpha = 1;
-    x.drawImage(this.sclera, this.gx * 0.4 - 30, this.gy * 0.4 - 30);
+
+    // göz küresi
+    x.drawImage(this.sclera, this.gx * 0.45 - 40, this.gy * 0.45 - 40);
+    // irisin etrafındaki hafif gölge (kornea kenarı)
+    let g = x.createRadialGradient(cx, cy, R * 0.96, cx, cy, R * 1.25);
+    g.addColorStop(0, 'rgba(60,40,30,0.35)'); g.addColorStop(1, 'rgba(60,40,30,0)');
+    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R * 1.25, 0, TAU); x.fill();
     x.drawImage(this.iris, cx - R, cy - R, R * 2, R * 2);
-    const pr = R * clamp(this.pupilMM / IRIS_MM, 0.12, 0.8);
-    let g = x.createRadialGradient(cx, cy, pr * 0.85, cx, cy, pr * 1.22);
-    g.addColorStop(0, 'rgba(8,5,3,1)'); g.addColorStop(0.5, 'rgba(48,28,10,.6)'); g.addColorStop(1, 'rgba(48,28,10,0)');
-    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, pr * 1.22, 0, TAU); x.fill();
-    x.fillStyle = '#040303'; x.beginPath(); x.arc(cx, cy, pr * 0.92, 0, TAU); x.fill();
-    // kornea parlaması
-    g = x.createRadialGradient(cx - R * 0.35, cy - R * 0.4, 0, cx, cy, R * 1.1);
-    g.addColorStop(0, 'rgba(255,255,255,.12)'); g.addColorStop(1, 'rgba(255,255,255,0)');
-    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R, 0, TAU); x.fill();
-    x.save(); x.translate(cx - R * 0.2, cy - R * 0.48); x.rotate(-0.1);
-    x.fillStyle = 'rgba(255,255,248,.78)'; rr(x, -R * 0.25, -R * 0.04, R * 0.5, R * 0.08, R * 0.04); x.fill();
+
+    // göz bebeği + kenar fırfırı
+    const pr = R * clamp(this.pupilMM / IRIS_MM, 0.12, 0.72);
+    x.fillStyle = 'rgba(52,30,14,0.85)';
+    x.beginPath();
+    for (let i = 0; i <= 64; i++) {
+      const a = (i / 64) * TAU, rr2 = pr * (1.07 + 0.05 * (this.ruff[i % 64] - 1));
+      const px = cx + Math.cos(a) * rr2, py = cy + Math.sin(a) * rr2;
+      i ? x.lineTo(px, py) : x.moveTo(px, py);
+    }
+    x.fill();
+    g = x.createRadialGradient(cx, cy, pr * 0.7, cx, cy, pr * 1.02);
+    g.addColorStop(0, '#020101'); g.addColorStop(0.85, '#050302'); g.addColorStop(1, 'rgba(20,10,4,0.9)');
+    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, pr, 0, TAU); x.fill();
+
+    // kornea: genel parlaklık
+    g = x.createRadialGradient(cx - R * 0.4, cy - R * 0.45, 0, cx, cy, R * 1.15);
+    g.addColorStop(0, 'rgba(255,255,255,0.16)'); g.addColorStop(0.5, 'rgba(255,255,255,0.03)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R * 1.05, 0, TAU); x.fill();
+
+    // korneada pencere yansıması (dört bölmeli parlak şerit, kavisli)
+    const wx = cx - R * 0.18, wy = cy - R * 0.5, ww = R * 0.82, wh = R * 0.15;
+    x.save();
+    x.translate(wx, wy); x.rotate(-0.08);
+    g = x.createRadialGradient(0, 0, 0, 0, 0, ww * 0.75);
+    g.addColorStop(0, 'rgba(240,255,250,0.35)'); g.addColorStop(1, 'rgba(240,255,250,0)');
+    x.fillStyle = g; x.fillRect(-ww, -wh * 3, ww * 2, wh * 6);
+    x.beginPath();
+    x.moveTo(-ww / 2, -wh / 2 + 3);
+    x.quadraticCurveTo(0, -wh / 2 - 8, ww / 2, -wh / 2 + 3);
+    x.lineTo(ww / 2 - 4, wh / 2);
+    x.quadraticCurveTo(0, wh / 2 - 7, -ww / 2 + 4, wh / 2);
+    x.closePath();
+    x.fillStyle = 'rgba(252,255,250,0.92)'; x.fill();
+    x.fillStyle = 'rgba(40,52,52,0.55)';
+    for (let i = 1; i < 4; i++) x.fillRect(-ww / 2 + (ww * i) / 4 - 1.5, -wh / 2 - 4, 3, wh + 6);
     x.restore();
-    x.fillStyle = 'rgba(255,255,250,.8)'; x.beginPath(); x.arc(cx + R * 0.36, cy - R * 0.18, R * 0.026, 0, TAU); x.fill();
+    // küçük ikinci parlama
+    x.fillStyle = 'rgba(255,255,250,0.85)';
+    x.beginPath(); x.arc(cx + R * 0.42, cy + R * 0.22, R * 0.03, 0, TAU); x.fill();
 
     // göz kapakları
-    const op = this.open, yE = cy + R * 0.04, xL = cx - R * 1.95, xR = cx + R * 1.95;
-    const yU = lerp(cy + R * 0.16, cy - R * 0.92, op), yL = lerp(cy + R * 0.2, cy + R * 1.02, op);
-    const A = [xR, yE], CU = [cx, 2 * yU - yE], B = [xL, yE], CL = [cx, 2 * yL - yE];
+    const op = this.open, yE = cy + R * 0.06, xL = cx - R * 2.1, xR = cx + R * 2.1;
+    const yU = lerp(cy + R * 0.2, cy - R * 0.95, op), yL = lerp(cy + R * 0.24, cy + R * 1.04, op);
+    const A = [xR, yE], CU = [cx - R * 0.15, 2 * yU - yE], B = [xL, yE + R * 0.08], CL = [cx + R * 0.1, 2 * yL - yE];
     const [skinA, skinB] = this.p.skin;
-    g = x.createLinearGradient(0, yU, 0, yU + R * 0.55);
-    g.addColorStop(0, 'rgba(25,12,6,.6)'); g.addColorStop(1, 'rgba(25,12,6,0)');
-    x.fillStyle = g; x.fillRect(0, yU - R * 0.2, W, R * 0.8);
-    x.beginPath(); x.moveTo(-20, -20); x.lineTo(W + 20, -20); x.lineTo(A[0], A[1]); x.quadraticCurveTo(CU[0], CU[1], B[0], B[1]); x.closePath();
-    g = x.createLinearGradient(0, yU - R * 1.1, 0, yU); g.addColorStop(0, skinB); g.addColorStop(0.7, skinA); g.addColorStop(1, skinA);
-    x.fillStyle = g; x.fill();
-    x.strokeStyle = '#160c08'; x.lineWidth = 8; x.beginPath(); x.moveTo(A[0], A[1]); x.quadraticCurveTo(CU[0], CU[1], B[0], B[1]); x.stroke();
-    x.strokeStyle = 'rgba(18,10,7,.88)'; x.lineCap = 'round';
+
+    // üst kapağın göz küresine düşen gölgesi
+    g = x.createLinearGradient(0, yU - R * 0.05, 0, yU + R * 0.6);
+    g.addColorStop(0, 'rgba(20,10,6,0.85)'); g.addColorStop(0.4, 'rgba(20,10,6,0.35)'); g.addColorStop(1, 'rgba(20,10,6,0)');
+    x.fillStyle = g;
+    x.beginPath(); x.moveTo(A[0], A[1]); x.quadraticCurveTo(CU[0], CU[1] + R * 0.5, B[0], B[1]); x.lineTo(B[0], B[1] - R * 2); x.lineTo(A[0], A[1] - R * 2); x.closePath(); x.fill();
+
+    // iç köşe (karunkül)
+    const kx = B[0] + R * 0.3, ky = B[1] + R * 0.0;
+    g = x.createRadialGradient(kx, ky, 0, kx, ky, R * 0.32);
+    g.addColorStop(0, 'rgba(200,118,108,0.6)'); g.addColorStop(0.6, 'rgba(180,100,92,0.3)'); g.addColorStop(1, 'rgba(180,100,92,0)');
+    x.fillStyle = g; x.beginPath(); x.ellipse(kx, ky, R * 0.24, R * 0.16 * Math.max(0.2, op), 0, 0, TAU); x.fill();
+
+    // üst kapak
+    const upper = new Path2D();
+    upper.moveTo(-40, -40); upper.lineTo(W + 40, -40); upper.lineTo(A[0], A[1]);
+    upper.quadraticCurveTo(CU[0], CU[1], B[0], B[1]); upper.closePath();
+    g = x.createLinearGradient(0, yU - R * 1.3, 0, yU);
+    g.addColorStop(0, skinB); g.addColorStop(0.55, skinA); g.addColorStop(1, skinA);
+    x.fillStyle = g; x.fill(upper);
+    // kapak kıvrımı (kırışık çizgisi)
+    const crease = R * (0.3 + 0.18 * op);
+    x.strokeStyle = 'rgba(45,20,12,0.55)'; x.lineWidth = 7;
+    x.beginPath(); x.moveTo(A[0] - R * 0.2, A[1] - crease * 0.9); x.quadraticCurveTo(CU[0], CU[1] - crease * 1.15, B[0] + R * 0.3, B[1] - crease * 0.8); x.stroke();
+    x.strokeStyle = 'rgba(255,215,190,0.18)'; x.lineWidth = 5;
+    x.beginPath(); x.moveTo(A[0] - R * 0.2, A[1] - crease * 0.9 - 7); x.quadraticCurveTo(CU[0], CU[1] - crease * 1.15 - 7, B[0] + R * 0.3, B[1] - crease * 0.8 - 7); x.stroke();
+    // cilt dokusu
+    x.save(); x.clip(upper);
+    x.globalCompositeOperation = 'overlay'; x.globalAlpha = 0.35; x.drawImage(this.skin, 0, 0);
+    x.restore();
+    // kapak kenarı (ıslak, pembe)
+    x.strokeStyle = 'rgba(150,70,58,0.95)'; x.lineWidth = 9;
+    x.beginPath(); x.moveTo(A[0], A[1]); x.quadraticCurveTo(CU[0], CU[1], B[0], B[1]); x.stroke();
+    x.strokeStyle = '#1c0d08'; x.lineWidth = 4;
+    x.beginPath(); x.moveTo(A[0], A[1] + 3); x.quadraticCurveTo(CU[0], CU[1] + 3, B[0], B[1] + 3); x.stroke();
+    // kirpikler
+    x.lineCap = 'round';
     for (const Ls of this.lash) {
       const P = qP(A, CU, B, Ls.u), T = qT(A, CU, B, Ls.u);
       let nx = T[1], ny = -T[0]; const m = Math.hypot(nx, ny) || 1; nx /= m; ny /= m; if (ny > 0) { nx = -nx; ny = -ny; }
-      const len = Ls.len * (0.4 + 0.6 * op), sx = (P[0] - cx) / R * 0.35;
-      x.lineWidth = Ls.w; x.beginPath(); x.moveTo(P[0], P[1]);
-      x.quadraticCurveTo(P[0] + nx * len * 0.45 + sx * len * 0.3, P[1] + ny * len * 0.45 + len * 0.28, P[0] + nx * len + sx * len, P[1] + ny * len + len * 0.05);
+      const len = Ls.len * (0.45 + 0.55 * op), sx = (P[0] - cx) / R * 0.3 + Ls.jit;
+      x.strokeStyle = `rgba(14,8,5,${0.75 + Ls.w * 0.08})`;
+      x.lineWidth = Ls.w;
+      x.beginPath(); x.moveTo(P[0], P[1] + 2);
+      x.quadraticCurveTo(P[0] + nx * len * 0.5 + sx * len * 0.3, P[1] + ny * len * 0.5 + len * Ls.curl, P[0] + nx * len + sx * len, P[1] + ny * len + len * 0.1);
       x.stroke();
     }
-    x.beginPath(); x.moveTo(-20, H + 20); x.lineTo(W + 20, H + 20); x.lineTo(A[0], A[1] + 4); x.quadraticCurveTo(CL[0], CL[1], B[0], B[1] + 4); x.closePath();
-    g = x.createLinearGradient(0, yL, 0, yL + R * 0.9); g.addColorStop(0, '#a97464'); g.addColorStop(0.3, '#87584a'); g.addColorStop(1, '#4d2d23');
-    x.fillStyle = g; x.fill();
-    x.strokeStyle = 'rgba(214,150,140,.85)'; x.lineWidth = 7; x.beginPath(); x.moveTo(A[0], A[1] + 2); x.quadraticCurveTo(CL[0], CL[1] - 2, B[0], B[1] + 2); x.stroke();
-    x.strokeStyle = 'rgba(30,16,10,.75)';
+
+    // alt kapak
+    const lower = new Path2D();
+    lower.moveTo(-40, H + 40); lower.lineTo(W + 40, H + 40); lower.lineTo(A[0], A[1] + 4);
+    lower.quadraticCurveTo(CL[0], CL[1], B[0], B[1] + 4); lower.closePath();
+    g = x.createLinearGradient(0, yL, 0, yL + R * 1.1);
+    g.addColorStop(0, '#b47f6c'); g.addColorStop(0.25, skinA); g.addColorStop(1, skinB);
+    x.fillStyle = g; x.fill(lower);
+    x.save(); x.clip(lower);
+    x.globalCompositeOperation = 'overlay'; x.globalAlpha = 0.3; x.drawImage(this.skin, 0, 0);
+    x.restore();
+    // ıslak su çizgisi
+    x.strokeStyle = 'rgba(225,160,148,0.95)'; x.lineWidth = 7;
+    x.beginPath(); x.moveTo(A[0], A[1] + 3); x.quadraticCurveTo(CL[0], CL[1] - 3, B[0], B[1] + 3); x.stroke();
+    x.strokeStyle = 'rgba(255,245,240,0.7)'; x.lineWidth = 1.6;
+    x.beginPath(); x.moveTo(A[0] - R * 0.3, A[1] + 1); x.quadraticCurveTo(CL[0], CL[1] - 5, B[0] + R * 0.6, B[1] + 1); x.stroke();
+    x.strokeStyle = 'rgba(30,16,10,0.75)';
     for (const Ls of this.llash) {
-      const P = qP([A[0], A[1] + 4], CL, [B[0], B[1] + 4], Ls.u);
-      x.lineWidth = Ls.w; x.beginPath(); x.moveTo(P[0], P[1] + 4); x.lineTo(P[0] + (P[0] - cx) / R * Ls.len * 0.5, P[1] + 4 + Ls.len); x.stroke();
+      const P = qP([A[0], A[1] + 6], CL, [B[0], B[1] + 6], Ls.u);
+      x.lineWidth = Ls.w; x.beginPath(); x.moveTo(P[0], P[1] + 3); x.lineTo(P[0] + (P[0] - cx) / R * Ls.len * 0.5, P[1] + 3 + Ls.len); x.stroke();
     }
     x.lineCap = 'butt';
 
@@ -194,7 +311,7 @@ export class Eye {
     }
 
     // ekran üstü işaretler
-    x.strokeStyle = 'rgba(210,255,230,0.35)'; x.lineWidth = 2;
+    x.strokeStyle = 'rgba(210,255,230,0.32)'; x.lineWidth = 2;
     const m = 26, l = 34;
     for (const [px, py, sx, sy] of [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]]) {
       x.beginPath(); x.moveTo(px, py + sy * l); x.lineTo(px, py); x.lineTo(px + sx * l, py); x.stroke();

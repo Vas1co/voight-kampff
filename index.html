@@ -10,6 +10,9 @@
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
 
+  <!-- seçenekler görünürken alttaki karartma -->
+  <div id="shade" aria-hidden="true"></div>
+
   <!-- sinema bantları ve kararma -->
   <div id="bars" aria-hidden="true"><i class="bar top"></i><i class="bar bottom"></i></div>
   <div id="fade" aria-hidden="true"></div>
@@ -32,8 +35,11 @@
     </div>
   </header>
 
-  <!-- yönlendirme satırı (amir talimatı) -->
-  <p id="hint" aria-live="polite" hidden></p>
+  <!-- cevap seçenekleri ve süre -->
+  <div id="answer">
+    <div id="choices" role="group"></div>
+    <div id="timer" aria-hidden="true"><i></i></div>
+  </div>
 
   <!-- altyazılar -->
   <div id="subtitles" aria-live="polite" aria-atomic="true">
@@ -41,12 +47,8 @@
     <p id="sub-line"></p>
   </div>
 
-  <!-- kontrol paneli (DOM; klavye ve ekran okuyucu ile kullanılabilir) -->
-  <section id="deck" hidden></section>
-
-  <!-- kâğıtlar: vaka dosyası ve rapor -->
-  <div id="casefile" class="paper-layer" role="dialog" aria-modal="true" aria-labelledby="casefile-title" hidden></div>
-  <aside id="report" class="paper-layer" role="dialog" aria-labelledby="report-title" hidden></aside>
+  <!-- sonuç raporu -->
+  <div id="result" role="dialog" aria-labelledby="result-title" hidden></div>
 
   <!-- sahne başlıkları -->
   <div id="titlecard" aria-live="polite"></div>

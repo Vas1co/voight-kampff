@@ -1,0 +1,24 @@
+{
+  "id": "player",
+  "number": "04",
+  "vitals": {
+    "resp": 14.0,
+    "pulse": 72,
+    "blush": 24.0,
+    "pupil": 3.6,
+    "particles": 400
+  },
+  "machine": {
+    "initialDrift": 1.5,
+    "driftRate": 0.35,
+    "hiddenDrift": 0.6,
+    "anomalyRate": 0.06
+  },
+  "eye": {
+    "seed": 23,
+    "iris": ["#5a3818", "#a07436", "#8c7a44", "#636443", "#17160d"],
+    "fleck": "#ead08a",
+    "skin": ["#a8705c", "#4a2a20"],
+    "blinkEvery": [3.5, 7.5]
+  }
+}
