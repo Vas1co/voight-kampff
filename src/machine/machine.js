@@ -5,7 +5,7 @@ import { textureOr } from '../core/assets.js';
 import { litMaterial, glowMaterial, crtUniforms } from '../fx/materials.js';
 import { crtMaterial } from '../fx/shaders/crt.js';
 import { BODY, L, rectLocal, toLocal } from './layout.js';
-import { paintBody, paintKey } from './body.js';
+import { paintBody, paintKey, SCHEME } from './body.js';
 import { Crt } from './crt.js';
 import { LeftMonitor, RightMonitor, LedBar } from './gauges.js';
 import { Bellows } from './bellows.js';
@@ -40,7 +40,7 @@ export class Machine {
 
     // gövde
     const bodyTex = textureOr('images/room', 'machine', paintBody);
-    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: '#fff0d6' });
+    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: SCHEME.tint });
     this.body = new THREE.Mesh(new THREE.PlaneGeometry(BODY.worldW, BODY.worldH), this.bodyMat);
     this.group.add(this.body);
 
@@ -72,12 +72,12 @@ export class Machine {
     place(new THREE.Mesh(new THREE.PlaneGeometry(ledr.w, ledr.h), this.ledMat), L.led);
 
     // körük
-    this.bellows = new Bellows();
+    this.bellows = new Bellows(L.bellows.w, L.bellows.h);
     const br = rectLocal(L.bellows);
-    this.bellowsMat = litMaterial(this.bellows.texture, { ambient: 0.75, beam: 0.9, crt: 0.6, alphaTest: 0.02 });
+    this.bellowsMat = litMaterial(this.bellows.texture, { ambient: 0.7, beam: 0.3, crt: 0.5, alphaTest: 0.02 });
     this.bellowsMesh = new THREE.Mesh(new THREE.PlaneGeometry(br.w, br.h), this.bellowsMat);
     place(this.bellowsMesh, L.bellows, -0.002);
-    this.intakeLocal = toLocal(L.bellows.x + L.bellows.w / 2, L.bellows.y + 40);
+    this.intakeLocal = toLocal(L.intake.x, L.intake.y);
 
     // tuşlar
     const kw = (L.keySize.w / BODY.W) * BODY.worldW, kh = (L.keySize.h / BODY.H) * BODY.worldH;

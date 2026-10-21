@@ -272,7 +272,7 @@
   },
   "dev": {
     "exportTitle": "Dokular dışa aktarılıyor…",
-    "exportDone": "Bitti: {n} dosya tasarim/ klasörüne yazıldı.",
+    "exportDone": "Bitti: {n} yazıldı, {s} atlandı (zaten var), {k} yazılamadı (dosya açık/kilitli olabilir).",
     "exportFail": "Dışa aktarma başarısız: {msg}",
     "guide": {
       "crt": "ANA CRT — göz burada görünür (koyu bırak)",

@@ -8,7 +8,10 @@ export const L = {
   right: { x: 1456, y: 612, w: 488, h: 372 },
   crt: { x: 744, y: 472, w: 560, h: 420 },
   led: { x: 772, y: 384, w: 504, h: 30 },
-  bellows: { x: 864, y: 36, w: 320, h: 300 },
+  // yelpaze körük: sağda menteşe, plakalar sola doğru açılır (orta modülün üstünde)
+  // (körük ayrı katmandır; gövde tuvalinin üstüne taşabilir, y negatif olabilir)
+  bellows: { x: 480, y: -260, w: 880, h: 610 },
+  intake: { x: 740, y: 20 },
   keys: [{ x: 1326, y: 760 }, { x: 1326, y: 830 }, { x: 1326, y: 900 }],
   keySize: { w: 52, h: 50 },
   alarm: { x: 128, y: 1046, w: 300, h: 34 },
