@@ -13,3 +13,4 @@ Thumbs.db
 
 # Dışa aktarılan düzenlenebilir dokular (yeniden üretilebilir: /?disa-aktar)
 /tasarim/**/*.png
+/tasarim/.aktarim.json
