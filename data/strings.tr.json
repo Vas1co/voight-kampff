@@ -1,0 +1,502 @@
+{
+  "brand": {
+    "testName": "Voight-Kampff",
+    "gameTitle": "SAPMA",
+    "unit": "Sorgu Birimi 4",
+    "era": "Kasım 2019",
+    "machine": "EMPATİ ANALİZ ÜNİTESİ",
+    "model": "MK·VI",
+    "generation": "6. kuşak"
+  },
+  "title": {
+    "kicker": "Empati ölçüm birimi · {era}",
+    "note": "Makine yalan ölçmez. Empatiyi ölçer. Hüküm vermez: yalnızca sapmayı gösterir. Kararı sen verirsin.",
+    "homage": "{test} testine saygıyla",
+    "start": "Başla",
+    "continue": "Devam et",
+    "settings": "Ayarlar",
+    "hint": "Kulaklık önerilir. Ses, Başla'ya bastığında açılır."
+  },
+  "hud": {
+    "rec": "KAYIT",
+    "subject": "DENEK {n}",
+    "question": "SORU",
+    "baseline": "TEMEL",
+    "sound": "SES",
+    "soundOn": "AÇIK",
+    "soundOff": "KAPALI",
+    "settings": "AYARLAR"
+  },
+  "speakers": {
+    "officer": "",
+    "subject": "DENEK",
+    "intercom": "HOPARLÖR"
+  },
+  "controls": {
+    "deck": "Kontrol paneli",
+    "cards": "SORU KARTLARI",
+    "cardCount": "{n} SORU",
+    "cardUsed": "SORULDU",
+    "test": "TEST",
+    "on": "AÇIK",
+    "off": "KAPALI",
+    "calib": "KALİBRASYON",
+    "calibAria": "Kalibrasyon kadranı",
+    "cassette": "KASET",
+    "rec": "KAYIT",
+    "pause": "ARA VER",
+    "next": "SÜRDÜR",
+    "press": "ÜSTÜNE GİT",
+    "stress": "GERGİNLİK",
+    "report": "RAPOR",
+    "file": "DOSYA",
+    "locked": "Önce kurulum",
+    "hintPrefix": "»"
+  },
+  "themes": {
+    "hayvan": "HAYVAN",
+    "aile": "AİLE",
+    "beden": "BEDEN",
+    "ani": "ANI",
+    "notr": "NÖTR"
+  },
+  "forms": {
+    "dogrudan": "doğrudan",
+    "varsayim": "varsayım",
+    "dolayli": "dolaylı",
+    "ani": "anı",
+    "notr": "nötr"
+  },
+  "pairs": {
+    "yavru": "Korunmasız yavru",
+    "bedel": "Kendi çıkarına karşı yardım",
+    "iz": "Geride kalan iz",
+    "ebeveyn": "Ebeveynin kırılganlığı",
+    "kayip": "Bir yakının kaybı",
+    "yara": "Bedenin incinmesi",
+    "ani": "Çocukluk anısı"
+  },
+  "channels": {
+    "resp": "SOLUNUM",
+    "pulse": "NABIZ",
+    "blush": "KIZARMA",
+    "pupil": "GÖZ BEBEĞİ",
+    "latency": "TEPKİ SÜRESİ",
+    "particles": "PARÇACIK",
+    "onset": "BEBEK GECİKMESİ"
+  },
+  "units": {
+    "resp": "n/dk",
+    "pulse": "at/dk",
+    "pct": "%",
+    "sec": "sn",
+    "mm": "mm",
+    "ppm": "ppm"
+  },
+  "machine": {
+    "baseline": "TEMEL",
+    "deviation": "SAPMA",
+    "anomaly": "ANOMALİ",
+    "sampling": "ÖRNEKLEME",
+    "idle": "BEKLEMEDE",
+    "off": "KAPALI",
+    "warming": "ISINIYOR",
+    "bellows": "KÖRÜK ÇEKİŞİ",
+    "noBaseline": "TEMEL YOK",
+    "calib": "KAL",
+    "channel": "KNL",
+    "focus": "ODAK",
+    "panelLeft": "SOLUNUM · NABIZ",
+    "panelRight": "TEPKİ ANALİZİ",
+    "stress": "GERG",
+    "rec": "KYT"
+  },
+  "casefile": {
+    "title": "VAKA DOSYASI",
+    "close": "Dosyayı kapat",
+    "open": "Dosya",
+    "unit": "{unit} · {era}",
+    "order": "TALİMAT",
+    "observation": "GÖZLEM",
+    "attachment": "EK: kimlik fotoğrafı yok"
+  },
+  "report": {
+    "title": "SORGU RAPORU",
+    "open": "Rapor",
+    "close": "Raporu kapat",
+    "subject": "Denek",
+    "operator": "Memur",
+    "operatorName": "Sicil 4-117",
+    "date": "Tarih",
+    "baselineTitle": "TEMEL ÖLÇÜM",
+    "readingsTitle": "OKUMALAR (temele göre sapma)",
+    "cols": {
+      "n": "No",
+      "q": "Kart · biçim",
+      "pupil": "Gz%",
+      "onset": "Gec",
+      "blush": "Kız%",
+      "pulse": "Nbz",
+      "resp": "Sol",
+      "latency": "Tps",
+      "particles": "Prt%",
+      "note": "Not"
+    },
+    "pressed": "+bastırma",
+    "anomaly": "ANOMALİ",
+    "empty": "Henüz okuma yok. Bir kart seç.",
+    "noBaseline": "Temel ölçüm alınmadı.",
+    "notes": [
+      "—",
+      "Tutarlı",
+      "Tutarsız",
+      "Gecikmeli",
+      "Düz",
+      "Güçlü",
+      "Şüpheli",
+      "Kayma?"
+    ],
+    "noteAria": "Not seç",
+    "freeNote": "Serbest not",
+    "freeNotePlaceholder": "Gözlemini yaz…",
+    "crossTitle": "ÇAPRAZ REFERANS",
+    "crossHint": "Aynı duygusal çekirdek, farklı biçimlerde. Makine yorum yapmaz.",
+    "crossEmpty": "Aynı çekirdeğe ait ikinci okuma henüz yok.",
+    "crossSpread": "Gz aralığı",
+    "decisionTitle": "KARAR",
+    "decisionHint": "Makine hüküm vermez. Damgayı sen vurursun.",
+    "decisionLocked": "Karar için en az {n} soru gerekli ({k} soruldu).",
+    "stampHuman": "İNSAN",
+    "stampReplicant": "REPLİKANT",
+    "stampUnsure": "BELİRSİZ",
+    "confirm": "Emin misin? Damga geri alınamaz. Onaylamak için tekrar bas.",
+    "stamped": "DAMGALANDI",
+    "breakNote": "SORGU YARIDA KESİLDİ"
+  },
+  "settings": {
+    "title": "AYARLAR",
+    "audio": "SES",
+    "master": "Genel",
+    "music": "Müzik",
+    "sfx": "Efektler",
+    "ambience": "Ortam",
+    "voice": "Seslendirme",
+    "mute": "Sesi kapat",
+    "display": "GÖRÜNTÜ",
+    "reduceMotion": "Hareketi azalt",
+    "quality": "Görüntü kalitesi",
+    "qualityLow": "Düşük",
+    "qualityHigh": "Yüksek",
+    "subSize": "Altyazı boyutu",
+    "subNormal": "Normal",
+    "subLarge": "Büyük",
+    "subtitlesAlways": "Altyazılar her zaman açıktır.",
+    "keysTitle": "KLAVYE",
+    "keys": [
+      [
+        "1–6",
+        "kart seç"
+      ],
+      [
+        "Enter",
+        "sürdür"
+      ],
+      [
+        "B",
+        "üstüne git"
+      ],
+      [
+        "P",
+        "ara ver"
+      ],
+      [
+        "← →",
+        "kalibrasyon"
+      ],
+      [
+        "C",
+        "kaset"
+      ],
+      [
+        "T",
+        "test şalteri"
+      ],
+      [
+        "R",
+        "rapor"
+      ],
+      [
+        "D",
+        "vaka dosyası"
+      ],
+      [
+        "Boşluk",
+        "altyazıyı geç"
+      ],
+      [
+        "Esc",
+        "ayarlar / kapat"
+      ]
+    ],
+    "reset": "Kaydı sil ve baştan başla",
+    "resetConfirm": "Emin misin? Tekrar bas.",
+    "close": "Kapat",
+    "qualityNote": "Kalite değişikliği bir sonraki açılışta uygulanır."
+  },
+  "chapter": {
+    "1": {
+      "kicker": "Birinci denek",
+      "title": "Eğitim sorgusu"
+    },
+    "end": "BÖLÜM SONU",
+    "next": "İkinci denek hazırlanıyor.",
+    "demoEnd": "Deneme bölümü burada bitiyor.",
+    "replay": "Baştan oyna",
+    "fileClosed": "DOSYA KAPANDI"
+  },
+  "lines": {
+    "intro": {
+      "card1": "{unit}",
+      "card2": "{era}"
+    },
+    "tutorial": {
+      "welcome": "Yeni memur sen misin? İyi. Bugün eğitim sorgusu yapacaksın. Ben buradan dinliyorum.",
+      "readFile": "Önce dosyaya bak. Masanın solunda.",
+      "cassette": "Kaseti çalıştır. Odada söylenen her şey kayda girer.",
+      "switch": "Şimdi TEST şalterini indir.",
+      "calibrate": "Makine ısınırken kalibrasyon iğnesine bak. Kadranla ortala.",
+      "calibrateDone": "Tamam. Tam sıfırlanmaz zaten. Hiçbir zaman.",
+      "baseline": "Önce temel ölçüm. Sıradan sorular. Makine onun normalini öğrenecek.",
+      "baselineDone": "Temel alındı. Bundan sonra ekranlardaki her şey bu temele göre sapma.",
+      "pickCard": "Bir kart seç. Her kartta dört soru var. Göz bebeğine bak: ne kadar açıldığı kadar, ne zaman açıldığı da önemli.",
+      "afterAnswer": "Hazır olduğunda sürdür. Cevabı yetmediyse üstüne gidebilirsin. Ama her bastırış gerginliği artırır.",
+      "report": "Raporu aç. Okumalar oraya yazılıyor. Notunu düş.",
+      "crossref": "Aynı duygu başka bir kartta, başka bir biçimde yine çıkacak. Raporun altındaki çapraz referansa bak. Tek okumaya değil, tutarlılığa bak.",
+      "stress": "Gerginlik yükseliyor. Fazla bastırırsan kopar. Gerekirse ara ver.",
+      "drift": "İğne yine kaydı. Bu makineye tamamen güvenme.",
+      "anomaly": "Kırmızı bir anomali gördün mü? Bazen makine kendi kendine görür. Not al, geç.",
+      "enough": "Karar verecek kadar verin var. İstersen devam et. Hazır olduğunda raporu damgala.",
+      "decided": "Kararı sen verdin. Makine değil."
+    },
+    "officer": {
+      "sit": "Otur lütfen.",
+      "explain": "Birkaç soru soracağım. Bazıları tuhaf gelebilir. Aklına ilk geleni söyle.",
+      "eye": "Şu kola bakma. Sadece bana bak.",
+      "baselineStart": "Kolay sorularla başlayalım.",
+      "cardIntro": "Şimdi bir şey anlatacağım. Kendini orada düşün.",
+      "pause": "Bir dakika ara verelim.",
+      "pauseOffer": "Su ister misin?",
+      "resume": "Devam edelim.",
+      "end": "Teşekkürler. Bu kadarı yeterli.",
+      "press": [
+        "Cevap bu değil. Bir daha düşün.",
+        "Gözlerini kaçırma. Aynı soruyu soruyorum.",
+        "Acele etme. Ama kaçma da.",
+        "Orada olduğunu düşün. Gerçekten orada."
+      ]
+    }
+  },
+  "questions": {
+    "b01": "Adını ve doğum tarihini söyle.",
+    "b02": "Bu sabah ne yedin?",
+    "b03": "Buraya nasıl geldin?",
+    "b04": "Odadaki ışık gözünü rahatsız ediyor mu?",
+    "k01a": [
+      "Kırsalda, toprak bir yolda yürüyorsun.",
+      "Eski bir kuyunun dibinden ince bir miyavlama geliyor. Kuyu derin, ip yok."
+    ],
+    "k01b": [
+      "Yanında bir kova ve uzun bir kablo var.",
+      "Yarım saat uğraşırsan yavruyu çıkarabilirsin. Ama son otobüs beş dakika sonra kalkıyor."
+    ],
+    "k01c": [
+      "Ertesi sabah aynı yoldan geçiyorsun.",
+      "Kuyudan hiç ses gelmiyor."
+    ],
+    "k01d": [
+      "Kuyunun ağzında küçük, çamurlu pati izleri var.",
+      "Taşın üstünde, yarıda bitiyorlar."
+    ],
+    "k02a": [
+      "Çocuksun. Bir pazar sabahı uyanıyorsun.",
+      "Mutfaktan annenin sesi geliyor; bir şarkı mırıldanıyor."
+    ],
+    "k02b": [
+      "Mutfağa giriyorsun. Annen sırtı sana dönük, ağlıyor.",
+      "Seni görünce gözlerini siliyor ve gülümsüyor."
+    ],
+    "k02c": [
+      "Yıllar geçiyor. Annen artık seni tanımıyor.",
+      "Adını soruyor. Kibarca, bir yabancıya sorar gibi."
+    ],
+    "k02d": [
+      "Annenin eşyalarını topluyorsun.",
+      "Bir zarfın içinde senin süt dişlerini buluyorsun. Üzerinde onun el yazısıyla adın."
+    ],
+    "k03a": [
+      "Sabah tıraş oluyorsun.",
+      "Aynada, yüzünde daha önce hiç görmediğin ince bir yara izi fark ediyorsun."
+    ],
+    "k03b": [
+      "Kalabalık bir otobüstesin.",
+      "Yaşlı bir yabancı elini tutuyor. Avucu sıcak ve terli. Bırakmıyor."
+    ],
+    "k03c": [
+      "Küçük bir çocuk düşüp dizini kanatmış. Pansuman yapıyorsun.",
+      "Sana bakıp soruyor: Senin de canın acıyor mu?"
+    ],
+    "k03d": [
+      "Bir kazadan sonra uyanıyorsun.",
+      "Doktor sol elini kurtaramayabileceklerini söylüyor. Parmaklarını hâlâ hissediyorsun."
+    ],
+    "k04a": [
+      "Yedinci doğum günün.",
+      "Pastanın üstünde mumlar yanıyor. Kim üflüyor?"
+    ],
+    "k04b": [
+      "Aynı gün biri sana bir hediye veriyor.",
+      "Sen ağlamaya başlıyorsun. Neden?"
+    ],
+    "k04c": [
+      "Hediye, kafes içinde küçük bir muhabbet kuşu.",
+      "Bir sabah kafesin kapısını açık unutuyorsun. Pencere de açık."
+    ],
+    "k04d": [
+      "Babanın sana ilk kez sesini yükselttiği günü hatırla.",
+      "Nerede duruyordun?"
+    ],
+    "k05a": [
+      "Bir balıkçı teknesindesin.",
+      "Ağdan dökülen balıklardan biri güvertede çırpınıyor, ağzını açıp kapıyor."
+    ],
+    "k05b": [
+      "Ağın içinde bir yunus yavrusu var.",
+      "Annesi teknenin çevresinde dönüyor, kısa ve tiz sesler çıkarıyor."
+    ],
+    "k05c": [
+      "Kaptan, yavruyu kurtarmak için ağı kesersen",
+      "haftalık kazancın gideceğini söylüyor."
+    ],
+    "k05d": [
+      "Akşam limana dönüyorsunuz.",
+      "Anne yunus hâlâ teknenin arkasından geliyor."
+    ],
+    "k06a": [
+      "Gece yarısı telefon çalıyor.",
+      "Arayan bir hemşire. Kardeşin için arıyor."
+    ],
+    "k06b": [
+      "Hastaneye vardığında oda boş.",
+      "Yatağın üstünde onun katlanmış ceketi duruyor."
+    ],
+    "k06c": [
+      "Babanın cenazesindesin. Herkes ağlıyor.",
+      "Sen ağlayamıyorsun."
+    ],
+    "k06d": [
+      "Kardeşinin küçük oğlu elini tutuyor.",
+      "Annem ne zaman gelecek, diye soruyor."
+    ]
+  },
+  "cards": {
+    "k01": "Kuyu",
+    "k02": "Pazar sabahı",
+    "k03": "Ayna",
+    "k04": "Yedinci yaş",
+    "k05": "Ağ",
+    "k06": "Gece telefonu"
+  },
+  "subjects": {
+    "s1": {
+      "label": "DENEK 01",
+      "casefile": {
+        "rows": [
+          [
+            "Beyan edilen ad",
+            "Teo Varga"
+          ],
+          [
+            "Beyan edilen yaş",
+            "31"
+          ],
+          [
+            "Meslek",
+            "Yükleme işçisi, 4. rıhtım"
+          ],
+          [
+            "Yakını",
+            "Kız kardeşi M. Varga, kuzey bölgesi"
+          ],
+          [
+            "Gözaltı gerekçesi",
+            "Kimlik kartının seri numarası hiçbir kayıtla eşleşmiyor. İşe giriş belgesindeki referans kişi 2017'de ölmüş."
+          ]
+        ],
+        "observation": "Sakin. Fazla sakin. Göz teması kesintisiz. Bekleme odasında iki saat boyunca kıpırdamadı.",
+        "order": "Eğitim sorgusu. Kıdemli memur hoparlörden izleyecek. En az on iki soru."
+      },
+      "answers": {
+        "b01": "Teo Varga. On iki mart, seksen sekiz.",
+        "b02": "Ekmek. Çay.",
+        "b03": "Arabayla getirdiler.",
+        "b04": "Hayır.",
+        "k01a": "Kuyu ne kadar derin?",
+        "k01b": "Otobüse binerim. Bir sonraki yarın.",
+        "k01c": "Demek ki çıkmış.",
+        "k01d": "İzler kurur.",
+        "k02a": "Hangi şarkı?",
+        "k02b": "Soğan doğruyordu herhalde.",
+        "k02c": "Adımı söylerim. Teo.",
+        "k02d": "Dişleri atarım. Zarf sağlam, saklarım.",
+        "k03a": "Bir izdir.",
+        "k03b": "Elimi çekerim.",
+        "k03c": "Hayır. Onun dizi.",
+        "k03d": "Yenisini takarlar.",
+        "k04a": "Ben. Yedi mum.",
+        "k04b": "Ağlamadım.",
+        "k04c": "Kuş uçar. Kuşların işi bu.",
+        "k04d": "Kapının yanında. Ya da mutfakta. Fark etmez.",
+        "k05a": "Suya dönmek istiyor. Dönemez.",
+        "k05b": "Ne kadar eder?",
+        "k05c": "Ağı kesmem.",
+        "k05d": "Gürültü yapıyor.",
+        "k06a": "Kardeşim yok.",
+        "k06b": "Ceketi alırım. Bedenim tutar.",
+        "k06c": "Neden ağlayayım? Herkes ağlıyordu zaten.",
+        "k06d": "Bilmiyorum, derim. Doğrusu bu."
+      },
+      "press": [
+        "Aynı cevabı verdim.",
+        "Bunu zaten söyledim.",
+        "Ne duymak istiyorsun?",
+        "Soruyu tekrarlaman bir şeyi değiştirmiyor."
+      ],
+      "hostile": [
+        "Bu sorular ne için?",
+        "Bitirdin mi?",
+        "Bir daha sorarsan kalkarım.",
+        "Makineni kapat."
+      ],
+      "pause": "…",
+      "break": [
+        "Yeter.",
+        "Denek masayı itti. Sandalye geriye devrildi.",
+        "Güvenlik içeri girdi."
+      ],
+      "outcome": {
+        "replicant": [
+          "Denek iki görevliyle odadan çıkarıldı.",
+          "Kapıda bir an durdu, makineye baktı. Sonra yürüdü."
+        ],
+        "human": [
+          "Denek serbest bırakıldı.",
+          "Üç gün sonra dördüncü rıhtımda bir bekçi kayboldu. Kayıtlarda adı geçmiyordu."
+        ],
+        "unsure": [
+          "Denek ikinci incelemeye sevk edildi.",
+          "Sevk kuyruğu on dört gün. Bekleme hücreleri geceleri kilitli kalır. Çoğu zaman."
+        ]
+      }
+    }
+  }
+}

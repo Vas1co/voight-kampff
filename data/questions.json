@@ -1,0 +1,64 @@
+{
+  "baseline": [
+    { "id": "b01", "theme": "notr", "form": "notr", "provocation": 0.02 },
+    { "id": "b02", "theme": "notr", "form": "notr", "provocation": 0.02 },
+    { "id": "b03", "theme": "notr", "form": "notr", "provocation": 0.03 },
+    { "id": "b04", "theme": "notr", "form": "notr", "provocation": 0.02 }
+  ],
+  "cards": [
+    {
+      "id": "k01", "theme": "hayvan",
+      "subs": [
+        { "id": "k01a", "form": "dogrudan", "provocation": 0.55, "pair": "yavru" },
+        { "id": "k01b", "form": "varsayim", "provocation": 0.45, "pair": "bedel" },
+        { "id": "k01c", "form": "dolayli",  "provocation": 0.60, "pair": "iz" },
+        { "id": "k01d", "form": "dolayli",  "provocation": 0.70, "pair": "iz" }
+      ]
+    },
+    {
+      "id": "k02", "theme": "aile",
+      "subs": [
+        { "id": "k02a", "form": "ani",      "provocation": 0.40, "pair": "ebeveyn" },
+        { "id": "k02b", "form": "ani",      "provocation": 0.55, "pair": "ebeveyn" },
+        { "id": "k02c", "form": "varsayim", "provocation": 0.55, "pair": "ebeveyn" },
+        { "id": "k02d", "form": "dogrudan", "provocation": 0.65, "pair": "kayip" }
+      ]
+    },
+    {
+      "id": "k03", "theme": "beden",
+      "subs": [
+        { "id": "k03a", "form": "dogrudan", "provocation": 0.35, "pair": null },
+        { "id": "k03b", "form": "varsayim", "provocation": 0.45, "pair": null },
+        { "id": "k03c", "form": "dolayli",  "provocation": 0.60, "pair": "yara" },
+        { "id": "k03d", "form": "dogrudan", "provocation": 0.75, "pair": "yara" }
+      ]
+    },
+    {
+      "id": "k04", "theme": "ani",
+      "subs": [
+        { "id": "k04a", "form": "ani",      "provocation": 0.40, "pair": "ani" },
+        { "id": "k04b", "form": "ani",      "provocation": 0.50, "pair": "ani" },
+        { "id": "k04c", "form": "dolayli",  "provocation": 0.50, "pair": "yavru" },
+        { "id": "k04d", "form": "ani",      "provocation": 0.60, "pair": "ani" }
+      ]
+    },
+    {
+      "id": "k05", "theme": "hayvan",
+      "subs": [
+        { "id": "k05a", "form": "dogrudan", "provocation": 0.45, "pair": null },
+        { "id": "k05b", "form": "dogrudan", "provocation": 0.65, "pair": "yavru" },
+        { "id": "k05c", "form": "varsayim", "provocation": 0.50, "pair": "bedel" },
+        { "id": "k05d", "form": "dolayli",  "provocation": 0.70, "pair": "iz" }
+      ]
+    },
+    {
+      "id": "k06", "theme": "aile",
+      "subs": [
+        { "id": "k06a", "form": "dogrudan", "provocation": 0.50, "pair": "kayip" },
+        { "id": "k06b", "form": "varsayim", "provocation": 0.60, "pair": "kayip" },
+        { "id": "k06c", "form": "ani",      "provocation": 0.60, "pair": "ebeveyn" },
+        { "id": "k06d", "form": "dogrudan", "provocation": 0.80, "pair": "kayip" }
+      ]
+    }
+  ]
+}

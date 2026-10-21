@@ -1,0 +1,63 @@
+{
+  "id": "s1",
+  "number": "01",
+  "chapter": 1,
+  "kind": "replicant",
+  "tutorial": true,
+  "targetQuestions": 24,
+  "minQuestions": 12,
+  "baseline": ["b01", "b02", "b03", "b04"],
+  "cards": ["k01", "k02", "k03", "k04", "k05", "k06"],
+
+  "vitals": {
+    "resp": 13.0,
+    "pulse": 64,
+    "blush": 22.0,
+    "pupil": 3.4,
+    "latency": 1.1,
+    "particles": 410
+  },
+
+  "response": {
+    "empathy": 0.30,
+    "themeGain": { "hayvan": 1.0, "aile": 0.8, "beden": 0.9, "ani": 0.45, "notr": 0.0 },
+    "formGain": { "dogrudan": 0.9, "varsayim": 0.5, "dolayli": 0.25, "ani": 0.1, "notr": 0.0 },
+    "noise": 0.45,
+    "onset": [1.5, 2.5],
+    "latency": { "base": 2.2, "perProvocation": 0.05, "jitter": 0.12 },
+    "blushCoupling": 0.1,
+    "particleCoupling": 0.0,
+    "particleNoise": 9,
+    "stressPulse": 0.16,
+    "stressResp": 0.05
+  },
+
+  "stress": {
+    "start": 18,
+    "volatility": 1.15,
+    "pressExtra": 14,
+    "break": "attack"
+  },
+
+  "machine": {
+    "initialDrift": 4.0,
+    "driftRate": 0.5,
+    "hiddenDrift": 0.8,
+    "anomalyRate": 0.05
+  },
+
+  "eye": {
+    "seed": 11,
+    "iris": ["#4a3a1c", "#8a7a3a", "#7c8a4a", "#4c5a32", "#1a2010"],
+    "fleck": "#e8d488",
+    "skin": ["#7d4b3c", "#3a2119"],
+    "blinkEvery": [4.5, 9.0]
+  },
+
+  "silhouette": {
+    "build": "broad",
+    "x": 0.42,
+    "shoulder": 0.56,
+    "head": 0.115
+  }
+}
