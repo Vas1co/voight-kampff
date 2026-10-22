@@ -32,13 +32,15 @@ export const RENKLER = {
   griSari: { name: 'Orta gri · yanlar sarı', center: 'gri', sides: 'sari', arm: 'gri', terminal: true },
   siyah80: { name: 'Hepsi siyah', center: 'siyah', sides: 'siyah', arm: 'siyah', terminal: true },
   beyaz80: { name: 'Hepsi beyaz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true },
+  // gövde grafit, orta soluk metal gri, yanlar eskimiş bordo; fosforlu olmayan CRT yeşili, az amber
+  grafitBordo: { name: 'Grafit · metal gri · bordo', center: 'metal', sides: 'bordo', base: 'grafit', arm: 'metal', terminal: true, ink: '#54b99a', amber: '#d5ad63' },
   kirmizisiyah: { name: 'Orta kırmızı · yanlar siyah', center: 'kirmizi', sides: 'siyah', arm: 'kirmizi' },
   grisiyah: { name: 'Orta gri · yanlar siyah', center: 'gri', sides: 'siyah', arm: 'gri' },
 };
 const VARSAYILAN_RENK = 'kirmizi80';
 const fromUrl = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('renk') : null;
 export const RENK_NAME = RENKLER[fromUrl] ? fromUrl : VARSAYILAN_RENK;
-const RENK = RENKLER[RENK_NAME];
+export const RENK = RENKLER[RENK_NAME];
 
 // Yan modülün alt kısmındaki koyu bant (80'ler terminal); lambalar ve düğmeler üstünde.
 const TRIM_Y = 1030;
@@ -58,7 +60,7 @@ export default {
   L,
   key: RENK.terminal ? '#e6e2da' : PAL[RENK.center].key,
   paint(x, W, H, renk = RENK) {
-    const PB = PAL.siyah, PS = PAL[renk.sides], PC = PAL[renk.center], PA = PAL[renk.arm];
+    const PB = PAL[renk.base ?? 'siyah'], PS = PAL[renk.sides], PC = PAL[renk.center], PA = PAL[renk.arm];
     const T = !!renk.terminal;
     // koyu bant üstündeki yazılar her zaman açık renk
     const DARK = { ink: 'rgba(235,232,226,0.72)', inkHi: 'rgba(0,0,0,0.6)' };

@@ -4,6 +4,7 @@
 import { mk, rr } from '../scene/paint.js';
 import { BODY } from './layout.js';
 import mevcut from './kasalar/mevcut.js';
+import { AMBER_LIT } from './tema.js';
 
 export const KASA = mevcut;
 
@@ -16,7 +17,7 @@ export function paintBody(renk) {
 // Ön paneldeki üç tuş (biri amber yanar).
 export function paintKey(lit) {
   const c = mk(64, 64), x = c.getContext('2d');
-  x.fillStyle = lit ? '#ffd08e' : KASA.key;
+  x.fillStyle = lit ? AMBER_LIT : KASA.key;
   rr(x, 2, 2, 60, 60, 8); x.fill();
   x.fillStyle = 'rgba(40,40,36,0.35)';
   x.fillRect(2, 48, 60, 14);

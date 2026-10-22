@@ -5,6 +5,7 @@
 import * as THREE from 'three';
 import { mk, rr } from '../scene/paint.js';
 import { t } from '../core/strings.js';
+import { EKRAN } from './tema.js';
 
 const MONO = '"Plex Mono", ui-monospace, monospace';
 const MINUS = '−';
@@ -36,7 +37,7 @@ export class LeftMonitor {
   draw(s, dt) {
     const x = this.x, W = 512, H = 390;
     this.blink += dt;
-    const ink = '#8dffcf', dim = 'rgba(141,255,207,0.35)', faint = 'rgba(141,255,207,0.08)';
+    const ink = EKRAN.mon(), dim = EKRAN.mon(0.35), faint = EKRAN.mon(0.08);
     x.fillStyle = '#021110';
     x.fillRect(0, 0, W, H);
     x.strokeStyle = faint; x.lineWidth = 1;

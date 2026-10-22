@@ -8,6 +8,7 @@ import { crtMaterial } from '../fx/shaders/crt.js';
 import { BODY, rectLocal, toLocal } from './layout.js';
 import { paintBody, paintKey, KASA } from './body.js';
 import { RENK_NAME } from './kasalar/mevcut.js';
+import { AMBER } from './tema.js';
 import { Crt } from './crt.js';
 import { LeftMonitor, RightMonitor, LedBar } from './gauges.js';
 import { Bellows } from './bellows.js';
@@ -98,8 +99,8 @@ export class Machine {
 
     // lambalar
     const lampAt = (lamp, px, py) => { const p = toLocal(px, py); lamp.group.position.set(p.x, p.y, Z * 2); this.group.add(lamp.group); return lamp; };
-    this.stressLamp = lampAt(new Lamp('#ffb35a', 0.007), L.stressLamp.x, L.stressLamp.y);
-    this.calLamp = lampAt(new Lamp('#ffb35a', 0.0055), L.calLamp.x, L.calLamp.y);
+    this.stressLamp = lampAt(new Lamp(AMBER, 0.007), L.stressLamp.x, L.stressLamp.y);
+    this.calLamp = lampAt(new Lamp(AMBER, 0.0055), L.calLamp.x, L.calLamp.y);
     this.recLamp = lampAt(new Lamp('#ff3a2a', 0.006), L.recLamp.x, L.recLamp.y);
     this.alarm = [];
     for (let i = 0; i < 8; i++) {
@@ -163,8 +164,8 @@ export class Machine {
     // lambalar
     const st = this.stress;
     if (st >= 85) this.stressLamp.set(0.6 + 0.4 * Math.sin(this.t * 9), '#ff4030');
-    else if (st >= 60) this.stressLamp.set(0.55, '#ffb35a');
-    else this.stressLamp.set(this.powerOn ? 0.08 : 0, '#ffb35a');
+    else if (st >= 60) this.stressLamp.set(0.55, AMBER);
+    else this.stressLamp.set(this.powerOn ? 0.08 : 0, AMBER);
     this.calLamp.set(Math.abs(this.calError) > 0.25 && this.powerOn ? (Math.floor(this.t * 2.5) % 2 ? 0.8 : 0.1) : 0);
     this.recLamp.set(this.recording ? 0.55 + 0.45 * Math.sin(this.t * 3.1) : 0);
     const anomaly = s.anomaly != null;

@@ -33,6 +33,28 @@ export const PAL = {
     bezel: ['#2a2c2e', '#141516'], bezelShade: '0,0,0', recess: '#0c0d0d', socket: '#1e1808',
     screw: ['#f2ecd8', '#a8a088', '#5a5440'], dirt: ['90,70,20', '30,25,10'], key: '#ebe6da',
   },
+  // grafit / soluk metal gri / eskimiş bordo
+  grafit: {
+    hi: '#4c5554', top: '#414948', face: '#343b3a', mid: '#2c3231', low: '#1f2423',
+    side: ['rgba(0,0,0,0.26)', 'rgba(0,0,0,0.44)'], edge: 'rgba(0,0,0,0.8)', glint: 'rgba(220,235,230,0.22)',
+    slot: '#0b0e0d', slotHi: 'rgba(220,235,230,0.1)', ink: 'rgba(214,222,216,0.6)', inkHi: 'rgba(0,0,0,0.6)',
+    bezel: ['#2a2f2e', '#161a19'], bezelShade: '0,0,0', recess: '#0c0e0e', socket: '#0a0c0c',
+    screw: ['#9aa29f', '#525a58', '#222827'], dirt: ['70,72,64', '0,0,0'], key: '#cfd3cc',
+  },
+  metal: {
+    hi: '#a9b0a9', top: '#9aa19a', face: '#89918a', mid: '#7c847d', low: '#646b65',
+    side: ['rgba(20,24,22,0.26)', 'rgba(14,18,16,0.4)'], edge: 'rgba(30,34,32,0.6)', glint: 'rgba(255,255,250,0.5)',
+    slot: '#202523', slotHi: 'rgba(255,255,250,0.3)', ink: 'rgba(26,30,28,0.8)', inkHi: 'rgba(255,255,250,0.28)',
+    bezel: ['#2a2e2d', '#151817'], bezelShade: '0,0,0', recess: '#0c0e0d', socket: '#1a1d1c',
+    screw: ['#e2e6e0', '#9aa19a', '#545a55'], dirt: ['60,62,54', '40,44,40'], key: '#d6d9d2',
+  },
+  bordo: {
+    hi: '#7a3a31', top: '#6a322a', face: '#572923', mid: '#4a221d', low: '#341815',
+    side: ['rgba(20,2,0,0.3)', 'rgba(14,0,0,0.46)'], edge: 'rgba(20,4,2,0.75)', glint: 'rgba(255,210,195,0.3)',
+    slot: '#160806', slotHi: 'rgba(255,200,185,0.16)', ink: 'rgba(240,226,218,0.78)', inkHi: 'rgba(30,0,0,0.5)',
+    bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#130605',
+    screw: ['#b9b6b2', '#5e5a56', '#221f1d'], dirt: ['50,20,14', '0,0,0'], key: '#d9d4cc',
+  },
   siyah: {
     hi: '#46494a', top: '#35383a', face: '#232627', mid: '#1c1e1f', low: '#141516',
     side: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.45)'], edge: 'rgba(0,0,0,0.85)', glint: 'rgba(255,255,255,0.2)',
