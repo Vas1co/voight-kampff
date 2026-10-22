@@ -57,7 +57,7 @@ function trim(x, px) {
 
 // Üretici logosu: eğik kalın yazı ve yanında üç eğik şerit. Genişliğini döndürür.
 function logo(x, px, py, size, ink) {
-  const name = t('brand.maker');
+  const name = t('kasa.maker');
   x.save();
   x.font = `italic 600 ${size}px "Source Sans 3", sans-serif`;
   x.textBaseline = 'middle';
@@ -74,6 +74,16 @@ function logo(x, px, py, size, ink) {
   }
   x.restore();
   return sx - px;
+}
+
+// Logonun genişliği (yazı + şeritler), ortalamak için.
+function logoWidth(x, size) {
+  x.save();
+  x.font = `italic 600 ${size}px "Source Sans 3", sans-serif`;
+  if ('letterSpacing' in x) x.letterSpacing = `${size * 0.02}px`;
+  const w = x.measureText(t('kasa.maker')).width;
+  x.restore();
+  return w + size * 0.22 + 3 * size * 0.27;
 }
 
 // Modülün üst şeridi: solda logo, sağda ünite adı.
@@ -140,42 +150,42 @@ export default {
     slots(x, PB, W - 430, 1184, 340, 46, 16);
     if (T) {
       // logo + makine adı, birlikte ortalı
-      const text = `${t('brand.machine')}  ${t('brand.model')}`;
+      const text = `${t('kasa.machine')}  ${t('kasa.model')}`;
       x.save(); x.font = '600 22px "Plex Mono", monospace'; if ('letterSpacing' in x) x.letterSpacing = `${22 * 0.32}px`;
       const tw = x.measureText(text).width; x.restore();
-      const lw = 150, x0 = W / 2 - (lw + 36 + tw) / 2;
+      const lw = logoWidth(x, 34), x0 = W / 2 - (lw + 36 + tw) / 2;
       logo(x, x0, 1208, 34, 'rgba(150,150,146,0.75)');
       label(x, PB, text, x0 + lw + 36, 1208, { size: 22, spacing: 0.32 });
     } else {
-      label(x, PB, `${t('brand.machine')}  ${t('brand.model')}`, W / 2, 1208, { size: 22, align: 'center', spacing: 0.32 });
+      label(x, PB, `${t('kasa.machine')}  ${t('kasa.model')}`, W / 2, 1208, { size: 22, align: 'center', spacing: 0.32 });
     }
 
     // sol modül
     box(x, PS, 40, 540, 620, 610, { top: 30, radius: 22 });
     bezel(x, PS, L.left);
     if (T) trim(x, 40);
-    if (T) header(x, PS, 96, 606, 562, t('machine.unitLeft'), 26);
-    else { label(x, PS, t('machine.panelLeft'), 300, 567, { size: 18 }); slots(x, PS, 80, 556, 200, 20, 10, false); }
+    if (T) header(x, PS, 96, 606, 562, t('kasa.unitLeft'), 26);
+    else { label(x, PS, t('kasa.panelLeft'), 300, 567, { size: 18 }); slots(x, PS, 80, 556, 200, 20, 10, false); }
     screw(x, PS, 66, 566); screw(x, PS, 634, 566); screw(x, PS, 66, 1124); screw(x, PS, 634, 1124);
     x.fillStyle = PS.socket; rr(x, L.alarm.x - 12, L.alarm.y - 9, L.alarm.w + 24, L.alarm.h + 18, 8); x.fill();
     x.fillStyle = PS.socket; x.beginPath(); x.arc(L.stressLamp.x, L.stressLamp.y, 22, 0, TAU); x.fill();
     if (T) {
-      label(x, lampInk, t('machine.anomaly'), L.alarm.x - 4, 1112, { size: 15 });
-      label(x, lampInk, t('machine.stress'), L.stressLamp.x, 1112, { size: 15, align: 'center' });
+      label(x, lampInk, t('kasa.anomaly'), L.alarm.x - 4, 1112, { size: 15 });
+      label(x, lampInk, t('kasa.stress'), L.stressLamp.x, 1112, { size: 15, align: 'center' });
     } else {
-      label(x, PS, t('machine.anomaly'), L.alarm.x - 4, L.alarm.y - 26, { size: 15 });
-      label(x, PS, t('machine.stress'), L.stressLamp.x, L.stressLamp.y - 42, { size: 15, align: 'center' });
+      label(x, PS, t('kasa.anomaly'), L.alarm.x - 4, L.alarm.y - 26, { size: 15 });
+      label(x, PS, t('kasa.stress'), L.stressLamp.x, L.stressLamp.y - 42, { size: 15, align: 'center' });
     }
 
     // sağ modül
     box(x, PS, 1388, 540, 620, 610, { top: 30, radius: 22 });
     bezel(x, PS, L.right);
     if (T) trim(x, 1388);
-    if (T) header(x, PS, 1444, 1862, 562, t('machine.unitRight'), 26);
-    else { label(x, PS, t('machine.panelRight'), 1436, 567, { size: 18 }); slots(x, PS, 1760, 556, 200, 20, 10, false); }
+    if (T) header(x, PS, 1444, 1862, 562, t('kasa.unitRight'), 26);
+    else { label(x, PS, t('kasa.panelRight'), 1436, 567, { size: 18 }); slots(x, PS, 1760, 556, 200, 20, 10, false); }
     screw(x, PS, 1414, 566); screw(x, PS, 1982, 566); screw(x, PS, 1414, 1124); screw(x, PS, 1982, 1124);
     x.fillStyle = PS.socket; x.beginPath(); x.arc(L.calLamp.x, L.calLamp.y, 17, 0, TAU); x.fill();
-    label(x, lampInk, t('machine.calib'), L.calLamp.x + 32, L.calLamp.y, { size: 15 });
+    label(x, lampInk, t('kasa.calib'), L.calLamp.x + 32, L.calLamp.y, { size: 15 });
     knob(x, 1770, 1066); knob(x, 1890, 1066);
 
     // sensör kolu
@@ -202,15 +212,15 @@ export default {
     rr(x, 690, 418, 668, 34, 8); x.fill();
     x.fillStyle = 'rgba(255,255,255,0.18)'; x.fillRect(704, 420, 640, 2);
     bezel(x, PC, L.crt, { pad: 44, radius: 40, hood: T });
-    if (T) header(x, PC, 684, 1380, 484, t('machine.unitCenter'));
+    if (T) header(x, PC, 684, 1380, 484, t('kasa.unitCenter'));
     x.fillStyle = '#0a0b0b'; rr(x, L.led.x - 10, L.led.y - 7, L.led.w + 20, L.led.h + 14, 5); x.fill();
     x.fillStyle = 'rgba(255,255,255,0.12)'; x.fillRect(L.led.x - 8, L.led.y + L.led.h + 7, L.led.w + 16, 1.5);
     for (let r = 0; r < 7; r++) for (let q = 0; q < 3; q++) {
       x.fillStyle = PC.slot; x.beginPath(); x.arc(1354 + q * 16, 584 + r * 20, 4.2, 0, TAU); x.fill();
     }
     for (const k of L.keys) { x.fillStyle = PC.slot; rr(x, k.x - 6, k.y - 6, L.keySize.w + 12, L.keySize.h + 12, 7); x.fill(); }
-    label(x, PC, `${t('machine.channel')} 06`, L.crt.x - 6, 972, { size: 17 });
-    label(x, PC, t('machine.focus'), L.crt.x + L.crt.w + 6, 972, { size: 17, align: 'right' });
+    label(x, PC, `${t('kasa.channel')} 06`, L.crt.x - 6, 972, { size: 17 });
+    label(x, PC, t('kasa.focus'), L.crt.x + L.crt.w + 6, 972, { size: 17, align: 'right' });
     slots(x, PC, 760, 1006, 520, 72, 24);
     x.fillStyle = PC.socket; rr(x, 660, 1100, 60, 28, 6); x.fill();
     if (T) {
@@ -219,7 +229,7 @@ export default {
       // renk şeritli rozet
       x.fillStyle = '#1b1c1d'; rr(x, 1196, 1098, 150, 30, 3); x.fill();
       ['#e0a43a', '#d9cf5a', '#6bb07c', '#5a8fbf'].forEach((c, i) => { x.fillStyle = c; x.fillRect(1206 + i * 16, 1106, 12, 14); });
-      label(x, DARK, t('brand.model'), 1336, 1113, { size: 13, align: 'right', spacing: 0.12 });
+      label(x, DARK, t('kasa.model'), 1336, 1113, { size: 13, align: 'right', spacing: 0.12 });
     }
     screw(x, PC, 652, 474); screw(x, PC, 1396, 474); screw(x, PC, 652, 1124); screw(x, PC, 1396, 1124);
 
