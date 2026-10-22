@@ -356,60 +356,8 @@ export function paintDeskEdge() {
   return c;
 }
 
-// Dağınık test dosyaları yığını ve manila klasörler (önden, hafif yukarıdan; 0.6 × 0.26 m).
-export function paintFiles() {
-  const W = 480, H = 208, c = mk(W, H), x = c.getContext('2d');
-  const R = seeded(61);
-  const layers = 9;
-  for (let i = 0; i < layers; i++) {
-    const y = H - 28 - i * 15, sk = (R() - 0.5) * 18, w = 380 + R() * 40;
-    const manila = i % 3 === 1;
-    // ön kalınlık
-    x.fillStyle = manila ? '#8d7448' : '#b9b3a0';
-    x.fillRect(40 + sk, y, w, 14);
-    x.fillStyle = 'rgba(0,0,0,0.35)'; x.fillRect(40 + sk, y + 12, w, 2);
-    if (i === layers - 1) {
-      // üst yüz (kısaltılmış perspektif)
-      x.fillStyle = manila ? '#c4a56c' : '#d6d0bc';
-      x.beginPath(); x.moveTo(40 + sk, y); x.lineTo(70 + sk, y - 52); x.lineTo(70 + sk + w - 10, y - 52); x.lineTo(40 + sk + w, y); x.closePath(); x.fill();
-      x.fillStyle = 'rgba(60,55,45,0.45)';
-      for (let k = 0; k < 4; k++) x.fillRect(110 + sk, y - 42 + k * 9, 140 + R() * 120, 3);
-      x.fillStyle = '#3a372f'; x.font = '700 15px "Courier Prime", monospace';
-      x.fillText(t('room.files'), 110 + sk, y - 14);
-    }
-  }
-  // dışarı taşan kâğıt köşeleri
-  for (let i = 0; i < 6; i++) { x.fillStyle = '#ddd7c4'; x.fillRect(30 + R() * 380, 60 + R() * 120, 30 + R() * 30, 4); }
-  grain(x, W, H, 10, 62);
-  return c;
-}
-
-// Basılı test verisi sayfası (tepeden, 0.3 × 0.4 m).
-export function paintSheet() {
-  const W = 300, H = 400, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = '#d9d3c0'; x.fillRect(0, 0, W, H);
-  x.fillStyle = '#3a3830'; x.font = '700 18px "Courier Prime", monospace'; x.fillText(t('room.sheet'), 22, 38);
-  x.strokeStyle = 'rgba(40,40,36,0.45)'; x.lineWidth = 1.5; x.strokeRect(20, 52, W - 40, 150);
-  const R = seeded(71);
-  x.strokeStyle = 'rgba(40,40,36,0.6)'; x.lineWidth = 1.5; x.beginPath();
-  for (let i = 0; i <= 50; i++) { const px = 24 + (i / 50) * (W - 48), py = 128 + Math.sin(i * 0.7) * 20 * R() + (R() - 0.5) * 30; i ? x.lineTo(px, py) : x.moveTo(px, py); }
-  x.stroke();
-  x.fillStyle = 'rgba(40,40,36,0.5)';
-  for (let y = 224; y < H - 24; y += 18) x.fillRect(22, y, 80 + R() * (W - 130), 5);
-  grime(x, W, H, 8, 'rgba(90,70,40,A)', 60, 0.12, 72);
-  grain(x, W, H, 10, 73);
-  return c;
-}
-
-// Siyah tükenmez kalem (tepeden).
-export function paintPen() {
-  const W = 340, H = 24, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = lg(x, 0, 2, 0, 22, [[0, '#3a3f40'], [0.4, '#121515'], [1, '#050606']]);
-  rr(x, 20, 4, 290, 16, 8); x.fill();
-  x.fillStyle = '#9aa09a'; x.beginPath(); x.moveTo(310, 6); x.lineTo(336, 12); x.lineTo(310, 18); x.closePath(); x.fill();
-  x.fillStyle = '#6e7470'; x.fillRect(40, 2, 70, 5);
-  return c;
-}
+// Masanın solundaki dosyalar, test formu ve kalem: papers.js
+export { paintFiles, paintSheet, paintPen } from './papers.js';
 
 // Sade metal kupa (önden, hafif yukarıdan).
 export function paintMug() {
