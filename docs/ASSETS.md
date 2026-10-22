@@ -39,7 +39,6 @@ Boyutlar önerilen en az değerlerdir; oran korunmalı. Renk uzayı sRGB.
 | `sheet` | 600×800 | hayır | Masanın sol önü: basılı test verisi sayfası (tepeden) |
 | `pen` | 680×48 | evet | Kâğıdın üstünde çapraz duran siyah kalem (tepeden) |
 | `machine` | 4096×2560 | evet | Masanın ortası: test makinesinin ön yüzü |
-| `machine-<kasa>` | 4096×2560 | evet | Kasa seçenekleri (mevcut, y1982, y2017, siber, terminal, saha); her birinin biçimi ve ekran yerleşimi farklı. Karşılaştırma için, oyuna geçmez. Hepsi yan yana: `_rehber/kasa-secenekleri.png`. Oyunda denemek: adrese `?kasa=<ad>` ekle |
 | `machine-key` | 256×256 | hayır | CRT'nin sağındaki tuşlar; `machine-key-lit.png` amber yanan |
 | `cassette` | 1024×400 | evet | Masanın sağı: kompakt kaset ses kaydedici (önden) |
 | `mug` | 352×480 | evet | Masanın sağı: sade metal kupa |

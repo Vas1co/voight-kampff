@@ -64,10 +64,7 @@
     "focus": "ODAK",
     "panelLeft": "SOLUNUM · NABIZ",
     "panelRight": "TEPKİ ANALİZİ",
-    "stress": "GERG",
-    "caution": "DİKKAT",
-    "voltage": "YÜKSEK GERİLİM",
-    "power": "GÜÇ"
+    "stress": "GERG"
   },
   "report": {
     "title": "SORGU RAPORU",

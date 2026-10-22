@@ -3,8 +3,7 @@
 // Dosyalar 2× çözünürlükte çizilir; adları oyunun beklediği adlarla aynıdır.
 import * as P from '../scene/procedural.js';
 import { withScale, mk, seeded } from '../scene/paint.js';
-import { paintBody, paintKey, KASALAR, KASA_NAME, KASA } from '../machine/body.js';
-import { Machine } from '../machine/machine.js';
+import { paintBody, paintKey, KASA } from '../machine/body.js';
 import { makeIris, makeSclera } from '../machine/eye.js';
 import { BODY } from '../machine/layout.js';
 import * as THREE from 'three';
@@ -41,14 +40,12 @@ const JOBS = [
   ['oda', 'chair-front', () => withScale(S, P.paintChairFront)],
   // makine
   ['oda', 'machine', () => withScale(S, paintBody)],
-  ...Object.keys(KASALAR).map((k) => ['oda', `machine-${k}`, () => withScale(S, () => paintBody(k))]),
   ['oda', 'machine-key', () => withScale(4, () => paintKey(false))],
   ['oda', 'machine-key-lit', () => withScale(4, () => paintKey(true))],
   ['goz', 'iris', () => makeIris(1024, { fleck: '#ead08a', ...player.eye }, player.eye.seed)],
   ['goz', 'sclera', () => withScale(S, () => makeSclera(720, 560, seeded(player.eye.seed)))],
   ['_rehber', 'machine-rehber', () => withScale(S, machineGuide)],
   ['_rehber', 'oda-yerlesim', (stage) => layoutGuide(stage)],
-  ['_rehber', 'kasa-secenekleri', (stage) => kasaSheet(stage)],
 ];
 
 // Odanın geniş planını 1920×1080 çizer ve her katmanın üstüne dosya adını yazar.
@@ -88,52 +85,6 @@ export function layoutGuide(stage) {
   renderer.setPixelRatio(prevPR);
   rig.cut(prevShot);
   rig.size.top = prevInsets.top; rig.size.bottom = prevInsets.bottom;
-  stage.resize();
-  return c;
-}
-
-// Bütün kasaları oda ışığında, makine planında yan yana gösterir (3 × 2 pafta).
-export function kasaSheet(stage) {
-  if (!stage) return null;
-  const names = Object.keys(KASALAR);
-  const Wd = 1280, Hd = 720, cols = 3, rows = Math.ceil(names.length / cols);
-  const { renderer, rig, post, scene } = stage;
-  const own = stage.machine.group;
-  const prev = { pr: renderer.getPixelRatio(), shot: rig.name, size: { ...rig.size } };
-  renderer.setPixelRatio(1);
-  renderer.setSize(Wd, Hd, false);
-  post.setSize(Wd, Hd, 1);
-  rig.cut('machine');
-  rig.size.top = 0; rig.size.bottom = 0;
-  rig.resize(Wd, Hd);
-  stage.room.chairFront.visible = false;
-  own.visible = false;
-  const c = mk(Wd * cols, Hd * rows), x = c.getContext('2d');
-  x.fillStyle = '#000'; x.fillRect(0, 0, c.width, c.height);
-  const time = performance.now() / 1000;
-  names.forEach((k, i) => {
-    const m = new Machine(k);
-    m.group.position.copy(own.position); m.group.scale.copy(own.scale);
-    m.setSubject(player);
-    m.setPower(true);
-    m.crt.power = m.crt.powerTarget = 1;
-    m.crt.screen.set('scan', { phase: 2, progress: 0.4 });
-    m.update(0.016, time); m.update(0.016, time + 0.02);
-    scene.add(m.group);
-    stage.render();
-    const px = (i % cols) * Wd, py = Math.floor(i / cols) * Hd;
-    x.drawImage(renderer.domElement, px, py, Wd, Hd);
-    x.font = '600 34px "Plex Mono", monospace'; x.textBaseline = 'top';
-    const label = `${i + 1}  ${KASALAR[k].name}${k === KASA_NAME ? '  •' : ''}`;
-    x.fillStyle = 'rgba(0,0,0,0.7)'; x.fillRect(px + 20, py + 20, x.measureText(label).width + 32, 54);
-    x.fillStyle = '#fff'; x.fillText(label, px + 36, py + 30);
-    scene.remove(m.group);
-    m.group.traverse((o) => { o.geometry?.dispose(); o.material?.map?.dispose?.(); o.material?.dispose?.(); });
-  });
-  own.visible = true;
-  renderer.setPixelRatio(prev.pr);
-  rig.cut(prev.shot);
-  rig.size.top = prev.size.top; rig.size.bottom = prev.size.bottom;
   stage.resize();
   return c;
 }
