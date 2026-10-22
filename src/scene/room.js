@@ -119,7 +119,7 @@ export class Room {
 
     // --- ön plan: sandalye sırtı (alt kenarda)
     // yalnızca geniş planda görünür (yakın planlarda kameranın önüne girer)
-    this.chairFront = stand('chair-front', P.paintChairFront, 0.72, 0.48, 0, 0.8, 1.75, { ambient: 0.25, lamp: 0.2, crt: 0.3 });
+    this.chairFront = stand('chair-front', P.paintChairFront, 0.62, 0.3, 0, 0.86, 1.75, { ambient: 0.25, lamp: 0.2, crt: 0.3 });
 
     this.dust = new Dust(quality === 'high' ? 200 : 100);
     this.group.add(this.dust.points);

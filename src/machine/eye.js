@@ -129,7 +129,8 @@ export class Eye {
     this.pupilMM = 3.6; this.targetMM = 3.6; this.rate = 2.2;
     this.gx = 0; this.gy = 0; this.gxT = 0; this.gyT = 0; this.sacAt = 0;
     this.open = 1; this.blinkAt = 2.5; this.blinkT = -1;
-    this.focus = 1; this.reduce = false; this.overlay = '';
+    this.focus = 1; this.reduce = false;
+    this.cx = width / 2; this.cy = height / 2; this.pr = 40;
     this.time = 0;
   }
 
@@ -202,6 +203,7 @@ export class Eye {
 
     // göz bebeği + kenar fırfırı
     const pr = R * clamp(this.pupilMM / IRIS_MM, 0.12, 0.72);
+    this.cx = cx; this.cy = cy; this.pr = pr; // ekran arayüzü (screen.js) nişangâhı buraya oturtur
     x.fillStyle = 'rgba(52,30,14,0.85)';
     x.beginPath();
     for (let i = 0; i <= 64; i++) {
@@ -322,17 +324,5 @@ export class Eye {
       x.globalAlpha = 1;
     }
 
-    // ekran üstü işaretler
-    x.strokeStyle = 'rgba(210,255,230,0.32)'; x.lineWidth = 2;
-    const m = 26, l = 34;
-    for (const [px, py, sx, sy] of [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]]) {
-      x.beginPath(); x.moveTo(px, py + sy * l); x.lineTo(px, py); x.lineTo(px + sx * l, py); x.stroke();
-    }
-    x.beginPath(); x.moveTo(W / 2 - 12, H / 2); x.lineTo(W / 2 + 12, H / 2); x.moveTo(W / 2, H / 2 - 12); x.lineTo(W / 2, H / 2 + 12); x.stroke();
-    if (this.overlay) {
-      x.font = '400 18px "Plex Mono", monospace';
-      x.fillStyle = 'rgba(210,255,230,0.6)';
-      x.fillText(this.overlay, m + 6, H - m - 10);
-    }
   }
 }

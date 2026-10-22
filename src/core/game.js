@@ -97,6 +97,8 @@ export class Game {
           G.iv = new Interview(player);
           const M = G.machine;
           M.setSubject(player);
+          // ekrandaki denek kimliği (her sorgu için yeni)
+          M.crt.screen.id = `${player.number}-${100 + (G.iv.rng.next() * 900 | 0)}${'ABCDEFGH'[G.iv.rng.next() * 8 | 0]}`;
           M.signals.setBaseline(null);
           M.signals.particleHistory = [];
           hud.subject(player.number);
@@ -130,6 +132,7 @@ export class Game {
           sfx.play('cassetteIn');
           ambience.recording(true);
           await sleep(2200, tk);
+          M.crt.screen.set('scan', { title: t('screen.scanTitle'), progressDur: 40 });
           G.cut('crt');
           if (first) {
             await G.say('lines.eye', { token: tk });
@@ -144,6 +147,7 @@ export class Game {
           const iv = G.iv, M = G.machine;
           G.cut('machine');
           await G.say('lines.baseline', { token: tk });
+          M.crt.screen.set('scan', { title: t('screen.baselineTitle'), progress: 0, progressDur: 4.4 });
           M.signals.status = 'sampling';
           for (let i = 0; i < 6; i++) {
             if (i % 3 === 0) { M.bellows.inhale(); sfx.play('bellows'); sfx.play('relays', { n: 3 }); }
@@ -151,6 +155,7 @@ export class Game {
             await sleep(700, tk);
           }
           iv.finishBaseline();
+          M.crt.screen.set('complete', { title: t('screen.baselineTitle') });
           M.signals.setBaseline(iv.baseline);
           M.signals.release();
           sfx.play('chirp');
@@ -166,6 +171,7 @@ export class Game {
           G.counter();
           M.signals.release();
           M.crt.kick(0.35, 0.2);
+          M.crt.screen.set('scan', { phase: i + 1, progress: 0, progressDur: 14 });
           sfx.play('static', { d: 0.25 });
           await sleep(300, tk);
 
@@ -203,7 +209,17 @@ export class Game {
           M.signals.onBeat = () => sfx.play('heartbeat', { v: 0.45 });
           setTimeout(() => { if (tk.alive) G.cut('machine'); }, 1400);
           await guard(settled, tk);
-          await G.subs.wait(1200, tk);
+          // ekran: hata (cevapsız / anomali) ya da tamamlandı → veri
+          if (reading.none || reading.anomaly) {
+            M.crt.screen.set('error', { kind: reading.none ? 'lost' : 'anomaly' });
+            M.crt.kick(0.5, 0.3);
+            sfx.play('warn');
+          } else {
+            M.crt.screen.set('complete', { phase: i + 1 });
+            setTimeout(() => { if (tk.alive) M.crt.screen.set('data', { reading }); }, 700);
+          }
+          // veri ekranı okunabilsin diye bir süre kalır
+          await G.subs.wait(reading.none || reading.anomaly ? 1600 : 3200, tk);
           M.signals.onBeat = null;
           G.subs.hide();
           sfx.play(reading.score === 2 ? 'warm' : reading.none || reading.score === 0 ? 'buzz' : 'chirp');
@@ -228,6 +244,7 @@ export class Game {
           await G.say('lines.end', { token: tk });
           G.cut('machine');
           sfx.play('analyze');
+          M.crt.screen.set('scan', { title: t('screen.dataTitle'), progress: 0.2, progressDur: 2.6 });
           M.signals.status = 'sampling';
           for (let k = 0; k < 18; k++) {
             M.signals.level = Math.random() * 0.8;
@@ -235,6 +252,7 @@ export class Game {
             await sleep(130, tk);
           }
           M.signals.release();
+          M.crt.screen.set('complete', { title: t('screen.dataTitle') });
           await sleep(500, tk);
           G.fsm.go('VERDICT');
         },
