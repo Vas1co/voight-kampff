@@ -254,7 +254,8 @@ export function paintWallCamera() {
   x.strokeStyle = '#141a1a'; x.lineWidth = 16; x.lineCap = 'round';
   x.beginPath(); x.moveTo(W - 44, 70); x.lineTo(W - 110, 100); x.stroke();
   // gövde (aşağı eğik)
-  x.save(); x.translate(150, 120); x.rotate(0.32);
+  // gövde aşağı ve sola, masaya doğru eğik (mercek sol alt uçta)
+  x.save(); x.translate(150, 120); x.rotate(-0.38);
   x.fillStyle = lg(x, 0, -40, 0, 40, [[0, '#3a4444'], [0.5, '#242c2c'], [1, '#111616']]);
   rr(x, -120, -38, 220, 76, 10); x.fill();
   x.fillStyle = '#0c1010'; rr(x, -138, -32, 26, 64, 6); x.fill();             // ön başlık
@@ -262,6 +263,7 @@ export function paintWallCamera() {
   x.fillStyle = rg(x, -134, -6, 0, -128, 0, 20, [[0, 'rgba(120,160,160,0.6)'], [0.4, 'rgba(30,50,50,0.4)'], [1, 'rgba(0,0,0,0)']]);
   x.beginPath(); x.arc(-128, 0, 20, 0, TAU); x.fill();
   x.fillStyle = '#0a0d0d'; x.fillRect(-40, -46, 120, 10);                       // güneşlik
+  x.fillStyle = '#1a0605'; x.beginPath(); x.arc(40, -20, 6, 0, TAU); x.fill();  // kayıt ışığı yuvası
   x.restore();
   return c;
 }
