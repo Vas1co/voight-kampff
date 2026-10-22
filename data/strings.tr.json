@@ -6,7 +6,8 @@
     "era": "Kasım 2019",
     "machine": "EMPATİ ANALİZ ÜNİTESİ",
     "model": "MK·VI",
-    "testShort": "VK"
+    "testShort": "VK",
+    "maker": "ARDON"
   },
   "title": {
     "kicker": "Empati ölçüm birimi · {era}",
@@ -64,7 +65,10 @@
     "focus": "ODAK",
     "panelLeft": "SOLUNUM · NABIZ",
     "panelRight": "TEPKİ ANALİZİ",
-    "stress": "GERG"
+    "stress": "GERG",
+    "unitLeft": "ANALOG GİRİŞ ÜNİTESİ",
+    "unitCenter": "GÖRSEL İŞLEM ÜNİTESİ",
+    "unitRight": "VERİ ANALİZ ÜNİTESİ"
   },
   "report": {
     "title": "SORGU RAPORU",
