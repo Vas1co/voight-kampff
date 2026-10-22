@@ -62,6 +62,7 @@ export class Game {
     this.machine.stress = dev ? Math.max(0, dev.pulse) * 6 : 0;
     ambience.machine(this.machine.crt.power, this.stage.rig.name === 'crt' || this.stage.rig.name === 'machine');
     ambience.lamp(this.stage.room.flick);
+    ambience.fan(this.stage.room.fanSpeed);
   }
 
   powerOn() {

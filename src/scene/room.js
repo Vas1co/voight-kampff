@@ -1,6 +1,6 @@
 // Sorgu odası. Kamera masaya karşıdan, göz hizasından bakar; oda simetrik.
 //
-//  TAVAN ── uzun floresan armatür
+//  TAVAN ── uzun floresan armatür ve altında yavaş dönen pervane
 //  ARKA DUVAR ── sol: metal kapı + erişim paneli │ orta: gözlem camı (arkasında loş oda,
 //               boş sandalye) │ sağ: dosya dolabı, havalandırma, tabela │ sağ üst köşe: kamera
 //  MASA ── sol: dosya yığını, test kâğıdı + kalem │ orta: test makinesi (stage.js)
@@ -14,6 +14,7 @@ import { litMaterial, fogMaterial, glowMaterial, roomUniforms } from '../fx/mate
 import { lightUniforms } from '../fx/shaders/common.js';
 import * as P from './procedural.js';
 import { Dust, Smoke } from './particles.js';
+import { CeilingFan } from './fan.js';
 
 export const DESK_Y = 0.76;
 const BACK_Z = -4.2;
@@ -84,6 +85,14 @@ export class Room {
     lampMesh.rotation.x = Math.PI / 2;
     lampMesh.name = 'lamp';
 
+    // --- tavan pervanesi: armatürün altında ve önünde, yavaş döner; kanat gölgeleri
+    // floresan ışığında masaya, duvarlara ve dumana düşer (common.js → fanShadow)
+    const fp = lightUniforms.uFanPos.value;
+    this.fan = new CeilingFan({ ceilY: CEIL_Y, hubY: fp.y, radius: lightUniforms.uFanR.value });
+    this.fan.place(fp.x, fp.z, lp);
+    this.group.add(this.fan.group);
+    this.fanSpeed = 0.75; // rad/sn (yavaş)
+
     // --- havada ince duman perdesi (çok hafif)
     this.volumes = [];
     const fogDefs = quality === 'high' ? [[-3.8, 0.16, 0.45], [-2.6, 0.12, 0.55], [-1.3, 0.08, 0.65]] : [[-3.2, 0.18, 0.5], [-1.4, 0.1, 0.65]];
@@ -128,6 +137,8 @@ export class Room {
   update(dt, t, { recording = false } = {}) {
     const motion = this.reduce ? 0.35 : 1;
     roomUniforms.uTime.value = t;
+    this.fan.update(dt, this.fanSpeed * motion);
+    lightUniforms.uFanAngle.value = -this.fan.angle;
     // yaşlı floresan: hafif dalgalanma ve ara sıra kısa titreme
     this.flickT -= dt;
     if (this.flickT <= 0 && !this.reduce) { this.flick = 0.55 + Math.random() * 0.3; this.flickT = Math.random() < 0.3 ? 0.06 : 5 + Math.random() * 12; }
