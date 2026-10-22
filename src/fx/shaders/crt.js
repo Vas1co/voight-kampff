@@ -102,10 +102,9 @@ export function crtMaterial(map, opts = {}) {
         col += vec3(0.7, 1.0, 0.85) * (1.0 - openY) * yMask * xMask * smoothstep(0.0, 0.08, p) * 2.2;
 
         col *= inside;
-        // cam yansıması (tüp kapalıyken de görünür)
+        // cam yansıması (tüp kapalıyken de görünür); bombeli görüntünün dışı tam siyah
         float refl = smoothstep(0.55, 0.0, length((vUv - vec2(0.28, 0.78)) * vec2(1.0, 1.6)));
-        col += vec3(0.55, 0.7, 0.68) * refl * uReflect;
-        col += vec3(0.012, 0.018, 0.018) * (1.0 - inside);
+        col += vec3(0.55, 0.7, 0.68) * refl * uReflect * inside;
         gl_FragColor = vec4(max(col, 0.0), 1.0);
       }`,
   });
