@@ -315,9 +315,25 @@
       "G–M",
       "N–Z"
     ],
-    "files": "TEST DOSYALARI",
-    "sheet": "TEST VERİSİ",
-    "mug": "B4"
+    "mug": "B4",
+    "folderLabel": "SUBJECT 04 · {testShort}",
+    "classified": "CLASSIFIED",
+    "form": "{testShort} · EMPATHY TEST FORM",
+    "formFields": [
+      "SUBJECT NO: 04",
+      "SESSION: 03",
+      "DATE: 11.14.2019"
+    ],
+    "formCols": [
+      "Q",
+      "PUPIL",
+      "FLUSH",
+      "PULSE",
+      "TIME"
+    ],
+    "formRow": "Q",
+    "notes": "NOTES:",
+    "examiner": "EXAMINER"
   },
   "screen": {
     "header": "{test}",

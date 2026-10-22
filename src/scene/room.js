@@ -119,7 +119,7 @@ export class Room {
     const sheet = add(flat(plane(0.3, 0.4, litMaterial(tex('sheet', P.paintSheet), { ambient: 0.4, crt: 1.4, transparent: false }))), -0.82, DESK_Y + 0.002, 0.82);
     sheet.rotation.z = 0.2;
     sheet.name = 'sheet';
-    const pen = add(flat(plane(0.17, 0.012, litMaterial(tex('pen', P.paintPen), { ambient: 0.4, crt: 1.2, alphaTest: 0.1 }))), -0.8, DESK_Y + 0.005, 0.84);
+    const pen = add(flat(plane(0.17, 0.022, litMaterial(tex('pen', P.paintPen), { ambient: 0.45, crt: 1.2, alphaTest: 0.02 }))), -0.8, DESK_Y + 0.005, 0.84);
     pen.rotation.z = -0.65;
     pen.name = 'pen';
 
