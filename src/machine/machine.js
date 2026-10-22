@@ -1,11 +1,12 @@
 // Makineyi oluşturur: gövde + CRT + yan ekranlar + LED çubuğu + körük + lambalar + tuşlar.
-// Gövde dokusu assets/images/room/machine.png ile değiştirilebilir.
+// Biçim ve yerleşim seçili kasadan gelir (body.js); oyundaki kasanın gövde dokusu
+// assets/images/room/machine.png ile değiştirilebilir.
 import * as THREE from 'three';
 import { textureOr } from '../core/assets.js';
 import { litMaterial, glowMaterial, crtUniforms } from '../fx/materials.js';
 import { crtMaterial } from '../fx/shaders/crt.js';
-import { BODY, L, rectLocal, toLocal } from './layout.js';
-import { paintBody, paintKey, KASA } from './body.js';
+import { BODY, rectLocal, toLocal } from './layout.js';
+import { paintBody, paintKey, KASALAR, KASA_NAME } from './body.js';
 import { Crt } from './crt.js';
 import { LeftMonitor, RightMonitor, LedBar } from './gauges.js';
 import { Bellows } from './bellows.js';
@@ -31,16 +32,22 @@ class Lamp {
   }
 }
 
+const canvasTex = (c) => { const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 4; return tx; };
+
 export class Machine {
-  constructor() {
+  constructor(name = KASA_NAME) {
+    this.kasa = KASALAR[name] ?? KASALAR[KASA_NAME];
+    const L = this.L = this.kasa.L;
+    // dosyadan değiştirme yalnızca oyundaki kasa için geçerli
+    const own = name === KASA_NAME;
     this.group = new THREE.Group();
     this.signals = new Signals();
     this.reduce = false;
     const Z = 0.0015;
 
     // gövde
-    const bodyTex = textureOr('images/room', 'machine', paintBody);
-    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: KASA.tint });
+    const bodyTex = own ? textureOr('images/room', 'machine', () => paintBody(name)) : canvasTex(paintBody(name));
+    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: this.kasa.tint });
     this.body = new THREE.Mesh(new THREE.PlaneGeometry(BODY.worldW, BODY.worldH), this.bodyMat);
     this.group.add(this.body);
 
@@ -73,18 +80,20 @@ export class Machine {
     place(new THREE.Mesh(new THREE.PlaneGeometry(ledr.w, ledr.h), this.ledMat), L.led);
 
     // körük
-    this.bellows = new Bellows(L.bellows.w, L.bellows.h);
+    this.bellows = new Bellows();
     const br = rectLocal(L.bellows);
     this.bellowsMat = litMaterial(this.bellows.texture, { ambient: 0.7, beam: 0.3, crt: 0.5, alphaTest: 0.02 });
     this.bellowsMesh = new THREE.Mesh(new THREE.PlaneGeometry(br.w, br.h), this.bellowsMat);
-    place(this.bellowsMesh, L.bellows, -0.002);
+    // körük çoğu kasada gövdenin arkasından yükselir; açık çantada tepsinin içinde, önde
+    place(this.bellowsMesh, L.bellows, this.kasa.bellowsFront ? Z : -0.002);
+    if (this.kasa.bellowsFront) this.bellowsMesh.renderOrder = 2;
     this.intakeLocal = toLocal(L.intake.x, L.intake.y);
 
     // tuşlar
     const kw = (L.keySize.w / BODY.W) * BODY.worldW, kh = (L.keySize.h / BODY.H) * BODY.worldH;
     this.keys = L.keys.map((k, i) => {
       const lit = i === 2;
-      const tx = textureOr('images/room', lit ? 'machine-key-lit' : 'machine-key', () => paintKey(lit));
+      const tx = own ? textureOr('images/room', lit ? 'machine-key-lit' : 'machine-key', () => paintKey(lit, name)) : canvasTex(paintKey(lit, name));
       const mat = new THREE.MeshBasicMaterial({ map: tx, color: lit ? new THREE.Color(2.2, 2.0, 1.7) : new THREE.Color(0.72, 0.72, 0.66) });
       const m = new THREE.Mesh(new THREE.PlaneGeometry(kw, kh), mat);
       place(m, { x: k.x, y: k.y, w: L.keySize.w, h: L.keySize.h });

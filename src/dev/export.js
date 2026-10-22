@@ -3,9 +3,10 @@
 // Dosyalar 2× çözünürlükte çizilir; adları oyunun beklediği adlarla aynıdır.
 import * as P from '../scene/procedural.js';
 import { withScale, mk, seeded } from '../scene/paint.js';
-import { paintBody, paintKey, KASALAR, KASA_NAME } from '../machine/body.js';
+import { paintBody, paintKey, KASALAR, KASA_NAME, KASA } from '../machine/body.js';
+import { Machine } from '../machine/machine.js';
 import { makeIris, makeSclera } from '../machine/eye.js';
-import { BODY, L } from '../machine/layout.js';
+import { BODY } from '../machine/layout.js';
 import * as THREE from 'three';
 import { t } from '../core/strings.js';
 import player from '../../data/subjects/player.json';
@@ -94,11 +95,11 @@ export function layoutGuide(stage) {
 // Bütün kasaları oda ışığında, makine planında yan yana gösterir (3 × 2 pafta).
 export function kasaSheet(stage) {
   if (!stage) return null;
-  const names = Object.keys(KASALAR).filter((k) => k !== 'krem');
+  const names = Object.keys(KASALAR);
   const Wd = 1280, Hd = 720, cols = 3, rows = Math.ceil(names.length / cols);
-  const { renderer, rig, post, machine } = stage;
-  const u = machine.bodyMat.uniforms;
-  const prev = { map: u.map.value, tint: u.uTint.value.clone(), pr: renderer.getPixelRatio(), shot: rig.name, size: { ...rig.size } };
+  const { renderer, rig, post, scene } = stage;
+  const own = stage.machine.group;
+  const prev = { pr: renderer.getPixelRatio(), shot: rig.name, size: { ...rig.size } };
   renderer.setPixelRatio(1);
   renderer.setSize(Wd, Hd, false);
   post.setSize(Wd, Hd, 1);
@@ -106,15 +107,19 @@ export function kasaSheet(stage) {
   rig.size.top = 0; rig.size.bottom = 0;
   rig.resize(Wd, Hd);
   stage.room.chairFront.visible = false;
-  // ekranlar açık ve ısınmış görünsün
-  machine.crt.power = machine.crt.powerTarget = 1;
-  machine.update(0.016, performance.now() / 1000);
+  own.visible = false;
   const c = mk(Wd * cols, Hd * rows), x = c.getContext('2d');
   x.fillStyle = '#000'; x.fillRect(0, 0, c.width, c.height);
+  const time = performance.now() / 1000;
   names.forEach((k, i) => {
-    const tex = new THREE.CanvasTexture(paintBody(k));
-    tex.colorSpace = THREE.SRGBColorSpace;
-    u.map.value = tex; u.uTint.value.set(KASALAR[k].tint);
+    const m = new Machine(k);
+    m.group.position.copy(own.position); m.group.scale.copy(own.scale);
+    m.setSubject(player);
+    m.setPower(true);
+    m.crt.power = m.crt.powerTarget = 1;
+    m.crt.screen.set('scan', { phase: 2, progress: 0.4 });
+    m.update(0.016, time); m.update(0.016, time + 0.02);
+    scene.add(m.group);
     stage.render();
     const px = (i % cols) * Wd, py = Math.floor(i / cols) * Hd;
     x.drawImage(renderer.domElement, px, py, Wd, Hd);
@@ -122,9 +127,10 @@ export function kasaSheet(stage) {
     const label = `${i + 1}  ${KASALAR[k].name}${k === KASA_NAME ? '  •' : ''}`;
     x.fillStyle = 'rgba(0,0,0,0.7)'; x.fillRect(px + 20, py + 20, x.measureText(label).width + 32, 54);
     x.fillStyle = '#fff'; x.fillText(label, px + 36, py + 30);
-    tex.dispose();
+    scene.remove(m.group);
+    m.group.traverse((o) => { o.geometry?.dispose(); o.material?.map?.dispose?.(); o.material?.dispose?.(); });
   });
-  u.map.value = prev.map; u.uTint.value.copy(prev.tint);
+  own.visible = true;
   renderer.setPixelRatio(prev.pr);
   rig.cut(prev.shot);
   rig.size.top = prev.size.top; rig.size.bottom = prev.size.bottom;
@@ -134,6 +140,7 @@ export function kasaSheet(stage) {
 
 // Makine gövdesinin üstüne konacak rehber katman: canlı parçaların yerleri.
 function machineGuide() {
+  const L = KASA.L;
   const c = mk(BODY.W, BODY.H), x = c.getContext('2d');
   const G = (k) => t(`dev.guide.${k}`);
   const box = (r, label, dashed = false) => {
