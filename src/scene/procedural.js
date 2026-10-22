@@ -7,6 +7,7 @@
 // küçük amber göstergeler. Kırmızı yalnızca kayıt ışığında.
 import { mk, rr, lg, rg, seeded, grain, grime } from './paint.js';
 import { t } from '../core/strings.js';
+import { DOOR, paintCorridor, paintFrostedGlass } from './peeker.js';
 
 const TAU = Math.PI * 2;
 
@@ -152,65 +153,67 @@ export function paintGlass() {
 
 // ---------------------------------------------------------------- duvar objeleri
 
-// Metal kapı: tel camlı pencere (arkasında koridordan gözetleyen bir siluet), kol,
-// soluk boya yazı (0.95 × 2.15 m).
+// Metal kapı (0.95 × 2.15 m): fırçalanmış metal kanat, menteşeler, kapı kapatıcı, kollu kilit,
+// tekme plakası, soluk boya yazılar. Sağ üst köşeye yakın ince uzun buzlu cam; içindeki
+// koridor ve oradan geçen adam ayrı, canlı bir katmandır (peeker.js), burada yalnızca boş
+// koridor çizilir.
 export function paintDoor() {
-  const W = 380, H = 860, c = mk(W, H), x = c.getContext('2d');
+  const { W, H, win } = DOOR, c = mk(W, H), x = c.getContext('2d');
+  const R = seeded(11);
+  const screw = (px, py, r = 3) => {
+    x.fillStyle = 'rgba(0,0,0,0.6)'; x.beginPath(); x.arc(px + 0.8, py + 1, r, 0, TAU); x.fill();
+    x.fillStyle = rg(x, px - 1, py - 1, 0, px, py, r, [[0, '#9aa5a3'], [1, '#3a4444']]); x.beginPath(); x.arc(px, py, r, 0, TAU); x.fill();
+  };
   // kasa
-  x.fillStyle = '#0c1111'; x.fillRect(0, 0, W, H);
-  x.fillStyle = lg(x, 0, 0, W, 0, [[0, '#1a2222'], [0.5, '#2a3434'], [1, '#161d1d']]);
-  x.fillRect(16, 16, W - 32, H - 16);
-  // kapı kanadı
-  metalPanel(x, 30, 30, W - 60, H - 30, ['#2b3636', '#1d2626'], 21);
-  // takviye panelleri
-  for (const [py, ph] of [[70, 260], [560, 230]]) {
-    x.strokeStyle = 'rgba(0,0,0,0.45)'; x.lineWidth = 3; x.strokeRect(54, py, W - 108, ph);
-    x.strokeStyle = 'rgba(170,190,186,0.08)'; x.lineWidth = 1; x.strokeRect(57, py + 3, W - 114, ph - 6);
+  x.fillStyle = '#0a0e0e'; x.fillRect(0, 0, W, H);
+  x.fillStyle = lg(x, 0, 0, W, 0, [[0, '#1a2323'], [0.5, '#2a3535'], [1, '#151c1c']]); x.fillRect(12, 12, W - 24, H - 12);
+  x.fillStyle = 'rgba(255,255,255,0.06)'; x.fillRect(12, 12, W - 24, 2);
+  // kanat
+  const lx = 26, lw = W - 52, ly = 26, lh = H - 26;
+  x.fillStyle = 'rgba(0,0,0,0.5)'; x.fillRect(lx + 4, ly + 6, lw, lh);
+  x.fillStyle = lg(x, lx, 0, lx + lw, 0, [[0, '#2c3838'], [0.55, '#25302f'], [1, '#1b2424']]); x.fillRect(lx, ly, lw, lh);
+  for (let i = 0; i < 260; i++) { const py = ly + R() * lh; x.fillStyle = `rgba(${R() < 0.5 ? '255,255,255' : '0,0,0'},${0.015 + R() * 0.03})`; x.fillRect(lx, py, lw, 1); }
+  x.fillStyle = lg(x, 0, ly, 0, ly + lh, [[0, 'rgba(200,220,215,0.06)'], [0.5, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.35)']]); x.fillRect(lx, ly, lw, lh);
+  // takviye panelleri (üstteki pencereye yer bırakır)
+  for (const [px, py, pw, ph] of [[lx + 26, ly + 44, lw - 120, 300], [lx + 26, ly + 520, lw - 52, 220]]) {
+    x.strokeStyle = 'rgba(0,0,0,0.5)'; x.lineWidth = 3; x.strokeRect(px, py, pw, ph);
+    x.strokeStyle = 'rgba(170,190,186,0.08)'; x.lineWidth = 1; x.strokeRect(px + 3, py + 3, pw - 6, ph - 6);
   }
-  // pencere: koridor ışığı, gözetleyen siluet, tel cam
-  const wx = W / 2 - 50, wy = 92, ww = 100, wh = 216;
-  x.fillStyle = '#050707'; rr(x, wx - 8, wy - 8, ww + 16, wh + 16, 5); x.fill();
-  x.save();
-  rr(x, wx, wy, ww, wh, 3); x.clip();
-  x.fillStyle = lg(x, 0, wy, 0, wy + wh, [[0, '#6a7868'], [0.4, '#3c4740'], [1, '#161d19']]);
-  x.fillRect(wx, wy, ww, wh);
-  x.fillStyle = rg(x, wx + ww * 0.7, wy - 10, 4, wx + ww * 0.7, wy - 10, 120, [[0, 'rgba(215,205,165,0.5)'], [1, 'rgba(215,205,165,0)']]);
-  x.fillRect(wx, wy, ww, wh);
-  // siluet: kenardan içeri bakan baş ve omuz (arkadan aydınlık, önü karanlık)
-  const hx = wx + ww * 0.36, hy = wy + 92;
-  x.fillStyle = '#050706';
-  x.beginPath(); x.ellipse(hx, hy, 25, 31, -0.08, 0, TAU); x.fill();
-  x.beginPath(); x.moveTo(hx - 12, hy + 24); x.lineTo(hx - 14, hy + 44); x.lineTo(hx + 12, hy + 44); x.lineTo(hx + 10, hy + 24); x.fill();
-  x.beginPath();
-  x.moveTo(wx - 4, wy + wh); x.lineTo(wx - 4, hy + 62);
-  x.quadraticCurveTo(hx - 34, hy + 40, hx - 10, hy + 42);
-  x.lineTo(hx + 12, hy + 42); x.quadraticCurveTo(hx + 44, hy + 46, hx + 58, hy + 76);
-  x.lineTo(hx + 70, wy + wh); x.closePath(); x.fill();
-  // saç ve omuz kenarında arka ışık
-  x.strokeStyle = 'rgba(190,200,170,0.22)'; x.lineWidth = 2;
-  x.beginPath(); x.ellipse(hx, hy, 25, 31, -0.08, Math.PI * 1.15, Math.PI * 1.85); x.stroke();
-  x.beginPath(); x.moveTo(hx + 14, hy + 43); x.quadraticCurveTo(hx + 44, hy + 47, hx + 58, hy + 76); x.stroke();
-  // gözlerde belli belirsiz parıltı
-  x.fillStyle = 'rgba(210,220,200,0.32)';
-  x.fillRect(hx - 11, hy - 1, 4, 2); x.fillRect(hx + 7, hy - 2, 4, 2);
-  // tel cam ve yansıma
-  x.strokeStyle = 'rgba(150,175,170,0.13)'; x.lineWidth = 1;
-  x.beginPath();
-  for (let d = -wh; d < ww + wh; d += 14) { x.moveTo(wx + d, wy); x.lineTo(wx + d + wh, wy + wh); x.moveTo(wx + d, wy); x.lineTo(wx + d - wh, wy + wh); }
-  x.stroke();
-  x.fillStyle = lg(x, wx, wy, wx + ww, wy + wh, [[0, 'rgba(160,200,195,0)'], [0.42, 'rgba(160,200,195,0.1)'], [0.5, 'rgba(160,200,195,0.02)'], [1, 'rgba(160,200,195,0.06)']]);
-  x.fillRect(wx, wy, ww, wh);
+  // menteşeler ve kapı kapatıcı
+  for (const hy of [70, 420, 770]) { x.fillStyle = '#0d1212'; rr(x, 14, hy, 14, 54, 3); x.fill(); x.fillStyle = 'rgba(170,190,186,0.18)'; x.fillRect(16, hy + 2, 2, 50); }
+  x.fillStyle = '#121818'; rr(x, lx + 40, ly + 10, 110, 26, 4); x.fill();
+  x.fillStyle = 'rgba(170,190,186,0.15)'; x.fillRect(lx + 42, ly + 12, 106, 2);
+  x.strokeStyle = '#0d1212'; x.lineWidth = 7; x.lineCap = 'round'; x.beginPath(); x.moveTo(lx + 130, ly + 24); x.lineTo(lx + 176, ly + 4); x.stroke(); x.lineCap = 'butt';
+  // ince uzun pencere: boş koridor ve buzlu cam (canlı katman bunun üstüne oturur)
+  const { x: wx, y: wy, w: ww, h: wh } = win;
+  x.fillStyle = '#040606'; rr(x, wx - 9, wy - 9, ww + 18, wh + 18, 5); x.fill();
+  x.save(); rr(x, wx, wy, ww, wh, 3); x.clip();
+  paintCorridor(x, wx, wy, ww, wh);
+  paintFrostedGlass(x, wx, wy, ww, wh);
   x.restore();
-  x.strokeStyle = 'rgba(170,190,186,0.14)'; x.lineWidth = 1.5; rr(x, wx - 8, wy - 8, ww + 16, wh + 16, 5); x.stroke();
-  // kol
-  x.fillStyle = '#0a0e0e'; rr(x, W - 92, 420, 22, 90, 4); x.fill();
-  x.fillStyle = lg(x, 0, 445, 0, 470, [[0, '#7a8584'], [1, '#2f3838']]); rr(x, W - 140, 448, 70, 18, 7); x.fill();
-  // soluk boya yazı
-  const sign = t('room.doorSign');
-  stencil(x, sign[0], W / 2, 400, { size: 96, align: 'center', color: 'rgba(160,178,174,0.2)', spacing: 0.2 });
-  stencil(x, sign[1], W / 2, 444, { size: 26, align: 'center', color: 'rgba(160,178,174,0.24)', weight: 600, spacing: 0.12 });
-  stencil(x, t('room.doorStencil'), W / 2, 760, { size: 18, align: 'center', color: 'rgba(160,178,174,0.16)', weight: 600, spacing: 0.25 });
-  grain(x, W, H, 10, 22);
+  x.strokeStyle = '#1b2222'; x.lineWidth = 4; rr(x, wx - 5, wy - 5, ww + 10, wh + 10, 4); x.stroke();
+  for (const sy of [wy - 5, wy + wh / 2, wy + wh + 5]) { screw(wx - 5, sy, 2.4); screw(wx + ww + 5, sy, 2.4); }
+  // boya yazılar
+  const sign = t('room.doorSign'), cxw = lx + (lw - 90) / 2;
+  stencil(x, sign[0], cxw, 400, { size: 84, align: 'center', color: 'rgba(160,178,174,0.17)', spacing: 0.2 });
+  stencil(x, sign[1], cxw, 430, { size: 19, align: 'center', color: 'rgba(160,178,174,0.24)', weight: 600, spacing: 0.12 });
+  // kol, rozet, kilit; kolun çevresinde el izi kiri
+  const hx = lx + lw - 44;
+  x.fillStyle = '#0c1010'; rr(x, hx - 14, 446, 30, 110, 6); x.fill();
+  x.fillStyle = lg(x, 0, 456, 0, 486, [[0, '#8c9796'], [1, '#323b3b']]); rr(x, hx - 74, 468, 84, 17, 8); x.fill();
+  x.fillStyle = rg(x, hx - 1, 472, 0, hx, 476, 13, [[0, '#9aa5a3'], [1, '#2a3232']]); x.beginPath(); x.arc(hx, 476, 13, 0, TAU); x.fill();
+  x.fillStyle = '#070909'; x.beginPath(); x.arc(hx, 528, 7, 0, TAU); x.fill(); x.fillRect(hx - 1.5, 528, 3, 9);
+  x.fillStyle = rg(x, hx - 20, 486, 4, hx - 20, 486, 70, [[0, 'rgba(0,0,0,0.22)'], [1, 'rgba(0,0,0,0)']]); x.fillRect(hx - 100, 406, 160, 160);
+  // tekme plakası
+  const ky = H - 120;
+  x.fillStyle = lg(x, 0, ky, 0, H - 20, [[0, '#3a4545'], [1, '#202828']]); x.fillRect(lx + 10, ky, lw - 20, 96);
+  for (let i = 0; i < 70; i++) { x.fillStyle = `rgba(${R() < 0.5 ? '255,255,255' : '0,0,0'},${0.03 + R() * 0.05})`; x.fillRect(lx + 10, ky + R() * 96, lw - 20, 1); }
+  for (const sx of [lx + 20, lx + lw / 2, lx + lw - 20]) { screw(sx, ky + 8); screw(sx, ky + 88); }
+  stencil(x, t('room.doorStencil'), lx + lw / 2, 782, { size: 17, align: 'center', color: 'rgba(160,178,174,0.15)', weight: 600, spacing: 0.25 });
+  // çizikler
+  for (let i = 0; i < 140; i++) { const px = lx + R() * lw, py = ly + R() * lh, l = 4 + R() * 26, a = (R() - 0.5) * 1.4; x.strokeStyle = R() < 0.5 ? 'rgba(200,215,210,0.08)' : 'rgba(0,0,0,0.18)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke(); }
+  // kapı altından sızan koridor ışığı
+  x.fillStyle = 'rgba(220,215,185,0.35)'; x.fillRect(lx, H - 3, lw, 3);
   return c;
 }
 

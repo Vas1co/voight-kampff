@@ -1,7 +1,8 @@
 // Sorgu odası. Kamera masaya karşıdan, göz hizasından bakar; oda simetrik.
 //
 //  TAVAN ── uzun floresan armatür ve altında yavaş dönen pervane
-//  ARKA DUVAR ── sol: metal kapı + erişim paneli │ orta: gözlem camı (arkasında loş oda,
+//  ARKA DUVAR ── sol: metal kapı (ince buzlu camından arada bir biri geçip içeri bakar)
+//               + erişim paneli │ orta: gözlem camı (arkasında loş oda,
 //               boş sandalye) │ sağ: dosya dolabı, havalandırma, tabela │ sağ üst köşe: kamera
 //  MASA ── sol: dosya yığını, test kâğıdı + kalem │ orta: test makinesi (stage.js)
 //          │ sağ: kaset kaydedici, metal kupa, küllük (aralarında boşluk)
@@ -15,6 +16,7 @@ import { lightUniforms } from '../fx/shaders/common.js';
 import * as P from './procedural.js';
 import { Dust, Smoke } from './particles.js';
 import { CeilingFan } from './fan.js';
+import { DoorWindow, DOOR } from './peeker.js';
 
 export const DESK_Y = 0.76;
 const BACK_Z = -4.2;
@@ -66,6 +68,13 @@ export class Room {
 
     // --- sol duvar: metal kapı ve erişim paneli (yeşil gösterge)
     stand('door', P.paintDoor, 0.95, 2.15, -2.85, 0, BACK_Z + 0.02, { ambient: 0.55, transparent: false });
+    // kapı penceresi: koridor ve oradan geçip içeri bakan adam (canlı katman, camın tam üstünde)
+    this.doorWindow = new DoorWindow();
+    {
+      const k = 0.95 / DOOR.W, { x: wx, y: wy, w: ww, h: wh } = DOOR.win;
+      add(plane(ww * k, wh * k, litMaterial(this.doorWindow.texture, { ambient: 0.55, transparent: false })),
+        -2.85 + (wx + ww / 2 - DOOR.W / 2) * k, (DOOR.H - wy - wh / 2) * k, BACK_Z + 0.022);
+    }
     stand('access-panel', P.paintAccessPanel, 0.16, 0.24, -2.2, 1.13, BACK_Z + 0.02, { ambient: 0.35 });
     this.panelLed = add(plane(0.05, 0.05, glowMaterial('#5dff9c', 0.9)), -2.2, 1.3, BACK_Z + 0.03);
 
@@ -153,6 +162,8 @@ export class Room {
     this.ember.material.uniforms.uI.value = 0.7 + 0.35 * Math.sin(t * 1.7) * Math.sin(t * 0.7 + 1);
     this.cassetteRec.material.uniforms.uI.value = recording ? 0.6 + 0.3 * Math.sin(t * 3) : 0;
     this.camLed.material.uniforms.uI.value = 0.45 + 0.4 * (Math.sin(t * 3.1) > 0 ? 1 : 0.2);
+    this.doorWindow.reduce = this.reduce;
+    this.doorWindow.update(dt);
     this.smoke.update(dt, t, motion);
     this.dust.update(dt, t, motion);
   }
