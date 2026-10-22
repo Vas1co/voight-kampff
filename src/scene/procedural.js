@@ -279,25 +279,56 @@ export function paintSign() {
   return c;
 }
 
-// Güvenlik kamerası: duvara monte, aşağı ve masaya bakar (kırmızı kayıt ışığı ayrı katman).
+// Güvenlik kamerası: tavana asılı siyah taret kamera, merceği bize (masaya ve oyuncuya)
+// dönük; kablo ve ayak yok. Dokunun üst kenarı tavana değer. Kırmızı kayıt ışığı ayrı katman,
+// yeri CAMERA_LED (doku pikseli).
+export const CAMERA_LED = [166, 106];
 export function paintWallCamera() {
   const W = 330, H = 228, c = mk(W, H), x = c.getContext('2d');
-  // duvar ayağı
-  x.fillStyle = '#1b2222'; rr(x, W - 70, 20, 56, 90, 6); x.fill();
-  x.strokeStyle = '#141a1a'; x.lineWidth = 16; x.lineCap = 'round';
-  x.beginPath(); x.moveTo(W - 44, 70); x.lineTo(W - 110, 100); x.stroke();
-  // gövde (aşağı eğik)
-  // gövde aşağı ve sola, masaya doğru eğik (mercek sol alt uçta)
-  x.save(); x.translate(150, 120); x.rotate(-0.38);
-  x.fillStyle = lg(x, 0, -40, 0, 40, [[0, '#3a4444'], [0.5, '#242c2c'], [1, '#111616']]);
-  rr(x, -120, -38, 220, 76, 10); x.fill();
-  x.fillStyle = '#0c1010'; rr(x, -138, -32, 26, 64, 6); x.fill();             // ön başlık
-  x.fillStyle = '#050707'; x.beginPath(); x.arc(-128, 0, 22, 0, TAU); x.fill(); // lens
-  x.fillStyle = rg(x, -134, -6, 0, -128, 0, 20, [[0, 'rgba(120,160,160,0.6)'], [0.4, 'rgba(30,50,50,0.4)'], [1, 'rgba(0,0,0,0)']]);
-  x.beginPath(); x.arc(-128, 0, 20, 0, TAU); x.fill();
-  x.fillStyle = '#0a0d0d'; x.fillRect(-40, -46, 120, 10);                       // güneşlik
-  x.fillStyle = '#1a0605'; x.beginPath(); x.arc(40, -20, 6, 0, TAU); x.fill();  // kayıt ışığı yuvası
+  const body = (x0, x1) => lg(x, x0, 0, x1, 0, [[0, '#0d0f0f'], [0.25, '#1f2323'], [0.6, '#363c3c'], [0.85, '#1a1d1d'], [1, '#090a0a']]);
+  // tavana düşen gölge, taban halkası
+  x.fillStyle = 'rgba(0,0,0,0.3)'; x.beginPath(); x.ellipse(166, 2, 64, 7, 0, 0, TAU); x.fill();
+  x.fillStyle = body(114, 218); x.fillRect(114, 0, 104, 18);
+  x.fillStyle = '#151818'; x.beginPath(); x.ellipse(166, 18, 52, 7, 0, 0, Math.PI); x.fill();
+  x.strokeStyle = 'rgba(0,0,0,0.18)'; x.lineWidth = 1; x.beginPath(); x.ellipse(166, 18, 52, 7, 0, 0, Math.PI); x.stroke();
+  // gövde (topla aynı genişlikte)
+  x.fillStyle = body(118, 214); x.beginPath(); x.moveTo(118, 20); x.lineTo(214, 20); x.lineTo(214, 92); x.ellipse(166, 92, 48, 13, 0, 0, Math.PI); x.closePath(); x.fill();
+  x.strokeStyle = 'rgba(255,255,255,0.08)'; x.beginPath(); x.moveTo(118, 36); x.lineTo(214, 36); x.stroke();
+  x.fillStyle = 'rgba(255,255,255,0.1)'; x.fillRect(184, 22, 5, 64);
+  // top: gövdenin altından ve önünden taşar
+  const bx = 150, by = 124, br = 60;
+  x.fillStyle = 'rgba(0,0,0,0.3)'; x.beginPath(); x.arc(bx + 4, by + 6, br, 0, TAU); x.fill();
+  x.fillStyle = rg(x, bx - 22, by - 26, 4, bx, by, br, [[0, '#4c5353'], [0.5, '#232828'], [1, '#090b0b']]); x.beginPath(); x.arc(bx, by, br, 0, TAU); x.fill();
+  x.strokeStyle = 'rgba(0,0,0,0.28)'; x.lineWidth = 6; x.beginPath(); x.arc(bx + 2, by + 2, br - 2, -Math.PI * 0.62, -Math.PI * 0.05); x.stroke();
+  // parlak siyah ön yüz, ince açık halka
+  const fx = 132, fy = 136;
+  x.fillStyle = 'rgba(0,0,0,0.25)'; x.beginPath(); x.ellipse(fx + 2, fy + 3, 43, 45, -0.3, 0, TAU); x.fill();
+  x.fillStyle = 'rgba(150,160,158,0.45)'; x.beginPath(); x.ellipse(fx, fy, 44, 46, -0.3, 0, TAU); x.fill();
+  x.fillStyle = lg(x, fx - 40, fy - 40, fx + 40, fy + 40, [[0, '#202424'], [1, '#050606']]); x.beginPath(); x.ellipse(fx, fy, 41, 43, -0.3, 0, TAU); x.fill();
+  // dikdörtgen mercek penceresi
+  x.save(); x.translate(fx, fy); x.rotate(-0.12);
+  x.fillStyle = '#121414'; rr(x, -27, -22, 54, 44, 6); x.fill();
+  x.strokeStyle = 'rgba(255,255,255,0.12)'; x.lineWidth = 1.2; rr(x, -27, -22, 54, 44, 6); x.stroke();
+  x.fillStyle = '#080909'; rr(x, -21, -17, 42, 34, 4); x.fill();
   x.restore();
+  // mercek: bilezik, namlu, kaplamalı cam, halkalar, diyafram, lamba yansıması
+  const r = 15;
+  x.fillStyle = 'rgba(0,0,0,0.45)'; x.beginPath(); x.arc(fx + 2, fy + 3, r + 1, 0, TAU); x.fill();
+  x.fillStyle = lg(x, fx - r, fy - r, fx + r, fy + r, [[0, '#5a6262'], [1, '#1c2020']]); x.beginPath(); x.arc(fx, fy, r, 0, TAU); x.fill();
+  x.fillStyle = '#060808'; x.beginPath(); x.arc(fx, fy, r * 0.84, 0, TAU); x.fill();
+  x.fillStyle = rg(x, fx - r * 0.2, fy - r * 0.25, 0, fx, fy, r * 0.7, [[0, '#28494a'], [0.55, '#0e1d1e'], [1, '#040707']]); x.beginPath(); x.arc(fx, fy, r * 0.7, 0, TAU); x.fill();
+  x.strokeStyle = 'rgba(130,170,165,0.25)'; x.lineWidth = 1;
+  for (const k of [0.62, 0.48]) { x.beginPath(); x.arc(fx, fy, r * k, 0, TAU); x.stroke(); }
+  x.fillStyle = '#020303'; x.beginPath(); x.arc(fx, fy, r * 0.24, 0, TAU); x.fill();
+  x.strokeStyle = 'rgba(235,245,240,0.6)'; x.lineWidth = 1.4; x.beginPath(); x.arc(fx, fy, r * 0.56, Math.PI * 1.08, Math.PI * 1.42); x.stroke();
+  x.fillStyle = 'rgba(240,248,244,0.75)'; x.beginPath(); x.arc(fx - r * 0.3, fy - r * 0.32, r * 0.08, 0, TAU); x.fill();
+  // marka
+  x.save(); x.font = 'italic 600 13px "Source Sans 3", sans-serif'; if ('letterSpacing' in x) x.letterSpacing = '0.5px';
+  x.fillStyle = 'rgba(190,198,196,0.6)'; x.fillText(t('kasa.maker'), 126, 31); x.restore();
+  // kayıt ışığı yuvası
+  const [lx, ly] = CAMERA_LED;
+  x.fillStyle = '#050606'; x.beginPath(); x.arc(lx, ly, 4.5, 0, TAU); x.fill();
+  x.fillStyle = 'rgba(160,40,30,0.55)'; x.beginPath(); x.arc(lx, ly, 2.6, 0, TAU); x.fill();
   return c;
 }
 
