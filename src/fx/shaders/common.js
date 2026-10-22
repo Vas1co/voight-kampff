@@ -66,7 +66,7 @@ export const lightUniforms = {
   uLampHalf: { value: new THREE.Vector2(1.5, 0.18) },
   uLampI: { value: 1.0 },
   uFanPos: { value: new THREE.Vector3(0, 2.6, -1.65) },
-  uFanR: { value: 0.98 },
+  uFanR: { value: 1.2 },
   uFanAngle: { value: 0 },
   uBladeW: { value: 0.16 },
   uFanShadow: { value: 0.42 },
