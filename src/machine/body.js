@@ -184,25 +184,25 @@ export function paintBody(name = SCHEME_NAME) {
   x.beginPath(); x.arc(1832, 214, 26, 0, Math.PI * 2); x.fill();
   x.lineCap = 'butt';
 
-  // orta modül (CRT)
-  casing(x, PC, 668, 352, 712, 798, { top: 28, radius: 26 });
+  // orta modül (CRT): yan modüllerden biraz yüksek ve geniş, kenarları onların önüne biner
+  casing(x, PC, 628, 452, 792, 698, { top: 28, radius: 26 });
   // körük kaidesi (körük üstte ayrı katman)
-  x.fillStyle = lg(x, 0, 318, 0, 352, [[0, '#3a3d3e'], [1, '#151617']]);
-  rr(x, 690, 318, 668, 34, 8); x.fill();
-  x.fillStyle = 'rgba(255,255,255,0.18)'; x.fillRect(704, 320, 640, 2);
+  x.fillStyle = lg(x, 0, 418, 0, 452, [[0, '#3a3d3e'], [1, '#151617']]);
+  rr(x, 690, 418, 668, 34, 8); x.fill();
+  x.fillStyle = 'rgba(255,255,255,0.18)'; x.fillRect(704, 420, 640, 2);
   // LED çubuğu yuvası
   x.fillStyle = PC.socket; rr(x, L.led.x - 14, L.led.y - 11, L.led.w + 28, L.led.h + 22, 8); x.fill();
   // CRT çerçevesi
-  screenBezel(x, PC, L.crt, { pad: 48, radius: 46 });
-  for (let r = 0; r < 12; r++) for (let q = 0; q < 3; q++) {
-    x.fillStyle = PC.slot; x.beginPath(); x.arc(1338 + q * 16, 492 + r * 20, 4.2, 0, Math.PI * 2); x.fill();
+  screenBezel(x, PC, L.crt, { pad: 44, radius: 40 });
+  for (let r = 0; r < 7; r++) for (let q = 0; q < 3; q++) {
+    x.fillStyle = PC.slot; x.beginPath(); x.arc(1354 + q * 16, 584 + r * 20, 4.2, 0, Math.PI * 2); x.fill();
   }
   for (const k of L.keys) { x.fillStyle = PC.slot; rr(x, k.x - 6, k.y - 6, L.keySize.w + 12, L.keySize.h + 12, 7); x.fill(); }
-  label(x, PC, `${t('machine.channel')} 06`, L.crt.x - 6, 968, { size: 17 });
-  label(x, PC, t('machine.focus'), L.crt.x + L.crt.w + 6, 968, { size: 17, align: 'right' });
-  slots(x, PC, 760, 1010, 520, 72, 24);
-  x.fillStyle = PC.socket; rr(x, 700, 1100, 60, 28, 6); x.fill();
-  screw(x, PC, 692, 374); screw(x, PC, 1356, 374); screw(x, PC, 692, 1124); screw(x, PC, 1356, 1124);
+  label(x, PC, `${t('machine.channel')} 06`, L.crt.x - 6, 972, { size: 17 });
+  label(x, PC, t('machine.focus'), L.crt.x + L.crt.w + 6, 972, { size: 17, align: 'right' });
+  slots(x, PC, 760, 1006, 520, 72, 24);
+  x.fillStyle = PC.socket; rr(x, 660, 1100, 60, 28, 6); x.fill();
+  screw(x, PC, 652, 474); screw(x, PC, 1396, 474); screw(x, PC, 652, 1124); screw(x, PC, 1396, 1124);
 
   // kablo
   x.strokeStyle = '#141412'; x.lineWidth = 16;

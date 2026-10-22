@@ -120,7 +120,7 @@ export class Room {
     const CAS = new THREE.Vector3(1.06, DESK_Y + CH / 2, 0.08);
     stand('cassette', P.paintCassettePlayer, CW, CH, CAS.x, DESK_Y, CAS.z, { ambient: 0.4, crt: 1.4 });
     this.cassetteRec = add(plane(0.04, 0.04, glowMaterial('#ff3a2a', 0)), CAS.x - CW / 2 + CW * 0.68, CAS.y + CH * (0.5 - 0.37), CAS.z + 0.003);
-    stand('mug', P.paintMug, 0.16, 0.22, 1.36, DESK_Y, 0.44, { ambient: 0.55, crt: 1.0 });
+    stand('mug', P.paintMug, 0.207, 0.22, 1.36, DESK_Y, 0.44, { ambient: 0.55, crt: 1.0 });
     const AW = 0.3, AH = 0.15;
     const ASH = new THREE.Vector3(0.92, DESK_Y + AH / 2 - 0.002, 0.95);
     stand('ashtray', P.paintAshtray, AW, AH, ASH.x, DESK_Y - 0.002, ASH.z, { ambient: 0.4, crt: 1.2 });
