@@ -33,6 +33,7 @@ export const RENKLER = {
   griSari: { name: 'Orta gri · yanlar sarı', center: 'gri', sides: 'sari', arm: 'gri', terminal: true },
   siyah80: { name: 'Hepsi siyah', center: 'siyah', sides: 'siyah', arm: 'siyah', terminal: true },
   beyaz80: { name: 'Hepsi beyaz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, wear: 1 },
+  beyazTemiz: { name: 'Hepsi beyaz · temiz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, clean: true },
   // gövde grafit, orta soluk metal gri, yanlar eskimiş bordo; fosforlu olmayan CRT yeşili, az amber
   grafitBordo: { name: 'Grafit · metal gri · bordo', center: 'metal', sides: 'bordo', base: 'grafit', arm: 'metal', terminal: true, ink: '#54b99a', amber: '#d5ad63' },
   kirmizisiyah: { name: 'Orta kırmızı · yanlar siyah', center: 'kirmizi', sides: 'siyah', arm: 'kirmizi' },
@@ -238,6 +239,6 @@ export default {
     x.beginPath(); x.moveTo(40, 1236); x.bezierCurveTo(16, 1250, 4, 1268, -10, 1280); x.stroke();
 
     if (renk.wear) wear(x, [[40, 540, 620, 490], [1388, 540, 620, 490], [628, 452, 792, 698], [1774, 156, 182, 116], [28, 1158, W - 56, 100]], renk.wear);
-    weather(x, W, H, PC, { from: 320 });
+    weather(x, W, H, PC, { from: 320, dirt: !renk.clean });
   },
 };

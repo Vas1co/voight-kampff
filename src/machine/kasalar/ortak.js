@@ -156,10 +156,10 @@ export function knob(x, kx, ky, r = 28) {
 }
 
 // Kir, yıpranma ve gren (gövde çiziminin son adımı).
-export function weather(x, W, H, p, { from = 0 } = {}) {
+export function weather(x, W, H, p, { from = 0, dirt = true } = {}) {
   const R = seeded(77);
   x.globalCompositeOperation = 'source-atop';
-  for (let i = 0; i < 70; i++) {
+  for (let i = 0; i < (dirt ? 70 : 0); i++) {
     const px = R() * W, py = from + R() * (H - from), r = 30 + R() * 200;
     const d = p.dirt[R() < 0.5 ? 0 : 1];
     x.fillStyle = rg(x, px, py, 0, px, py, r, [[0, `rgba(${d},${0.04 + R() * 0.07})`], [1, 'rgba(0,0,0,0)']]);
