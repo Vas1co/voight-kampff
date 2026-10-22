@@ -24,8 +24,8 @@ export class Stage {
 
     this.machine = new Machine();
     // makine masanın ortasında: ne dibimizde ne arka uçta
-    // (konseptteki gibi baskın: %20 büyük)
-    const MS = 1.2;
+    // (konseptteki gibi baskın: %45 büyük)
+    const MS = 1.45;
     this.machine.group.scale.setScalar(MS);
     this.machine.group.position.set(0, 0.76 + (BODY.worldH * MS) / 2, 0.35);
 

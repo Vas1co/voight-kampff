@@ -83,3 +83,13 @@ Konsept şemasına göre, masaya karşıdan ve göz hizasından bakan simetrik o
 - Planlar: `wide`, `machine`, `crt`. Sahne satırlarında geniş plan, soru ve cevapta göz yakın planı,
   okumalarda makine planı. Her planda yavaş içeri kayma; fare/jiroskop paralaksı.
 - Her katman `tasarim/` üzerinden düzenlenebilir; yerleşim: `tasarim/_rehber/oda-yerlesim.png`.
+
+## 6. CRT ekranı
+
+Göz görüntüsü yeşil monokrom bir taramaya çevrilir ve üstüne arayüz çizilir (`src/machine/screen.js`).
+Durumlar: **bekleme** (DENEK BEKLENİYOR), **tarama** (başlık, denek kimliği, soru no, nişangâh, halkalar,
+tarama bandı, ilerleme, sıcaklık), **tamamlandı**, **veri** (cevabın ham sapmaları + duygusal tepki izi),
+**hata** (kırmızı: cevapsız soruda göz takibi kayboldu, anomalide açıklanamayan okuma).
+Akış: makine açılınca bekleme → temel ölçümde tarama → her soruda tarama → okuma bitince tamamlandı ve
+~3 sn veri (ya da hata). Makine yine hüküm vermez; yalnızca ham değer gösterir.
+

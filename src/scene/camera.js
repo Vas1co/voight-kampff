@@ -7,8 +7,8 @@ import { damp } from '../core/rng.js';
 
 export const SHOTS = {
   wide: { pos: [0, 1.55, 2.6], look: [0, 1.62, -3.0], w: 6.9, h: 3.7, push: 0.04 },
-  machine: { pos: [0, 1.21, 2.15], look: [0, 1.13, 0.35], w: 1.4, h: 0.89, push: 0.035 },
-  crt: { pos: [0, 1.11, 1.18], look: [0, 1.11, 0.36], w: 0.41, h: 0.306, push: 0.05 },
+  machine: { pos: [0, 1.29, 2.5], look: [0, 1.21, 0.35], w: 1.68, h: 1.07, push: 0.035 },
+  crt: { pos: [0, 1.18, 1.35], look: [0, 1.18, 0.36], w: 0.49, h: 0.37, push: 0.05 },
   desk: { pos: [-0.2, 1.6, 2.0], look: [-0.4, 0.8, 0.5], w: 1.8, h: 1.1, push: 0.03 },
 };
 

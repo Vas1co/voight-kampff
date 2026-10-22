@@ -318,5 +318,32 @@
     "files": "TEST DOSYALARI",
     "sheet": "TEST VERİSİ",
     "mug": "B4"
+  },
+  "screen": {
+    "header": "{test}",
+    "model": "{model}",
+    "awaiting": "DENEK BEKLENİYOR",
+    "scanTitle": "GÖZ TARAMA ANALİZİ",
+    "baselineTitle": "TEMEL ÖLÇÜM",
+    "id": "ID: {id}",
+    "phase": "S{n}",
+    "phaseBaseline": "T0",
+    "subject": "DENEK",
+    "scan": "TARAMA",
+    "temp": "T: {t}°C",
+    "complete": "ANALİZ TAMAMLANDI",
+    "dataTitle": "VERİ ANALİZİ",
+    "rows": {
+      "pupil": "GÖZ BEBEĞİ",
+      "blush": "KIZARMA",
+      "pulse": "NABIZ",
+      "latency": "TEPKİ SÜRESİ"
+    },
+    "response": "DUYGUSAL TEPKİ",
+    "error": "HATA",
+    "errorLost": "GÖZ TAKİBİ KAYBOLDU",
+    "errorAdjust": "LÜTFEN POZİSYONU DÜZELTİN",
+    "errorAnomaly": "AÇIKLANAMAYAN OKUMA",
+    "errorRecheck": "KALİBRASYONU DENETLEYİN"
   }
 }

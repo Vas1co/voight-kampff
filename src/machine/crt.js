@@ -1,20 +1,23 @@
-// Ana CRT: göz görüntüsünü (prosedürel ya da video) CRT shader'ı ile gösterir.
-// assets/video/eyes/<denek>-loop.(webm|mp4) varsa döngüsel video,
-// <denek>-dilate varsa göz bebeği genişleme klibi kullanılır.
+// Ana CRT: ekran arayüzünü (screen.js) CRT shader'ı ile gösterir. Göz görüntüsü
+// prosedürel çizilir; assets/video/eyes/<denek>-loop.(webm|mp4) varsa döngüsel video,
+// <denek>-dilate varsa göz bebeği genişleme klibi kullanılır. Her iki durumda da
+// görüntü yeşil monokrom taramaya çevrilir ve arayüz üstüne çizilir.
 import * as THREE from 'three';
 import { crtMaterial } from '../fx/shaders/crt.js';
 import { assets, videoTexture } from '../core/assets.js';
 import { Eye } from './eye.js';
+import { CrtScreen } from './screen.js';
 import { damp } from '../core/rng.js';
 
 export class Crt {
   constructor(w, h) {
     this.eye = new Eye({});
-    this.eyeTex = new THREE.CanvasTexture(this.eye.canvas);
-    this.eyeTex.colorSpace = THREE.SRGBColorSpace;
-    this.eyeTex.minFilter = THREE.LinearFilter;
-    this.eyeTex.generateMipmaps = false;
-    this.material = crtMaterial(this.eyeTex);
+    this.screen = new CrtScreen(this.eye);
+    this.tex = new THREE.CanvasTexture(this.screen.canvas);
+    this.tex.colorSpace = THREE.SRGBColorSpace;
+    this.tex.minFilter = THREE.LinearFilter;
+    this.tex.generateMipmaps = false;
+    this.material = crtMaterial(this.tex, { tint: '#f2fff8', bright: 1.25 });
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), this.material);
     this.power = 0; this.powerTarget = 0;
     this.glitch = 0; this.glitchT = 0;
@@ -34,19 +37,14 @@ export class Crt {
     const loopUrl = assets.video('video/eyes', `${id}-loop`);
     const dilateUrl = assets.video('video/eyes', `${id}-dilate`);
     if (this.video) { this.video.loop.video.pause(); this.video = null; }
-    if (!loopUrl) { this.material.uniforms.map.value = this.eyeTex; return; }
+    this.screen.source = null;
+    if (!loopUrl) return;
     const loop = videoTexture(loopUrl);
     const dilate = dilateUrl ? videoTexture(dilateUrl, { loop: false }) : null;
-    this.video = { loop, dilate, playing: 'loop' };
+    this.video = { loop, dilate };
     loop.video.play().catch(() => {});
-    this.material.uniforms.map.value = loop.texture;
-    if (dilate) dilate.video.addEventListener('ended', () => this.showLoop());
-  }
-
-  showLoop() {
-    if (!this.video) return;
-    this.video.playing = 'loop';
-    this.material.uniforms.map.value = this.video.loop.texture;
+    this.screen.source = loop.video;
+    if (dilate) dilate.video.addEventListener('ended', () => { this.screen.source = loop.video; });
   }
 
   // Göz bebeği tepkisi (prosedürel gözde çap, videoda genişleme klibi).
@@ -54,15 +52,19 @@ export class Crt {
     this.eye.setPupil(mm, rate);
     const v = this.video;
     if (v?.dilate && mm > this.eye.pupilMM * 1.03) {
-      v.playing = 'dilate';
       v.dilate.video.currentTime = 0;
       v.dilate.video.playbackRate = Math.min(2, Math.max(0.5, rate / 2));
       v.dilate.video.play().catch(() => {});
-      this.material.uniforms.map.value = v.dilate.texture;
+      this.screen.source = v.dilate.video;
     }
   }
 
-  setPower(on) { this.powerTarget = on ? 1 : 0; }
+  setPower(on) {
+    this.powerTarget = on ? 1 : 0;
+    if (!on) this.screen.set('off');
+    else if (this.screen.mode === 'off') this.screen.set('idle');
+  }
+
   kick(amount = 0.6, dur = 0.35) { this.glitch = Math.max(this.glitch, amount); this.glitchT = Math.max(this.glitchT, dur); }
 
   update(dt, time) {
@@ -82,10 +84,13 @@ export class Crt {
     u.uMotion.value = this.reduce ? 0 : 1;
     u.uFlicker.value = this.measuring ? 0.08 : 0.03;
     this.eye.reduce = this.reduce;
-    this.eye.focus = this.measuring ? 1 : 0.9;
-    if (!this.video || this.material.uniforms.map.value === this.eyeTex) {
-      this.eye.update(dt, this.measuring);
-      if (this.power > 0.02) { this.eye.render(); this.eyeTex.needsUpdate = true; }
+    this.eye.focus = this.measuring ? 1 : 0.92;
+    this.eye.update(dt, this.measuring);
+    this.screen.update(dt);
+    if (this.power > 0.02) {
+      if (this.screen.usesEye && !this.screen.source) this.eye.render();
+      this.screen.render();
+      this.tex.needsUpdate = true;
     }
   }
 }

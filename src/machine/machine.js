@@ -54,6 +54,7 @@ export class Machine {
     // CRT
     const cr = rectLocal(L.crt);
     this.crt = new Crt(cr.w, cr.h);
+    this.crt.screen.signals = this.signals;
     place(this.crt.mesh, L.crt);
 
     // yan ekranlar
