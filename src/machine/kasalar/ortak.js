@@ -19,26 +19,12 @@ export const PAL = {
     bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#140605',
     screw: ['#b9bcbe', '#5e6264', '#202224'], dirt: ['40,10,8', '0,0,0'], key: '#d9dcd8',
   },
-  mavi: {
-    hi: '#5f90c4', top: '#4b7eb3', face: '#376b9f', mid: '#2d5b89', low: '#1f4268',
-    side: ['rgba(4,14,30,0.3)', 'rgba(2,10,24,0.48)'], edge: 'rgba(6,18,34,0.72)', glint: 'rgba(210,230,255,0.45)',
-    slot: '#0a1522', slotHi: 'rgba(200,225,255,0.22)', ink: 'rgba(240,246,255,0.84)', inkHi: 'rgba(0,10,30,0.5)',
-    bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#0b1420',
-    screw: ['#c4c8cc', '#6a7074', '#24282a'], dirt: ['20,30,44', '0,0,0'], key: '#e6e9ee',
-  },
   beyaz: {
     hi: '#f3f3ef', top: '#e9e9e4', face: '#dddcd6', mid: '#d0cfc8', low: '#b3b2ab',
     side: ['rgba(40,40,36,0.2)', 'rgba(30,30,26,0.34)'], edge: 'rgba(50,50,46,0.5)', glint: 'rgba(255,255,255,0.8)',
     slot: '#2a2b2b', slotHi: 'rgba(255,255,255,0.5)', ink: 'rgba(40,42,44,0.8)', inkHi: 'rgba(255,255,255,0.5)',
     bezel: ['#2a2c2e', '#141516'], bezelShade: '0,0,0', recess: '#0c0d0d', socket: '#1c1d1d',
     screw: ['#f6f6f2', '#b4b4ae', '#6a6a64'], dirt: ['90,85,70', '50,50,46'], key: '#e6e6e0',
-  },
-  yesil: {
-    hi: '#6f9a6a', top: '#5c8758', face: '#487344', mid: '#3d6339', low: '#2b482a',
-    side: ['rgba(4,20,4,0.3)', 'rgba(2,14,2,0.46)'], edge: 'rgba(8,24,8,0.72)', glint: 'rgba(220,245,210,0.42)',
-    slot: '#0d180c', slotHi: 'rgba(210,240,200,0.2)', ink: 'rgba(236,244,232,0.84)', inkHi: 'rgba(0,20,0,0.45)',
-    bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#0d160c',
-    screw: ['#c4c8c2', '#6a706a', '#242a24'], dirt: ['40,50,30', '0,0,0'], key: '#e3e6dc',
   },
   sari: {
     hi: '#f0c94a', top: '#e3b836', face: '#d1a327', mid: '#bb8f1f', low: '#8f6b14',
