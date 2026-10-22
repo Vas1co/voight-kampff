@@ -1,5 +1,8 @@
 // Mevcut kasa: üç modül yan yana (sol monitör, ortada CRT, sağ monitör), körük
 // orta modülün üstünde, sağda metal kolun ucunda kayıt kamerası.
+// Renk şeması tek yerden seçilir: RENK = '<ad>'
+//   grisiyah      orta modül ve kamera kutusu gri, yan monitörler ve taban siyah
+//   kirmizisiyah  orta modül ve kamera kutusu kırmızı boyalı metal, gerisi siyah
 import { lg, rg, rr } from '../../scene/paint.js';
 import { t } from '../../core/strings.js';
 import { PAL, TAU, label, screw, slots, box, bezel, knob, weather } from './ortak.js';
@@ -19,13 +22,19 @@ export const L = {
   calLamp: { x: 1510, y: 1064 },
 };
 
+const RENKLER = {
+  grisiyah: { center: 'gri', sides: 'siyah', base: 'siyah', arm: 'gri', tint: '#f2f4f3' },
+  kirmizisiyah: { center: 'kirmizi', sides: 'siyah', base: 'siyah', arm: 'kirmizi', tint: '#f6f2f1' },
+};
+const RENK = RENKLER.kirmizisiyah;
+
 export default {
   name: 'Mevcut',
-  tint: '#f2f4f3',
+  tint: RENK.tint,
   L,
-  key: PAL.gri.key,
+  key: PAL[RENK.center].key,
   paint(x, W, H) {
-    const PB = PAL.siyah, PS = PAL.siyah, PC = PAL.gri, PA = PAL.gri;
+    const PB = PAL[RENK.base], PS = PAL[RENK.sides], PC = PAL[RENK.center], PA = PAL[RENK.arm];
 
     // taban
     x.fillStyle = 'rgba(0,0,0,0.4)'; x.fillRect(30, 1176, W - 60, 100);
