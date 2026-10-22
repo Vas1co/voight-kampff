@@ -2,11 +2,12 @@
 // Biçim ve yerleşim kasadan gelir (body.js → kasalar/mevcut.js); gövde dokusu
 // assets/images/room/machine.png ile değiştirilebilir.
 import * as THREE from 'three';
-import { textureOr } from '../core/assets.js';
+import { assets, textureOr } from '../core/assets.js';
 import { litMaterial, glowMaterial, crtUniforms } from '../fx/materials.js';
 import { crtMaterial } from '../fx/shaders/crt.js';
 import { BODY, rectLocal, toLocal } from './layout.js';
 import { paintBody, paintKey, KASA } from './body.js';
+import { RENK_NAME } from './kasalar/mevcut.js';
 import { Crt } from './crt.js';
 import { LeftMonitor, RightMonitor, LedBar } from './gauges.js';
 import { Bellows } from './bellows.js';
@@ -41,7 +42,9 @@ export class Machine {
     const Z = 0.0015;
 
     // gövde
-    const bodyTex = textureOr('images/room', 'machine', paintBody);
+    // düzenlenmiş gövde: önce seçili renk şemasının dosyası (machine-<renk>.png), yoksa machine.png
+    const ownFile = assets.image('images/room', `machine-${RENK_NAME}`) ? `machine-${RENK_NAME}` : 'machine';
+    const bodyTex = textureOr('images/room', ownFile, paintBody);
     this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: KASA.tint });
     this.body = new THREE.Mesh(new THREE.PlaneGeometry(BODY.worldW, BODY.worldH), this.bodyMat);
     this.group.add(this.body);

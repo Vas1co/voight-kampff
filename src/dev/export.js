@@ -41,6 +41,8 @@ const JOBS = [
   ['oda', 'chair-front', () => withScale(S, P.paintChairFront)],
   // makine
   ['oda', 'machine', () => withScale(S, paintBody)],
+  // her renk şeması ayrı dosya: düzenlenen, o şema seçiliyken oyuna geçer
+  ...Object.keys(RENKLER).filter((k) => RENKLER[k].terminal).map((k) => ['oda', `machine-${k}`, () => withScale(S, () => paintBody(RENKLER[k]))]),
   ['oda', 'machine-key', () => withScale(4, () => paintKey(false))],
   ['oda', 'machine-key-lit', () => withScale(4, () => paintKey(true))],
   ['goz', 'iris', () => makeIris(1024, { fleck: '#ead08a', ...player.eye }, player.eye.seed)],
