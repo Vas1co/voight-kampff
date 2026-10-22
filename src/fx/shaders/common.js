@@ -1,9 +1,7 @@
-// Ortak GLSL parçaları: gürültü, pencere ışığı (hüzme) ve pervane gölgesi.
-// Pencereden gelen ışık tek bir yönle modellenir. Bir noktanın aydınlanıp
-// aydınlanmadığı, o noktadan ışığın tersine gidip pencere düzlemine ulaşan
-// ışının pencereye düşüp düşmediğiyle bulunur. Aynı ışın pervane düzlemini
-// keserken bir kanada çarpıyorsa nokta gölgededir. Böylece hüzmeler, sis,
-// masa ve denek aynı dönen gölgeyi paylaşır.
+// Ortak GLSL parçaları: gürültü ve tavandaki floresan armatürün ışığı.
+// Işık, dikdörtgen bir alan ışığı gibi yaklaşık hesaplanır: armatürün altındaki
+// noktalar en çok, uzaklaştıkça yumuşakça azalan ışık alır. Işık hüzmesi,
+// renkli ışık ya da sert gölge yok; oda kurumsal ve loş.
 import * as THREE from 'three';
 
 export const NOISE = /* glsl */ `
@@ -22,60 +20,24 @@ float fbm(vec2 p){
 `;
 
 export const LIGHT = /* glsl */ `
-uniform vec3 uLightDir;     // pencereden odaya, birim vektör (aşağı ve öne)
-uniform vec4 uWindow;       // xMin, xMax, yMin, yMax (pencere düzleminde)
-uniform float uWindowZ;
-uniform vec3 uFanPos;
-uniform float uFanR;
-uniform float uFanAngle;
-uniform float uBladeW;
-uniform float uFanShadow;
-uniform float uMullions;
+uniform vec3 uLampPos;    // armatürün merkezi (tavanda)
+uniform vec2 uLampHalf;   // armatürün yarı genişliği (x) ve yarı derinliği (z)
+uniform float uLampI;     // anlık parlaklık (titreme dahil)
 
-float beam(vec3 p){
-  float t = (p.z - uWindowZ) / uLightDir.z;
-  if (t < 0.0) return 0.0;
-  vec3 w = p - uLightDir * t;
-  float soft = 0.06 + t * 0.035;
-  float m = smoothstep(uWindow.x - soft, uWindow.x + soft, w.x) * (1.0 - smoothstep(uWindow.y - soft, uWindow.y + soft, w.x))
-          * smoothstep(uWindow.z - soft, uWindow.z + soft, w.y) * (1.0 - smoothstep(uWindow.w - soft, uWindow.w + soft, w.y));
-  // pencere kayıtları (dikey kirişler) ışığı şeritlere böler
-  float span = uWindow.y - uWindow.x;
-  float mx = fract((w.x - uWindow.x) / span * uMullions);
-  float mull = smoothstep(0.0, 0.05 + t*0.004, mx) * smoothstep(1.0, 0.95 - t*0.004, mx);
-  return m * mix(1.0, mull, 0.55);
-}
-
-float fanShadow(vec3 p){
-  if (p.y > uFanPos.y - 0.01) return 1.0;
-  float s = (p.y - uFanPos.y) / uLightDir.y;
-  vec3 q = p - uLightDir * s;
-  vec2 d = q.xz - uFanPos.xz;
-  float r = length(d);
-  float a = atan(d.y, d.x) - uFanAngle;
-  float seg = 6.2831853 / 5.0;
-  float ang = a - seg * floor(a / seg + 0.5);
-  float perp = abs(r * sin(ang));
-  float soft = 0.012 + s * 0.03;
-  float halfW = uBladeW * 0.5 * (0.7 + 0.3 * smoothstep(0.1, uFanR, r));
-  float blade = (1.0 - smoothstep(halfW - soft, halfW + soft, perp)) * step(0.0, cos(ang))
-              * (1.0 - smoothstep(uFanR - soft, uFanR + soft, r));
-  float hub = 1.0 - smoothstep(0.11 - soft, 0.11 + soft, r);
-  return 1.0 - max(blade, hub) * uFanShadow;
+float lamp(vec3 p){
+  vec3 d = p - uLampPos;
+  float h = max(0.05, -d.y);
+  vec2 q = max(abs(d.xz) - uLampHalf, 0.0);
+  float r2 = dot(q, q) + h * h;
+  return uLampI / (1.0 + r2 * 0.42);
 }
 `;
 
 // Bütün ışık kullanan malzemelerin paylaştığı uniform nesneleri.
 export const lightUniforms = {
-  uLightDir: { value: new THREE.Vector3(0.1, -0.31, 1).normalize() },
-  uWindow: { value: new THREE.Vector4(-3.1, 3.1, 2.55, 3.18) },
-  uWindowZ: { value: -5.9 },
-  uFanPos: { value: new THREE.Vector3(0, 2.62, -4.85) },
-  uFanR: { value: 0.86 },
-  uFanAngle: { value: 0 },
-  uBladeW: { value: 0.13 },
-  uFanShadow: { value: 0.62 },
-  uMullions: { value: 4 },
+  uLampPos: { value: new THREE.Vector3(0, 3.14, -2.4) },
+  uLampHalf: { value: new THREE.Vector2(1.5, 0.18) },
+  uLampI: { value: 1.0 },
 };
 
 export const VERT_WORLD = /* glsl */ `

@@ -25,7 +25,7 @@ istersen: `http://localhost:5173/?disa-aktar&uzerine` (önce düzenlediklerini y
 ## Kurallar
 
 - **Boyut oranını koru.** Piksel boyutu büyüyebilir (ör. 2× daha), oran aynı kalmalı.
-- **Saydam alanlar saydam kalmalı** (makine, sandalyeler, klasör, küllük, kaset, kalemlik, iris).
+- **Saydam alanlar saydam kalmalı** (tabloda "evet" olanlar). Arka duvardaki gözlem camı boşluğu özellikle.
 - Renk profili **sRGB**.
 - Makinede rehberdeki **mor alanlar** oyunda canlı parçalarla örtülür:
   ekranlar, LED çubuğu ve CRT'nin sağındaki üç tuş oyunda canlı katmanla kaplanır (oraya çizdiklerin görünmez);
@@ -35,24 +35,38 @@ istersen: `http://localhost:5173/?disa-aktar&uzerine` (önce düzenlediklerini y
 
 ## Dosyalar
 
-| Dosya | Boyut | Saydam | Oyundaki yeri |
-|---|---|---|---|
-| `oda/machine.png` | 4096×2560 | evet | Masadaki test ünitesinin ön yüzü |
-| `oda/machine-grisiyah.png`, `machine-krem.png` | 4096×2560 | evet | Aynı ön yüzün renk şeması sürümleri (karşılaştırma için); hangisini kullanacaksan `machine.png` adıyla kaydet |
-| `oda/machine-key.png`, `machine-key-lit.png` | 256×256 | hayır | CRT'nin sağındaki tuşlar (biri amber yanar) |
-| `oda/wall.png` | 4096×1760 | hayır | Arka duvar (14×6 m) |
-| `oda/window.png` | 2048×224 | hayır | Parlak pencere şeridi |
-| `oda/mirror.png` | 1024×768 | hayır | Sol duvardaki ayna cam |
-| `oda/desk.png` | 2048×2048 | hayır | Masa üstü (4×3 m; dosya kare, oyunda 4:3'e gerilir) |
-| `oda/desk-edge.png` | 1024×64 | hayır | Masanın uzak kenar kalınlığı |
-| `oda/folder.png` | 1024×1320 | evet | Sol arkadaki klasör (tepeden) |
-| `oda/report.png` | 1024×1400 | hayır | Sol öndeki kâğıt (tepeden) |
-| `oda/ashtray.png` | 512×256 | evet | Sağ öndeki küllük (yandan); sigara ucu sağda, duman oradan çıkar |
-| `oda/cassette.png` | 1024×400 | evet | Sağ arkadaki kaset çalar (önden) |
-| `oda/pencup.png` | 256×384 | evet | Kalemlik |
-| `oda/chair-left.png`, `chair-right.png` | 768×2048 | evet | Çerçeve kenarlarındaki sandalyeler |
-| `goz/iris.png` | 1024×1024 | evet | CRT'deki gözün irisi (merkezde, daire). Göz bebeği oyunda üstüne çizilir. |
-| `goz/sclera.png` | 1440×1120 | hayır | Göz akı ve damarlar (göz kapakları oyunda üstüne çizilir) |
+Her katmanın odada nerede durduğu: **`_rehber/oda-yerlesim.png`** (geniş plan, katman adları üstünde).
+Makinenin canlı parçaları: `_rehber/machine-rehber.png`.
 
-Not: Tavan pervanesi, göz kapakları, ekran içerikleri, yelpaze körük ve LED'ler her karede kodla çizilir;
+| Dosya | Boyut | Saydam | Odadaki yeri |
+|---|---|---|---|
+| `oda/lamp.png` | 2400×288 | hayır | Tavandaki floresan armatür (alttan görünüş). Işığı oyun hesaplar; dosya yalnızca görünüş |
+| `oda/wall.png` | 2880×1280 | **evet** | Arka duvar (7.2×3.2 m). Ortadaki gözlem camının yeri **saydam** kalmalı (x 680–2200, y 260–900) |
+| `oda/side-wall.png` | 2720×1280 | hayır | Sol ve sağ yan duvarlar |
+| `oda/ceiling.png` | 2048×2048 | hayır | Tavan |
+| `oda/behind-room.png` | 2400×1280 | hayır | Gözlem camının arkasındaki loş bitişik oda |
+| `oda/chair-behind.png` | 640×1160 | evet | Camın arkasındaki boş sorgu sandalyesi (silüet) |
+| `oda/glass.png` | 1520×640 | evet (yarı) | Gözlem camı: yansıma çizgileri, kir; büyük ölçüde saydam |
+| `oda/door.png` | 760×1720 | hayır | Sol: metal kapı, dar dikey pencere, "VK TEST ODASI 03" |
+| `oda/access-panel.png` | 256×384 | evet | Kapının sağındaki küçük erişim paneli (yeşil gösterge ışığı oyunda) |
+| `oda/cabinet.png` | 640×1080 | evet | Sağ: metal dosya dolabı |
+| `oda/vent.png` | 480×280 | evet | Sağ: havalandırma ızgarası |
+| `oda/sign.png` | 660×456 | evet | Sağ: soluk prosedür tabelası |
+| `oda/camera.png` | 660×456 | evet | Sağ üst köşe: güvenlik kamerası, aşağı ve masaya bakar (kırmızı kayıt ışığı oyunda) |
+| `oda/desk.png` | 2048×1536 | hayır | Masa üstü, koyu metal (4×3 m, tepeden) |
+| `oda/desk-edge.png` | 1024×64 | hayır | Masanın uzak kenarı |
+| `oda/files.png` | 960×416 | evet | Masanın solu: test dosyaları ve manila klasör yığını (önden, hafif yukarıdan) |
+| `oda/sheet.png` | 600×800 | hayır | Masanın sol önü: basılı test verisi sayfası (tepeden) |
+| `oda/pen.png` | 680×48 | evet | Kâğıdın üstünde çapraz duran siyah kalem (tepeden) |
+| `oda/machine.png` | 4096×2560 | evet | Masanın ortası: test makinesinin ön yüzü |
+| `oda/machine-grisiyah.png` | 4096×2560 | evet | Makinenin renk şeması sürümleri (karşılaştırma için, oyuna geçmez); `machine-krem.png` de aynı |
+| `oda/machine-key.png` | 256×256 | hayır | CRT'nin sağındaki tuşlar; `machine-key-lit.png` amber yanan |
+| `oda/cassette.png` | 1024×400 | evet | Masanın sağı: kompakt kaset ses kaydedici (önden) |
+| `oda/mug.png` | 352×480 | evet | Masanın sağı: sade metal kupa |
+| `oda/ashtray.png` | 512×256 | evet | Masanın sağ önü: küçük yuvarlak küllük ve sigara (duman sigara ucundan çıkar) |
+| `oda/chair-front.png` | 1000×750 | evet | Ön plan: alt kenardaki sandalye sırtı silüeti (yalnızca geniş planda) |
+| `goz/iris.png` | 1024×1024 | evet | CRT'deki gözün irisi (merkezde daire; göz bebeği oyunda çizilir) |
+| `goz/sclera.png` | 1440×1120 | hayır | Göz akı ve damarlar |
+
+Not: Göz kapakları, ekran içerikleri, yelpaze körük, LED'ler ve gösterge ışıkları her karede kodla çizilir;
 bunlar dosyayla değiştirilmez.

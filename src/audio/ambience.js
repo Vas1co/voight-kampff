@@ -1,4 +1,4 @@
-// Sürekli sesler: oda uğultusu, pervane ritmi, CRT vızıltısı, makine motoru, kaset motoru.
+// Sürekli sesler: oda uğultusu, floresan vızıltısı, CRT vızıltısı, makine motoru, kaset motoru.
 // assets/audio/sfx/room-tone varsa oda uğultusu yerine dosya döngüde çalar.
 import { audio } from './engine.js';
 
@@ -22,14 +22,17 @@ export class Ambience {
       o.connect(of); of.connect(og); og.connect(out); o.start();
     }
 
-    // pervane: kanat geçişiyle dalgalanan hava
-    const fs = audio.loopNoise(audio.white);
-    const ff = ctx.createBiquadFilter(); ff.type = 'bandpass'; ff.frequency.value = 650; ff.Q.value = 0.6;
-    this.fanGain = ctx.createGain(); this.fanGain.gain.value = 0.010;
-    fs.connect(ff); ff.connect(this.fanGain); this.fanGain.connect(out);
-    this.fanLfo = ctx.createOscillator(); this.fanLfo.frequency.value = (1.05 * 5) / (Math.PI * 2);
-    const lg = ctx.createGain(); lg.gain.value = 0.007;
-    this.fanLfo.connect(lg); lg.connect(this.fanGain.gain); this.fanLfo.start();
+    // floresan armatür: balast vızıltısı (100/200 Hz) ve hafif cızırtı
+    this.lampGain = ctx.createGain(); this.lampGain.gain.value = 0.006;
+    this.lampGain.connect(out);
+    for (const [fr, a] of [[100, 1], [200, 0.5], [300, 0.2]]) {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = fr;
+      const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 600;
+      const g = ctx.createGain(); g.gain.value = a * 0.25; o.connect(f); f.connect(g); g.connect(this.lampGain); o.start();
+    }
+    const ls = audio.loopNoise(audio.white);
+    const lf = ctx.createBiquadFilter(); lf.type = 'bandpass'; lf.frequency.value = 4200; lf.Q.value = 2;
+    const lg = ctx.createGain(); lg.gain.value = 0.25; ls.connect(lf); lf.connect(lg); lg.connect(this.lampGain);
 
     // CRT vızıltısı + makine motoru (güçle açılır)
     this.hum = ctx.createGain(); this.hum.gain.value = 0;
@@ -60,9 +63,10 @@ export class Ambience {
     this.hum.gain.setTargetAtTime(power * (close ? 0.014 : 0.006), audio.now, 0.3);
   }
 
-  fan(speed) {
-    if (!this.fanLfo) return;
-    this.fanLfo.frequency.setTargetAtTime((speed * 5) / (Math.PI * 2), audio.now, 0.5);
+  // Floresanın titremesi vızıltıya da yansır.
+  lamp(level) {
+    if (!this.lampGain) return;
+    this.lampGain.gain.setTargetAtTime(0.006 * (0.4 + 0.6 * level), audio.now, 0.02);
   }
 
   recording(on) { this.tape?.gain.setTargetAtTime(on ? 0.008 : 0, audio.now, 0.1); }

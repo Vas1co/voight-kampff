@@ -73,5 +73,5 @@ if (import.meta.env.DEV) {
   // Geliştirme: ?hizli ile altyazılar hızlanır (test için).
   if (new URLSearchParams(location.search).has('hizli')) subs.speed = 5;
   // Geliştirme: ?disa-aktar ile dokular düzenlenebilir PNG olarak tasarim/ klasörüne yazılır.
-  if (new URLSearchParams(location.search).has('disa-aktar')) import('./dev/export.js').then((m) => m.runExport());
+  if (new URLSearchParams(location.search).has('disa-aktar')) import('./dev/export.js').then((m) => setTimeout(() => m.runExport(stage), 1500));
 }

@@ -70,8 +70,16 @@ TITLE → INTRO (sorgucu oturtur, makineyi açar, kaydı başlatır)
 
 ## 5. Sahne
 
-- Katmanlar (arkadan öne): duvar + pencere → ayna cam → prototip pervanesi (pencerenin önünde, yavaş) →
-  ışık hüzmeleri ve sis (pervane gölgeli) → masa → krem makine → masa objeleri → ön plan toz/duman.
-- Denek silueti yok: sorgucu karşıdadır, yalnızca sesi/altyazısı gelir.
-- Planlar: `wide`, `machine`, `crt`, `desk`. Sahne satırlarında geniş plan, soru ve cevapta göz yakın planı,
+Konsept şemasına göre, masaya karşıdan ve göz hizasından bakan simetrik oda:
+
+- **Tavan:** tek, uzun, yaşlı floresan armatür. Işık modeli: tavandaki dikdörtgen alan ışığı
+  (`src/fx/shaders/common.js` → `lamp()`); hüzme, renkli ışık ve güçlü bloom yok. Ara sıra titreme.
+- **Arka duvar:** solda metal kapı + erişim paneli, ortada kalın çerçeveli gözlem camı (arkasında loş
+  bitişik oda ve boş sandalye), sağda dosya dolabı, havalandırma ve prosedür tabelası; sağ üst köşede
+  masaya bakan güvenlik kamerası (kırmızı kayıt ışığı).
+- **Masa (koyu metal):** solda dosya yığını, test kâğıdı ve çapraz kalem; ortada test makinesi
+  (%20 büyük, baskın); sağda kaset kaydedici, metal kupa ve küllük, aralarında boşluk.
+- **Ön plan:** alt kenarda sandalye sırtı silüeti (yalnızca geniş planda).
+- Planlar: `wide`, `machine`, `crt`. Sahne satırlarında geniş plan, soru ve cevapta göz yakın planı,
   okumalarda makine planı. Her planda yavaş içeri kayma; fare/jiroskop paralaksı.
+- Her katman `tasarim/` üzerinden düzenlenebilir; yerleşim: `tasarim/_rehber/oda-yerlesim.png`.

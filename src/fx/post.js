@@ -12,7 +12,7 @@ export function createPost(renderer, scene, camera, { quality = 'high' } = {}) {
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const div = quality === 'high' ? 2 : 3;
-  const bloom = new UnrealBloomPass(new THREE.Vector2(size.x / div, size.y / div), 0.32, 0.5, 1.05);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(size.x / div, size.y / div), 0.18, 0.4, 1.1);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
   const film = new ShaderPass(FilmShader);

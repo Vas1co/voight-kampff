@@ -18,24 +18,37 @@ seste `ogg → opus → mp3 → m4a → wav`.
 Katmanlar Three.js düzlemlerine dokudur. Saydam olanlar **PNG (RGBA)** ya da **WebP (alfa)** olmalı.
 Boyutlar önerilen en az değerlerdir; oran korunmalı. Renk uzayı sRGB.
 
-| Dosya | Boyut (px) | Alfa | Düzlem (m) | Not |
-|---|---|---|---|---|
-| `wall` | 4096 × 1760 | hayır | 14 × 6 | Arka duvar. Pencere ayrı katman. |
-| `window` | 2048 × 224 | hayır | 6.2 × 0.63 | Aşırı parlak pencere şeridi (bloom yakalar). 4 eşit bölme, kirişler koyu. |
-| `mirror` | 1024 × 768 | hayır | 2.4 × 1.5 | Sol arka duvardaki tek yönlü ayna cam. |
-| `desk` | 2048 × 1536 | hayır | 4 × 3 | Masa üstü, **tepeden** düz doku. Uzak kenar görüntünün üstünde. |
-| `desk-edge` | 1024 × 64 | hayır | 4 × 0.06 | Masanın uzak kenar kalınlığı. |
-| `folder` | 1024 × 1320 | evet | 0.30 × 0.39 | Kapalı vaka klasörü, tepeden. |
-| `report` | 1024 × 1400 | hayır | 0.25 × 0.34 | Masadaki rapor kâğıdı, tepeden. |
-| `ashtray` | 512 × 256 | evet | 0.20 × 0.10 | Küllük + sigara, yandan. Sigara ucu sağda (duman çıkışı ~ x %80, y %45). |
-| `cassette` | 1024 × 400 | evet | 0.27 × 0.105 | Masadaki kaset çalar, önden. |
-| `pencup` | 256 × 384 | evet | 0.09 × 0.135 | Kalemlik. |
-| `chair-left`, `chair-right` | 768 × 2048 | evet | 0.62 × 1.65 | Ön plandaki boş yüksek sırtlı sandalyeler. |
-| `machine` | 4096 × 2560 | **evet** | 1.0 × 0.625 | Makine ön yüzü (90'lar krem plastik kasalar). **Ekran, LED ve körük alanları boş/koyu bırakılmalı**; dinamik katmanlar üstüne oturur. |
+| Ad | Boyut (px) | Alfa | Yeri |
+|---|---|---|---|
+| `lamp` | 2400×288 | hayır | Tavandaki floresan armatür (alttan görünüş). Işığı oyun hesaplar; dosya yalnızca görünüş |
+| `wall` | 2880×1280 | **evet** | Arka duvar (7.2×3.2 m). Ortadaki gözlem camının yeri **saydam** kalmalı (x 680–2200, y 260–900) |
+| `side-wall` | 2720×1280 | hayır | Sol ve sağ yan duvarlar |
+| `ceiling` | 2048×2048 | hayır | Tavan |
+| `behind-room` | 2400×1280 | hayır | Gözlem camının arkasındaki loş bitişik oda |
+| `chair-behind` | 640×1160 | evet | Camın arkasındaki boş sorgu sandalyesi (silüet) |
+| `glass` | 1520×640 | evet (yarı) | Gözlem camı: yansıma çizgileri, kir; büyük ölçüde saydam |
+| `door` | 760×1720 | hayır | Sol: metal kapı, dar dikey pencere, "VK TEST ODASI 03" |
+| `access-panel` | 256×384 | evet | Kapının sağındaki küçük erişim paneli (yeşil gösterge ışığı oyunda) |
+| `cabinet` | 640×1080 | evet | Sağ: metal dosya dolabı |
+| `vent` | 480×280 | evet | Sağ: havalandırma ızgarası |
+| `sign` | 660×456 | evet | Sağ: soluk prosedür tabelası |
+| `camera` | 660×456 | evet | Sağ üst köşe: güvenlik kamerası, aşağı ve masaya bakar (kırmızı kayıt ışığı oyunda) |
+| `desk` | 2048×1536 | hayır | Masa üstü, koyu metal (4×3 m, tepeden) |
+| `desk-edge` | 1024×64 | hayır | Masanın uzak kenarı |
+| `files` | 960×416 | evet | Masanın solu: test dosyaları ve manila klasör yığını (önden, hafif yukarıdan) |
+| `sheet` | 600×800 | hayır | Masanın sol önü: basılı test verisi sayfası (tepeden) |
+| `pen` | 680×48 | evet | Kâğıdın üstünde çapraz duran siyah kalem (tepeden) |
+| `machine` | 4096×2560 | evet | Masanın ortası: test makinesinin ön yüzü |
+| `machine-grisiyah` | 4096×2560 | evet | Makinenin renk şeması sürümleri (karşılaştırma için, oyuna geçmez); `machine-krem.png` de aynı |
+| `machine-key` | 256×256 | hayır | CRT'nin sağındaki tuşlar; `machine-key-lit.png` amber yanan |
+| `cassette` | 1024×400 | evet | Masanın sağı: kompakt kaset ses kaydedici (önden) |
+| `mug` | 352×480 | evet | Masanın sağı: sade metal kupa |
+| `ashtray` | 512×256 | evet | Masanın sağ önü: küçük yuvarlak küllük ve sigara (duman sigara ucundan çıkar) |
+| `chair-front` | 1000×750 | evet | Ön plan: alt kenardaki sandalye sırtı silüeti (yalnızca geniş planda) |
 
-| `machine-key`, `machine-key-lit` | 256 × 256 | hayır | — | CRT'nin sağındaki tuşlar (normal / amber yanan). |
-
-> Tavan pervanesi ilk prototipteki çizimle her karede kodla çizilir (`src/scene/fan.js`); dosyayla değiştirilmez.
+Oda yerleşimi (konsept şemasına göre): tavanda floresan armatür; arka duvarda solda kapı + erişim paneli,
+ortada gözlem camı (arkasında loş oda ve boş sandalye), sağda dolap, havalandırma, tabela; sağ üst köşede kamera.
+Masada solda dosyalar, kâğıt ve kalem; ortada makine; sağda kaset, kupa, küllük. Ön planda sandalye sırtı.
 
 > **Düzenlemeye başlamak için:** geliştirme sunucusu açıkken `http://localhost:5173/?disa-aktar`
 > adresi tüm prosedürel dokuları 2× çözünürlükte `tasarim/` klasörüne yazar (makine için rehber

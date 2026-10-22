@@ -10,7 +10,7 @@ const puffTex = (() => {
   return t;
 })();
 
-function pointsMaterial({ additive = true, baseColor = '#cfe6e0', alpha = 1, beamK = 1, ambient = 0.2 }) {
+function pointsMaterial({ additive = true, baseColor = '#cfe6e0', alpha = 1, lampK = 1, ambient = 0.2 }) {
   return new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
@@ -20,7 +20,7 @@ function pointsMaterial({ additive = true, baseColor = '#cfe6e0', alpha = 1, bea
       map: { value: puffTex },
       uColor: { value: new THREE.Color(baseColor) },
       uAlpha: { value: alpha },
-      uBeamK: { value: beamK },
+      uLampK: { value: lampK },
       uAmbK: { value: ambient },
       uScale: { value: 600 },
     },
@@ -38,14 +38,14 @@ function pointsMaterial({ additive = true, baseColor = '#cfe6e0', alpha = 1, bea
     fragmentShader: /* glsl */ `
       ${NOISE}
       ${LIGHT}
-      uniform sampler2D map; uniform vec3 uColor, uBeamColor, uCrtPos, uCrtColor; uniform float uAlpha, uBeamK, uAmbK, uCrtI;
+      uniform sampler2D map; uniform vec3 uColor, uCrtPos, uCrtColor; uniform float uAlpha, uLampK, uAmbK, uCrtI;
       varying float vA; varying vec3 vWorld;
       void main(){
         float m = texture2D(map, gl_PointCoord).a;
-        float b = beam(vWorld) * fanShadow(vWorld);
+        float b = lamp(vWorld);
         vec3 toCrt = vWorld - uCrtPos;
         float crt = uCrtI / (1.0 + dot(toCrt, toCrt) * 25.0);
-        vec3 col = uColor * (uAmbK + b * uBeamK) + uCrtColor * crt * 0.6;
+        vec3 col = uColor * (uAmbK + b * uLampK) + uCrtColor * crt * 0.6;
         gl_FragColor = vec4(col * m * vA * uAlpha, m * vA * uAlpha);
       }`,
   });
@@ -66,7 +66,7 @@ export class Dust {
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
     g.setAttribute('aAlpha', new THREE.BufferAttribute(alpha, 1));
-    this.points = new THREE.Points(g, pointsMaterial({ additive: true, baseColor: '#e6f5f0', beamK: 2.4, ambient: 0.05 }));
+    this.points = new THREE.Points(g, pointsMaterial({ additive: true, baseColor: '#e6f5f0', lampK: 0.9, ambient: 0.04 }));
     this.points.frustumCulled = false;
     this.attractor = null;
     this.pull = 0;
@@ -119,7 +119,7 @@ export class Smoke {
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
     g.setAttribute('aAlpha', new THREE.BufferAttribute(alpha, 1));
-    this.points = new THREE.Points(g, pointsMaterial({ additive: true, baseColor: '#b9d4cf', beamK: 0.9, ambient: 0.16, alpha: 0.5 }));
+    this.points = new THREE.Points(g, pointsMaterial({ additive: true, baseColor: '#b9d4cf', lampK: 0.45, ambient: 0.12, alpha: 0.5 }));
     this.points.frustumCulled = false;
     this.fanBoost = 0;
   }
