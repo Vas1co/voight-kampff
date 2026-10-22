@@ -6,8 +6,7 @@
     "era": "Kasım 2019",
     "machine": "EMPATİ ANALİZ ÜNİTESİ",
     "model": "MK·VI",
-    "testShort": "VK",
-    "maker": "ARDON"
+    "testShort": "VK"
   },
   "title": {
     "kicker": "Empati ölçüm birimi · {era}",
@@ -65,10 +64,7 @@
     "focus": "ODAK",
     "panelLeft": "SOLUNUM · NABIZ",
     "panelRight": "TEPKİ ANALİZİ",
-    "stress": "GERG",
-    "unitLeft": "ANALOG GİRİŞ ÜNİTESİ",
-    "unitCenter": "GÖRSEL İŞLEM ÜNİTESİ",
-    "unitRight": "VERİ ANALİZ ÜNİTESİ"
+    "stress": "GERG"
   },
   "report": {
     "title": "SORGU RAPORU",
@@ -349,5 +345,20 @@
     "errorAdjust": "LÜTFEN POZİSYONU DÜZELTİN",
     "errorAnomaly": "AÇIKLANAMAYAN OKUMA",
     "errorRecheck": "KALİBRASYONU DENETLEYİN"
+  },
+  "kasa": {
+    "maker": "SONI",
+    "machine": "EMPATHY ANALYSIS UNIT",
+    "model": "MK-VI",
+    "unitLeft": "ANALOG INPUT UNIT",
+    "unitCenter": "VISUAL PROCESSING UNIT",
+    "unitRight": "DATA ANALYSIS UNIT",
+    "panelLeft": "RESPIRATION · PULSE",
+    "panelRight": "RESPONSE ANALYSIS",
+    "anomaly": "ANOMALY",
+    "stress": "GRG-7",
+    "calib": "CAL",
+    "channel": "CH",
+    "focus": "FOCUS"
   }
 }
