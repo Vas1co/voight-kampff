@@ -152,7 +152,8 @@ export function paintGlass() {
 
 // ---------------------------------------------------------------- duvar objeleri
 
-// Metal kapı: dar dikey pencere, kol, soluk boya yazı (0.95 × 2.15 m).
+// Metal kapı: tel camlı pencere (arkasında koridordan gözetleyen bir siluet), kol,
+// soluk boya yazı (0.95 × 2.15 m).
 export function paintDoor() {
   const W = 380, H = 860, c = mk(W, H), x = c.getContext('2d');
   // kasa
@@ -166,12 +167,41 @@ export function paintDoor() {
     x.strokeStyle = 'rgba(0,0,0,0.45)'; x.lineWidth = 3; x.strokeRect(54, py, W - 108, ph);
     x.strokeStyle = 'rgba(170,190,186,0.08)'; x.lineWidth = 1; x.strokeRect(57, py + 3, W - 114, ph - 6);
   }
-  // dar dikey pencere
-  x.fillStyle = '#060909'; rr(x, W / 2 - 22, 90, 44, 220, 4); x.fill();
-  x.fillStyle = lg(x, W / 2 - 18, 0, W / 2 + 18, 0, [[0, 'rgba(90,130,125,0.15)'], [0.5, 'rgba(140,180,175,0.28)'], [1, 'rgba(90,130,125,0.1)']]);
-  rr(x, W / 2 - 18, 94, 36, 212, 3); x.fill();
-  x.strokeStyle = 'rgba(0,0,0,0.6)'; x.lineWidth = 2;
-  for (let i = 0; i < 6; i++) { x.beginPath(); x.moveTo(W / 2 - 18, 110 + i * 34); x.lineTo(W / 2 + 18, 120 + i * 34); x.stroke(); }
+  // pencere: koridor ışığı, gözetleyen siluet, tel cam
+  const wx = W / 2 - 50, wy = 92, ww = 100, wh = 216;
+  x.fillStyle = '#050707'; rr(x, wx - 8, wy - 8, ww + 16, wh + 16, 5); x.fill();
+  x.save();
+  rr(x, wx, wy, ww, wh, 3); x.clip();
+  x.fillStyle = lg(x, 0, wy, 0, wy + wh, [[0, '#6a7868'], [0.4, '#3c4740'], [1, '#161d19']]);
+  x.fillRect(wx, wy, ww, wh);
+  x.fillStyle = rg(x, wx + ww * 0.7, wy - 10, 4, wx + ww * 0.7, wy - 10, 120, [[0, 'rgba(215,205,165,0.5)'], [1, 'rgba(215,205,165,0)']]);
+  x.fillRect(wx, wy, ww, wh);
+  // siluet: kenardan içeri bakan baş ve omuz (arkadan aydınlık, önü karanlık)
+  const hx = wx + ww * 0.36, hy = wy + 92;
+  x.fillStyle = '#050706';
+  x.beginPath(); x.ellipse(hx, hy, 25, 31, -0.08, 0, TAU); x.fill();
+  x.beginPath(); x.moveTo(hx - 12, hy + 24); x.lineTo(hx - 14, hy + 44); x.lineTo(hx + 12, hy + 44); x.lineTo(hx + 10, hy + 24); x.fill();
+  x.beginPath();
+  x.moveTo(wx - 4, wy + wh); x.lineTo(wx - 4, hy + 62);
+  x.quadraticCurveTo(hx - 34, hy + 40, hx - 10, hy + 42);
+  x.lineTo(hx + 12, hy + 42); x.quadraticCurveTo(hx + 44, hy + 46, hx + 58, hy + 76);
+  x.lineTo(hx + 70, wy + wh); x.closePath(); x.fill();
+  // saç ve omuz kenarında arka ışık
+  x.strokeStyle = 'rgba(190,200,170,0.22)'; x.lineWidth = 2;
+  x.beginPath(); x.ellipse(hx, hy, 25, 31, -0.08, Math.PI * 1.15, Math.PI * 1.85); x.stroke();
+  x.beginPath(); x.moveTo(hx + 14, hy + 43); x.quadraticCurveTo(hx + 44, hy + 47, hx + 58, hy + 76); x.stroke();
+  // gözlerde belli belirsiz parıltı
+  x.fillStyle = 'rgba(210,220,200,0.32)';
+  x.fillRect(hx - 11, hy - 1, 4, 2); x.fillRect(hx + 7, hy - 2, 4, 2);
+  // tel cam ve yansıma
+  x.strokeStyle = 'rgba(150,175,170,0.13)'; x.lineWidth = 1;
+  x.beginPath();
+  for (let d = -wh; d < ww + wh; d += 14) { x.moveTo(wx + d, wy); x.lineTo(wx + d + wh, wy + wh); x.moveTo(wx + d, wy); x.lineTo(wx + d - wh, wy + wh); }
+  x.stroke();
+  x.fillStyle = lg(x, wx, wy, wx + ww, wy + wh, [[0, 'rgba(160,200,195,0)'], [0.42, 'rgba(160,200,195,0.1)'], [0.5, 'rgba(160,200,195,0.02)'], [1, 'rgba(160,200,195,0.06)']]);
+  x.fillRect(wx, wy, ww, wh);
+  x.restore();
+  x.strokeStyle = 'rgba(170,190,186,0.14)'; x.lineWidth = 1.5; rr(x, wx - 8, wy - 8, ww + 16, wh + 16, 5); x.stroke();
   // kol
   x.fillStyle = '#0a0e0e'; rr(x, W - 92, 420, 22, 90, 4); x.fill();
   x.fillStyle = lg(x, 0, 445, 0, 470, [[0, '#7a8584'], [1, '#2f3838']]); rr(x, W - 140, 448, 70, 18, 7); x.fill();
@@ -380,18 +410,19 @@ export function paintPen() {
 
 // Sade metal kupa (önden, hafif yukarıdan).
 export function paintMug() {
-  const W = 176, H = 240, c = mk(W, H), x = c.getContext('2d');
+  const W = 226, H = 240, c = mk(W, H), x = c.getContext('2d');
+  const L = 14, R = 176, M = (L + R) / 2, RX = (R - L) / 2;
   // kulp
   x.strokeStyle = '#2a3131'; x.lineWidth = 16;
-  x.beginPath(); x.ellipse(140, 120, 26, 48, 0, -Math.PI / 2, Math.PI / 2); x.stroke();
+  x.beginPath(); x.ellipse(R + 4, 120, 26, 48, 0, -Math.PI / 2, Math.PI / 2); x.stroke();
   // gövde
-  x.fillStyle = lg(x, 14, 0, 136, 0, [[0, '#1a2020'], [0.3, '#4e5858'], [0.45, '#7a8483'], [0.6, '#3a4343'], [1, '#141919']]);
-  x.fillRect(14, 30, 122, 196);
-  x.beginPath(); x.ellipse(75, 226, 61, 12, 0, 0, Math.PI); x.fill();
+  x.fillStyle = lg(x, L, 0, R, 0, [[0, '#1a2020'], [0.3, '#4e5858'], [0.45, '#7a8483'], [0.6, '#3a4343'], [1, '#141919']]);
+  x.fillRect(L, 30, R - L, 196);
+  x.beginPath(); x.ellipse(M, 226, RX, 13, 0, 0, Math.PI); x.fill();
   // ağız
-  x.fillStyle = '#5c6666'; x.beginPath(); x.ellipse(75, 30, 61, 14, 0, 0, TAU); x.fill();
-  x.fillStyle = '#0c0f0f'; x.beginPath(); x.ellipse(75, 31, 54, 10, 0, 0, TAU); x.fill();
-  stencil(x, t('room.mug'), 60, 150, { size: 22, color: 'rgba(170,185,180,0.25)', font: 'Plex Mono', weight: 600 });
+  x.fillStyle = '#5c6666'; x.beginPath(); x.ellipse(M, 30, RX, 16, 0, 0, TAU); x.fill();
+  x.fillStyle = '#0c0f0f'; x.beginPath(); x.ellipse(M, 31, RX - 7, 12, 0, 0, TAU); x.fill();
+  stencil(x, t('room.mug'), M - 18, 150, { size: 22, color: 'rgba(170,185,180,0.25)', font: 'Plex Mono', weight: 600 });
   return c;
 }
 

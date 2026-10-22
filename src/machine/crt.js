@@ -6,12 +6,12 @@ import * as THREE from 'three';
 import { crtMaterial } from '../fx/shaders/crt.js';
 import { assets, videoTexture } from '../core/assets.js';
 import { Eye } from './eye.js';
-import { CrtScreen } from './screen.js';
+import { CrtScreen, W as SW, H as SH } from './screen.js';
 import { damp } from '../core/rng.js';
 
 export class Crt {
   constructor(w, h) {
-    this.eye = new Eye({});
+    this.eye = new Eye({}, { width: SW, height: SH });
     this.screen = new CrtScreen(this.eye);
     this.tex = new THREE.CanvasTexture(this.screen.canvas);
     this.tex.colorSpace = THREE.SRGBColorSpace;

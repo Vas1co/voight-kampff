@@ -11,7 +11,8 @@ import { mk, rr } from '../scene/paint.js';
 import { t } from '../core/strings.js';
 import { sgn } from './gauges.js';
 
-const W = 640, H = 480;
+// yatay dikdörtgen ekran; göz tuvali de aynı boyutta (crt.js)
+export const W = 768, H = 440;
 const INK = '#6dffc9', DIM = 'rgba(109,255,201,0.45)', FAINT = 'rgba(109,255,201,0.16)';
 const RED = '#ff4a3a', RED_DIM = 'rgba(255,74,58,0.45)';
 const MONO = '"Plex Mono", ui-monospace, monospace';
@@ -184,10 +185,10 @@ export class CrtScreen {
     const x = this.x;
     this.header();
     const blink = this.t % 1.6 < 1.15;
-    this.corners(170, 150, W - 170, 360, 22, DIM);
-    if (blink) this.text(t('screen.awaiting'), W / 2, 205, { size: 20, weight: 600, align: 'center', spacing: 0.12 });
+    this.corners(210, 128, W - 210, 330, 22, DIM);
+    if (blink) this.text(t('screen.awaiting'), W / 2, 185, { size: 20, weight: 600, align: 'center', spacing: 0.12 });
     // göz simgesi
-    const cx = W / 2, cy = 275;
+    const cx = W / 2, cy = 255;
     x.strokeStyle = INK; x.lineWidth = 3;
     x.beginPath(); x.moveTo(cx - 44, cy); x.quadraticCurveTo(cx, cy - 36, cx + 44, cy); x.quadraticCurveTo(cx, cy + 36, cx - 44, cy); x.stroke();
     x.beginPath(); x.arc(cx, cy, 14, 0, TAU); x.stroke();
@@ -236,16 +237,16 @@ export class CrtScreen {
     this.header(RED_DIM);
     this.corners(84, 70, W - 84, H - 64, 26, RED, 2.5);
     const on = Math.floor(this.modeT * 3) % 2 === 0;
-    this.text(t('screen.error'), W / 2, 125, { size: 26, weight: 600, align: 'center', color: RED, spacing: 0.2 });
+    this.text(t('screen.error'), W / 2, 112, { size: 26, weight: 600, align: 'center', color: RED, spacing: 0.2 });
     // uyarı üçgeni
-    const cx = W / 2, cy = 215;
+    const cx = W / 2, cy = 196;
     x.strokeStyle = on ? RED : RED_DIM; x.lineWidth = 4; x.lineJoin = 'round';
     x.beginPath(); x.moveTo(cx, cy - 40); x.lineTo(cx + 46, cy + 36); x.lineTo(cx - 46, cy + 36); x.closePath(); x.stroke();
     x.lineWidth = 5; x.beginPath(); x.moveTo(cx, cy - 12); x.lineTo(cx, cy + 12); x.stroke();
     x.fillStyle = on ? RED : RED_DIM; x.beginPath(); x.arc(cx, cy + 24, 3.5, 0, TAU); x.fill();
     const lines = o.kind === 'anomaly' ? [t('screen.errorAnomaly'), t('screen.errorRecheck')] : [t('screen.errorLost'), t('screen.errorAdjust')];
-    this.text(lines[0], W / 2, 305, { size: 20, weight: 600, align: 'center', color: RED, spacing: 0.08 });
-    this.text(lines[1], W / 2, 335, { size: 20, weight: 600, align: 'center', color: RED, spacing: 0.08 });
+    this.text(lines[0], W / 2, 282, { size: 20, weight: 600, align: 'center', color: RED, spacing: 0.08 });
+    this.text(lines[1], W / 2, 312, { size: 20, weight: 600, align: 'center', color: RED, spacing: 0.08 });
   }
 
   render() {
