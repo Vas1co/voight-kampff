@@ -3,7 +3,7 @@
 //  TAVAN ── uzun floresan armatür ve altında yavaş dönen pervane
 //  ARKA DUVAR ── sol: metal kapı (ince buzlu camından arada bir biri geçip içeri bakar)
 //               + erişim paneli │ orta: gözlem camı (arkasında loş oda,
-//               boş sandalye) │ sağ: dosya dolabı, havalandırma, tabela │ sağ üst köşe: kamera
+//               boş sandalye) │ sağ: dosya dolabı, havalandırma, tabela │ sağ üst köşe: tavana asılı taret kamera
 //  MASA ── sol: dosya yığını, test kâğıdı + kalem │ orta: test makinesi (stage.js)
 //          │ sağ: kaset kaydedici, metal kupa, küllük (aralarında boşluk)
 //  ÖN PLAN ── sandalye sırtı silüeti
@@ -46,6 +46,10 @@ export class Room {
     const W = 7.2, H = CEIL_Y;
     named(add(plane(W, H, litMaterial(tex('wall', P.paintWall), { ambient: 0.55, alphaTest: 0.5 })), 0, H / 2, BACK_Z), 'wall')
       .userData.labelAt = new THREE.Vector3(-1.2, 2.85, BACK_Z); // etiket yeri (yerleşim rehberi)
+    // Arka duvar saydam katmanların hepsinden önce çizilir. Saydam nesneler merkezlerinin
+    // uzaklığına göre sıralanır; bazı açılardan (fareyle kayan kamera) dev duvar önündeki
+    // tabela, havalandırma, kamera gibi küçük katmanlardan "yakın" sayılıp üstlerine çiziliyordu.
+    this.group.children.at(-1).renderOrder = -1;
     for (const s of [-1, 1]) {
       const side = add(plane(7, H, litMaterial(tex('side-wall', P.paintSideWall), { ambient: 0.22, transparent: false })), s * W / 2, H / 2, BACK_Z + 3.5);
       side.rotation.y = -s * Math.PI / 2;
@@ -84,8 +88,13 @@ export class Room {
     stand('sign', P.paintSign, 0.55, 0.38, 2.75, 2.11, BACK_Z + 0.02, { ambient: 0.32, lamp: 0.8 });
 
     // --- sağ üst köşe: güvenlik kamerası (kırmızı kayıt ışığı)
-    stand('camera', P.paintWallCamera, 0.72, 0.5, 2.55, 2.5, -3.9, { ambient: 0.5 });
-    this.camLed = add(plane(0.06, 0.06, glowMaterial('#ff3a2a', 0.8)), 2.582, 2.81, -3.89);
+    // güvenlik kamerası: sağ üst köşede tavana asılı, merceği masaya dönük
+    {
+      const CW = 0.5, CH = CW * 228 / 330, CX = 2.55, CZ = -3.9, bottom = CEIL_Y - CH;
+      stand('camera', P.paintWallCamera, CW, CH, CX, bottom, CZ, { ambient: 0.5 });
+      const [lx, ly] = P.CAMERA_LED;
+      this.camLed = add(plane(0.042, 0.042, glowMaterial('#ff3a2a', 0.8)), CX + (lx / 330 - 0.5) * CW, bottom + (1 - ly / 228) * CH, CZ + 0.01);
+    }
 
     // --- tavan: floresan armatür (aşağı bakar)
     const lp = lightUniforms.uLampPos.value;
