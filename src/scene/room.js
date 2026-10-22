@@ -76,7 +76,7 @@ export class Room {
 
     // --- sağ üst köşe: güvenlik kamerası (kırmızı kayıt ışığı)
     stand('camera', P.paintWallCamera, 0.72, 0.5, 2.55, 2.5, -3.9, { ambient: 0.5 });
-    this.camLed = add(plane(0.06, 0.06, glowMaterial('#ff3a2a', 0.8)), 2.73, 2.82, -3.89);
+    this.camLed = add(plane(0.06, 0.06, glowMaterial('#ff3a2a', 0.8)), 2.582, 2.81, -3.89);
 
     // --- tavan: floresan armatür (aşağı bakar)
     const lp = lightUniforms.uLampPos.value;
@@ -115,13 +115,16 @@ export class Room {
     pen.name = 'pen';
 
     // --- masanın sağı: kaset kaydedici, metal kupa, küllük (aralarında boşluk)
-    const CAS = new THREE.Vector3(0.98, DESK_Y + 0.0525, 0.08);
-    stand('cassette', P.paintCassettePlayer, 0.27, 0.105, CAS.x, DESK_Y, CAS.z, { ambient: 0.4, crt: 1.4 });
-    this.cassetteRec = add(plane(0.03, 0.03, glowMaterial('#ff3a2a', 0)), CAS.x - 0.135 + 0.27 * 0.68, CAS.y + 0.105 * (0.5 - 0.37), CAS.z + 0.003);
-    stand('mug', P.paintMug, 0.11, 0.15, 1.2, DESK_Y, 0.45, { ambient: 0.55, crt: 1.0 });
-    const ASH = new THREE.Vector3(0.9, DESK_Y + 0.048, 0.92);
-    stand('ashtray', P.paintAshtray, 0.2, 0.1, ASH.x, DESK_Y - 0.002, ASH.z, { ambient: 0.4, crt: 1.2 });
-    const tip = new THREE.Vector3(ASH.x + 0.2 * (206 / 256 - 0.5), ASH.y + 0.1 * (0.5 - 57 / 128), ASH.z + 0.002);
+    // boyutlar soldaki test kâğıdına (0.3 × 0.4 m) göre ayarlı
+    const CW = 0.42, CH = CW / 2.56;
+    const CAS = new THREE.Vector3(1.06, DESK_Y + CH / 2, 0.08);
+    stand('cassette', P.paintCassettePlayer, CW, CH, CAS.x, DESK_Y, CAS.z, { ambient: 0.4, crt: 1.4 });
+    this.cassetteRec = add(plane(0.04, 0.04, glowMaterial('#ff3a2a', 0)), CAS.x - CW / 2 + CW * 0.68, CAS.y + CH * (0.5 - 0.37), CAS.z + 0.003);
+    stand('mug', P.paintMug, 0.16, 0.22, 1.36, DESK_Y, 0.44, { ambient: 0.55, crt: 1.0 });
+    const AW = 0.3, AH = 0.15;
+    const ASH = new THREE.Vector3(0.92, DESK_Y + AH / 2 - 0.002, 0.95);
+    stand('ashtray', P.paintAshtray, AW, AH, ASH.x, DESK_Y - 0.002, ASH.z, { ambient: 0.4, crt: 1.2 });
+    const tip = new THREE.Vector3(ASH.x + AW * (206 / 256 - 0.5), ASH.y + AH * (0.5 - 57 / 128), ASH.z + 0.002);
     this.ember = add(plane(0.05, 0.05, glowMaterial('#ff8a3a', 1.0)), tip.x, tip.y, tip.z + 0.003);
     this.smoke = new Smoke(tip, { max: quality === 'high' ? 70 : 35, rate: 5 });
     this.group.add(this.smoke.points);
