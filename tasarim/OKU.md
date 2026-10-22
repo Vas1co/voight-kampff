@@ -13,8 +13,8 @@ Dosya adları oyunun beklediği adlarla aynıdır.
    ve tarayıcı kendiliğinden yenilenir. Sunucu kapalıyken kaydettiysen, bir sonraki açılışta uygulanır.
 
 Yalnızca **senin değiştirdiğin** dosyalar oyuna geçer; dokunmadıkların kodla çizilmeye devam eder.
-`machine-grisiyah.png` / `machine-krem.png` karşılaştırma içindir, oyuna geçmez; birini kullanmak
-istersen `machine.png` adıyla kaydet.
+`machine-<kasa>.png` dosyaları (ör. `machine-y1982.png`) karşılaştırma içindir, oyuna geçmez; birini kullanmak
+istersen `machine.png` adıyla kaydet. Kasaları oyunda denemek için adrese `?kasa=siber` gibi ekle.
 
 Geri almak için dosyayı `assets/images/...` klasöründen sil; oyun çizime döner.
 
@@ -59,7 +59,7 @@ Makinenin canlı parçaları: `_rehber/machine-rehber.png`.
 | `oda/sheet.png` | 600×800 | hayır | Masanın sol önü: basılı test verisi sayfası (tepeden) |
 | `oda/pen.png` | 680×48 | evet | Kâğıdın üstünde çapraz duran siyah kalem (tepeden) |
 | `oda/machine.png` | 4096×2560 | evet | Masanın ortası: test makinesinin ön yüzü |
-| `oda/machine-grisiyah.png` | 4096×2560 | evet | Makinenin renk şeması sürümleri (karşılaştırma için, oyuna geçmez); `machine-krem.png` de aynı |
+| `machine-<kasa>` | 4096×2560 | evet | Kasa seçenekleri (mevcut, y1982, y2017, siber, terminal, saha); her birinin biçimi ve ekran yerleşimi farklı. Karşılaştırma için, oyuna geçmez. Hepsi yan yana: `_rehber/kasa-secenekleri.png`. Oyunda denemek: adrese `?kasa=<ad>` ekle |
 | `oda/machine-key.png` | 256×256 | hayır | CRT'nin sağındaki tuşlar; `machine-key-lit.png` amber yanan |
 | `oda/cassette.png` | 1024×400 | evet | Masanın sağı: kompakt kaset ses kaydedici (önden) |
 | `oda/mug.png` | 352×480 | evet | Masanın sağı: sade metal kupa |

@@ -1,9 +1,9 @@
 // Three.js sahnesi: renderer, oda, makine, kamera ve post-processing.
 import * as THREE from 'three';
 import { Room } from './room.js';
-import { CameraRig } from './camera.js';
+import { CameraRig, SHOTS } from './camera.js';
 import { Machine } from '../machine/machine.js';
-import { BODY } from '../machine/layout.js';
+import { BODY, rectLocal } from '../machine/layout.js';
 import { createPost } from '../fx/post.js';
 import { crtUniforms } from '../fx/materials.js';
 import { setPointScale } from './particles.js';
@@ -32,6 +32,9 @@ export class Stage {
 
     this.scene.add(this.machine.group);
     this.scene.updateMatrixWorld(true);
+    // yakın CRT planı, seçili kasada ekranın durduğu yere bakar
+    const cw = this.machine.crtWorld(new THREE.Vector3()), cs = rectLocal(this.machine.L.crt);
+    Object.assign(SHOTS.crt, { pos: [cw.x, cw.y, cw.z + 0.99], look: [cw.x, cw.y, cw.z + 0.01], w: cs.w * MS * 1.22, h: cs.h * MS * 1.28 });
     this.machine.crtWorld(crtUniforms.uCrtPos.value);
     crtUniforms.uCrtPos.value.z += 0.03;
     this.room.dust.attractor = this.machine.intakeWorld();
