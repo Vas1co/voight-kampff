@@ -1,4 +1,4 @@
-// Sürekli sesler: oda uğultusu, floresan vızıltısı, CRT vızıltısı, makine motoru, kaset motoru.
+// Sürekli sesler: oda uğultusu, pervane, floresan vızıltısı, CRT vızıltısı, makine motoru, kaset motoru.
 // assets/audio/sfx/room-tone varsa oda uğultusu yerine dosya döngüde çalar.
 import { audio } from './engine.js';
 
@@ -21,6 +21,15 @@ export class Ambience {
       const og = ctx.createGain(); og.gain.value = 0.012;
       o.connect(of); of.connect(og); og.connect(out); o.start();
     }
+
+    // pervane: kanat geçişiyle yavaşça dalgalanan hava
+    const fs = audio.loopNoise(audio.white);
+    const ff = ctx.createBiquadFilter(); ff.type = 'bandpass'; ff.frequency.value = 600; ff.Q.value = 0.6;
+    this.fanGain = ctx.createGain(); this.fanGain.gain.value = 0.008;
+    fs.connect(ff); ff.connect(this.fanGain); this.fanGain.connect(out);
+    this.fanLfo = ctx.createOscillator(); this.fanLfo.frequency.value = (0.75 * 5) / (Math.PI * 2);
+    const flg = ctx.createGain(); flg.gain.value = 0.006;
+    this.fanLfo.connect(flg); flg.connect(this.fanGain.gain); this.fanLfo.start();
 
     // floresan armatür: balast vızıltısı (100/200 Hz) ve hafif cızırtı
     this.lampGain = ctx.createGain(); this.lampGain.gain.value = 0.006;
@@ -61,6 +70,11 @@ export class Ambience {
   machine(power, close = false) {
     if (!this.hum) return;
     this.hum.gain.setTargetAtTime(power * (close ? 0.014 : 0.006), audio.now, 0.3);
+  }
+
+  fan(speed) {
+    if (!this.fanLfo) return;
+    this.fanLfo.frequency.setTargetAtTime((speed * 5) / (Math.PI * 2), audio.now, 0.5);
   }
 
   // Floresanın titremesi vızıltıya da yansır.
