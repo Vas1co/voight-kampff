@@ -14,6 +14,9 @@ Dosya adları oyunun beklediği adlarla aynıdır.
 
 Yalnızca **senin değiştirdiğin** dosyalar oyuna geçer; dokunmadıkların kodla çizilmeye devam eder.
 
+Makinenin renk şemaları yan yana: `_rehber/renk-secenekleri.png`. Oyunda denemek için adrese `?renk=maviBeyaz` gibi ekle
+(adlar: kirmizi80, kirmiziGri, griKirmizi, maviBeyaz, yesilGri, griYesil, sari). Kalıcı seçim: `src/machine/kasalar/mevcut.js` → `VARSAYILAN_RENK`.
+
 Geri almak için dosyayı `assets/images/...` klasöründen sil; oyun çizime döner.
 
 Bu klasörü yeniden üretmek için geliştirme sunucusu açıkken `http://localhost:5173/?disa-aktar`
