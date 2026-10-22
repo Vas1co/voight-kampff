@@ -4,6 +4,7 @@
 import * as P from '../scene/procedural.js';
 import { withScale, mk, seeded } from '../scene/paint.js';
 import { paintBody, paintKey, KASA } from '../machine/body.js';
+import { RENKLER, RENK_NAME } from '../machine/kasalar/mevcut.js';
 import { makeIris, makeSclera } from '../machine/eye.js';
 import { BODY } from '../machine/layout.js';
 import * as THREE from 'three';
@@ -46,6 +47,7 @@ const JOBS = [
   ['goz', 'sclera', () => withScale(S, () => makeSclera(720, 560, seeded(player.eye.seed)))],
   ['_rehber', 'machine-rehber', () => withScale(S, machineGuide)],
   ['_rehber', 'oda-yerlesim', (stage) => layoutGuide(stage)],
+  ['_rehber', 'renk-secenekleri', (stage) => renkSheet(stage)],
 ];
 
 // Odanın geniş planını 1920×1080 çizer ve her katmanın üstüne dosya adını yazar.
@@ -85,6 +87,45 @@ export function layoutGuide(stage) {
   renderer.setPixelRatio(prevPR);
   rig.cut(prevShot);
   rig.size.top = prevInsets.top; rig.size.bottom = prevInsets.bottom;
+  stage.resize();
+  return c;
+}
+
+// Makinenin renk şemalarını oda ışığında, makine planında yan yana gösterir.
+export function renkSheet(stage, names = Object.keys(RENKLER).filter((k) => RENKLER[k].terminal)) {
+  if (!stage) return null;
+  const Wd = 1280, Hd = 720, cols = names.length > 4 ? 4 : names.length, rows = Math.ceil(names.length / cols);
+  const { renderer, rig, post, machine } = stage;
+  const u = machine.bodyMat.uniforms;
+  const prev = { map: u.map.value, pr: renderer.getPixelRatio(), shot: rig.name, size: { ...rig.size } };
+  renderer.setPixelRatio(1);
+  renderer.setSize(Wd, Hd, false);
+  post.setSize(Wd, Hd, 1);
+  rig.cut('machine');
+  rig.size.top = 0; rig.size.bottom = 0;
+  rig.resize(Wd, Hd);
+  stage.room.chairFront.visible = false;
+  machine.crt.power = machine.crt.powerTarget = 1;
+  machine.update(0.016, performance.now() / 1000);
+  const c = mk(Wd * cols, Hd * rows), x = c.getContext('2d');
+  x.fillStyle = '#000'; x.fillRect(0, 0, c.width, c.height);
+  names.forEach((k, i) => {
+    const tex = new THREE.CanvasTexture(paintBody(RENKLER[k]));
+    tex.colorSpace = THREE.SRGBColorSpace;
+    u.map.value = tex;
+    stage.render();
+    const px = (i % cols) * Wd, py = Math.floor(i / cols) * Hd;
+    x.drawImage(renderer.domElement, px, py, Wd, Hd);
+    x.font = '600 32px "Plex Mono", monospace'; x.textBaseline = 'top';
+    const label = `${i + 1}  ${RENKLER[k].name}${k === RENK_NAME ? '  •' : ''}`;
+    x.fillStyle = 'rgba(0,0,0,0.7)'; x.fillRect(px + 20, py + 20, x.measureText(label).width + 32, 52);
+    x.fillStyle = '#fff'; x.fillText(label, px + 36, py + 30);
+    tex.dispose();
+  });
+  u.map.value = prev.map;
+  renderer.setPixelRatio(prev.pr);
+  rig.cut(prev.shot);
+  rig.size.top = prev.size.top; rig.size.bottom = prev.size.bottom;
   stage.resize();
   return c;
 }

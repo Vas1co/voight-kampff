@@ -7,9 +7,9 @@ import mevcut from './kasalar/mevcut.js';
 
 export const KASA = mevcut;
 
-export function paintBody() {
+export function paintBody(renk) {
   const c = mk(BODY.W, BODY.H), x = c.getContext('2d');
-  KASA.paint(x, BODY.W, BODY.H);
+  KASA.paint(x, BODY.W, BODY.H, renk);
   return c;
 }
 

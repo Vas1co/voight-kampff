@@ -1,11 +1,9 @@
 // Mevcut kasa: üç modül yan yana (sol monitör, ortada CRT, sağ monitör), körük
 // orta modülün üstünde, sağda metal kolun ucunda kayıt kamerası. Modüller düz
 // önlü alçak bir kaidenin üstüne oturur.
-// Renk şeması tek yerden seçilir: RENK = RENKLER.<ad>
-//   grisiyah      orta modül ve kamera kutusu gri, yan monitörler ve taban siyah
-//   kirmizisiyah  orta modül ve kamera kutusu kırmızı boyalı metal, gerisi siyah
-//   kirmizi80     bütün modüller kırmızı; 80'ler terminal ayrıntıları: ortada ekran
-//                 siperliği, yan modüllerin altında koyu bant, disket yuvası, rozet
+// Renk şeması tek yerden seçilir: VARSAYILAN_RENK (geliştirirken adres çubuğunda ?renk=<ad>).
+// "terminal" şemalarında 80'ler ayrıntıları var: ortada ekran siperliği, yan modüllerin
+// altında koyu bant, disket yuvası, rozet. Taban her şemada siyah.
 import { lg, rg, rr } from '../../scene/paint.js';
 import { t } from '../../core/strings.js';
 import { PAL, TAU, label, screw, slots, box, bezel, knob, weather } from './ortak.js';
@@ -25,12 +23,21 @@ export const L = {
   calLamp: { x: 1510, y: 1064 },
 };
 
-const RENKLER = {
-  grisiyah: { center: 'gri', sides: 'siyah', base: 'siyah', arm: 'gri', tint: '#f2f4f3' },
-  kirmizisiyah: { center: 'kirmizi', sides: 'siyah', base: 'siyah', arm: 'kirmizi', tint: '#f6f2f1' },
-  kirmizi80: { center: 'kirmizi', sides: 'kirmizi', base: 'siyah', arm: 'kirmizi', tint: '#f6f2f1', terminal: true },
+export const RENKLER = {
+  kirmizi80: { name: 'Hepsi kırmızı', center: 'kirmizi', sides: 'kirmizi', arm: 'kirmizi', terminal: true },
+  kirmiziGri: { name: 'Orta kırmızı · yanlar gri', center: 'kirmizi', sides: 'gri', arm: 'kirmizi', terminal: true },
+  griKirmizi: { name: 'Orta gri · yanlar kırmızı', center: 'gri', sides: 'kirmizi', arm: 'gri', terminal: true },
+  maviBeyaz: { name: 'Orta mavi · yanlar beyaz', center: 'mavi', sides: 'beyaz', arm: 'mavi', terminal: true },
+  yesilGri: { name: 'Orta yeşil · yanlar gri', center: 'yesil', sides: 'gri', arm: 'yesil', terminal: true },
+  griYesil: { name: 'Orta gri · yanlar yeşil', center: 'gri', sides: 'yesil', arm: 'gri', terminal: true },
+  sari: { name: 'Hepsi sarı', center: 'sari', sides: 'sari', arm: 'sari', terminal: true },
+  kirmizisiyah: { name: 'Orta kırmızı · yanlar siyah', center: 'kirmizi', sides: 'siyah', arm: 'kirmizi' },
+  grisiyah: { name: 'Orta gri · yanlar siyah', center: 'gri', sides: 'siyah', arm: 'gri' },
 };
-const RENK = RENKLER.kirmizi80;
+const VARSAYILAN_RENK = 'kirmizi80';
+const fromUrl = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('renk') : null;
+export const RENK_NAME = RENKLER[fromUrl] ? fromUrl : VARSAYILAN_RENK;
+const RENK = RENKLER[RENK_NAME];
 
 // Yan modülün alt kısmındaki koyu bant (80'ler terminal); lambalar ve düğmeler üstünde.
 const TRIM_Y = 1030;
@@ -46,12 +53,12 @@ function trim(x, px) {
 
 export default {
   name: 'Mevcut',
-  tint: RENK.tint,
+  tint: '#f4f3f1',
   L,
   key: RENK.terminal ? '#e6e2da' : PAL[RENK.center].key,
-  paint(x, W, H) {
-    const PB = PAL[RENK.base], PS = PAL[RENK.sides], PC = PAL[RENK.center], PA = PAL[RENK.arm];
-    const T = !!RENK.terminal;
+  paint(x, W, H, renk = RENK) {
+    const PB = PAL.siyah, PS = PAL[renk.sides], PC = PAL[renk.center], PA = PAL[renk.arm];
+    const T = !!renk.terminal;
     // koyu bant üstündeki yazılar her zaman açık renk
     const DARK = { ink: 'rgba(235,232,226,0.72)', inkHi: 'rgba(0,0,0,0.6)' };
     const lampInk = T ? DARK : PS;
