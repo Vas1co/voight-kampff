@@ -5,7 +5,7 @@ import { textureOr } from '../core/assets.js';
 import { litMaterial, glowMaterial, crtUniforms } from '../fx/materials.js';
 import { crtMaterial } from '../fx/shaders/crt.js';
 import { BODY, L, rectLocal, toLocal } from './layout.js';
-import { paintBody, paintKey, SCHEME } from './body.js';
+import { paintBody, paintKey, KASA } from './body.js';
 import { Crt } from './crt.js';
 import { LeftMonitor, RightMonitor, LedBar } from './gauges.js';
 import { Bellows } from './bellows.js';
@@ -40,7 +40,7 @@ export class Machine {
 
     // gövde
     const bodyTex = textureOr('images/room', 'machine', paintBody);
-    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: SCHEME.tint });
+    this.bodyMat = litMaterial(bodyTex, { ambient: 0.66, beam: 0.6, crt: 1.2, alphaTest: 0.02, tint: KASA.tint });
     this.body = new THREE.Mesh(new THREE.PlaneGeometry(BODY.worldW, BODY.worldH), this.bodyMat);
     this.group.add(this.body);
 
