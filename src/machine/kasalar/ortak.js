@@ -79,8 +79,17 @@ export function box(x, p, px, py, w, h, { top = 30, radius = 22 } = {}) {
 }
 
 // Tüp ekran çerçevesi: kalın bezel, içe doğru eğimli koyu yuva.
-export function bezel(x, p, r, { pad = 34, radius = 30 } = {}) {
+// hood: üstte ve yanlarda gövde renginde, gölge düşüren siperlik.
+export function bezel(x, p, r, { pad = 34, radius = 30, hood = false } = {}) {
   const ox = r.x - pad, oy = r.y - pad, ow = r.w + pad * 2, oh = r.h + pad * 2;
+  if (hood) {
+    const hp = Math.round(pad * 0.4);
+    x.fillStyle = 'rgba(0,0,0,0.45)'; rr(x, ox - hp + 4, oy - hp + 8, ow + hp * 2, oh * 0.74, radius + hp); x.fill();
+    x.fillStyle = lg(x, 0, oy - hp, 0, oy + oh * 0.74, [[0, p.hi], [0.5, p.top], [1, p.mid]]);
+    rr(x, ox - hp, oy - hp, ow + hp * 2, oh * 0.74, radius + hp); x.fill();
+    x.fillStyle = p.glint; x.fillRect(ox - hp + radius, oy - hp + 2, ow + hp * 2 - radius * 2, 2.5);
+    x.strokeStyle = p.edge; x.lineWidth = 2; rr(x, ox - hp, oy - hp, ow + hp * 2, oh * 0.74, radius + hp); x.stroke();
+  }
   x.fillStyle = lg(x, 0, oy, 0, oy + oh, [[0, p.bezel[0]], [1, p.bezel[1]]]);
   rr(x, ox, oy, ow, oh, radius); x.fill();
   for (let i = 0; i < 14; i++) {

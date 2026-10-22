@@ -1,8 +1,11 @@
 // Mevcut kasa: üç modül yan yana (sol monitör, ortada CRT, sağ monitör), körük
-// orta modülün üstünde, sağda metal kolun ucunda kayıt kamerası.
-// Renk şeması tek yerden seçilir: RENK = '<ad>'
+// orta modülün üstünde, sağda metal kolun ucunda kayıt kamerası. Modüller düz
+// önlü alçak bir kaidenin üstüne oturur.
+// Renk şeması tek yerden seçilir: RENK = RENKLER.<ad>
 //   grisiyah      orta modül ve kamera kutusu gri, yan monitörler ve taban siyah
 //   kirmizisiyah  orta modül ve kamera kutusu kırmızı boyalı metal, gerisi siyah
+//   kirmizi80     bütün modüller kırmızı; 80'ler terminal ayrıntıları: ortada ekran
+//                 siperliği, yan modüllerin altında koyu bant, disket yuvası, rozet
 import { lg, rg, rr } from '../../scene/paint.js';
 import { t } from '../../core/strings.js';
 import { PAL, TAU, label, screw, slots, box, bezel, knob, weather } from './ortak.js';
@@ -25,46 +28,76 @@ export const L = {
 const RENKLER = {
   grisiyah: { center: 'gri', sides: 'siyah', base: 'siyah', arm: 'gri', tint: '#f2f4f3' },
   kirmizisiyah: { center: 'kirmizi', sides: 'siyah', base: 'siyah', arm: 'kirmizi', tint: '#f6f2f1' },
+  kirmizi80: { center: 'kirmizi', sides: 'kirmizi', base: 'siyah', arm: 'kirmizi', tint: '#f6f2f1', terminal: true },
 };
-const RENK = RENKLER.kirmizisiyah;
+const RENK = RENKLER.kirmizi80;
+
+// Yan modülün alt kısmındaki koyu bant (80'ler terminal); lambalar ve düğmeler üstünde.
+const TRIM_Y = 1030;
+function trim(x, px) {
+  x.save();
+  rr(x, px, 540, 620, 610, 22); x.clip();
+  x.fillStyle = 'rgba(0,0,0,0.55)'; x.fillRect(px, TRIM_Y - 4, 620, 4);
+  x.fillStyle = lg(x, 0, TRIM_Y, 0, 1150, [[0, '#2e3033'], [1, '#141516']]);
+  x.fillRect(px, TRIM_Y, 620, 1150 - TRIM_Y);
+  x.fillStyle = 'rgba(255,255,255,0.13)'; x.fillRect(px, TRIM_Y, 620, 2);
+  x.restore();
+}
 
 export default {
   name: 'Mevcut',
   tint: RENK.tint,
   L,
-  key: PAL[RENK.center].key,
+  key: RENK.terminal ? '#e6e2da' : PAL[RENK.center].key,
   paint(x, W, H) {
     const PB = PAL[RENK.base], PS = PAL[RENK.sides], PC = PAL[RENK.center], PA = PAL[RENK.arm];
+    const T = !!RENK.terminal;
+    // koyu bant üstündeki yazılar her zaman açık renk
+    const DARK = { ink: 'rgba(235,232,226,0.72)', inkHi: 'rgba(0,0,0,0.6)' };
+    const lampInk = T ? DARK : PS;
 
-    // taban
-    x.fillStyle = 'rgba(0,0,0,0.4)'; x.fillRect(30, 1176, W - 60, 100);
-    x.fillStyle = lg(x, 0, 1150, 0, 1176, [[0, PB.top], [1, PB.mid]]);
-    x.beginPath(); x.moveTo(40, 1150); x.lineTo(W - 40, 1150); x.lineTo(W - 22, 1176); x.lineTo(22, 1176); x.closePath(); x.fill();
-    x.fillStyle = lg(x, 0, 1176, 0, H, [[0, PB.mid], [1, PB.low]]);
-    x.fillRect(22, 1176, W - 44, H - 1180);
-    slots(x, PB, 90, 1196, 340, 46, 16);
-    slots(x, PB, W - 430, 1196, 340, 46, 16);
-    label(x, PB, `${t('brand.machine')}  ${t('brand.model')}`, W / 2, 1222, { size: 22, align: 'center', spacing: 0.32 });
+    // kaide: düz önlü alçak kutu, üst yüzü modüllerin altında, altında kauçuk ayaklar
+    x.fillStyle = 'rgba(0,0,0,0.5)'; rr(x, 36, 1172, W - 66, 104, 12); x.fill();
+    x.fillStyle = lg(x, 0, 1140, 0, 1160, [[0, PB.hi], [1, PB.top]]);
+    x.beginPath(); x.moveTo(46, 1140); x.lineTo(W - 46, 1140); x.lineTo(W - 28, 1160); x.lineTo(28, 1160); x.closePath(); x.fill();
+    x.fillStyle = lg(x, 0, 1158, 0, 1258, [[0, PB.face], [0.55, PB.mid], [1, PB.low]]);
+    rr(x, 28, 1158, W - 56, 100, 10); x.fill();
+    x.fillStyle = PB.glint; x.fillRect(40, 1160, W - 80, 2);
+    x.strokeStyle = PB.edge; x.lineWidth = 2; rr(x, 28, 1158, W - 56, 100, 10); x.stroke();
+    for (const fx of [110, 640, W - 780, W - 250]) {
+      x.fillStyle = '#070808'; rr(x, fx, 1254, 140, 24, 6); x.fill();
+      x.fillStyle = 'rgba(255,255,255,0.06)'; x.fillRect(fx + 6, 1256, 128, 2);
+    }
+    slots(x, PB, 90, 1184, 340, 46, 16);
+    slots(x, PB, W - 430, 1184, 340, 46, 16);
+    label(x, PB, `${t('brand.machine')}  ${t('brand.model')}`, W / 2, 1208, { size: 22, align: 'center', spacing: 0.32 });
 
     // sol modül
     box(x, PS, 40, 540, 620, 610, { top: 30, radius: 22 });
     bezel(x, PS, L.left);
+    if (T) trim(x, 40);
     label(x, PS, t('machine.panelLeft'), 300, 567, { size: 18 });
     slots(x, PS, 80, 556, 200, 20, 10, false);
     screw(x, PS, 66, 566); screw(x, PS, 634, 566); screw(x, PS, 66, 1124); screw(x, PS, 634, 1124);
     x.fillStyle = PS.socket; rr(x, L.alarm.x - 12, L.alarm.y - 9, L.alarm.w + 24, L.alarm.h + 18, 8); x.fill();
-    label(x, PS, t('machine.anomaly'), L.alarm.x - 4, L.alarm.y - 26, { size: 15 });
     x.fillStyle = PS.socket; x.beginPath(); x.arc(L.stressLamp.x, L.stressLamp.y, 22, 0, TAU); x.fill();
-    label(x, PS, t('machine.stress'), L.stressLamp.x, L.stressLamp.y - 42, { size: 15, align: 'center' });
+    if (T) {
+      label(x, lampInk, t('machine.anomaly'), L.alarm.x - 4, 1112, { size: 15 });
+      label(x, lampInk, t('machine.stress'), L.stressLamp.x, 1112, { size: 15, align: 'center' });
+    } else {
+      label(x, PS, t('machine.anomaly'), L.alarm.x - 4, L.alarm.y - 26, { size: 15 });
+      label(x, PS, t('machine.stress'), L.stressLamp.x, L.stressLamp.y - 42, { size: 15, align: 'center' });
+    }
 
     // sağ modül
     box(x, PS, 1388, 540, 620, 610, { top: 30, radius: 22 });
     bezel(x, PS, L.right);
+    if (T) trim(x, 1388);
     label(x, PS, t('machine.panelRight'), 1436, 567, { size: 18 });
     slots(x, PS, 1760, 556, 200, 20, 10, false);
     screw(x, PS, 1414, 566); screw(x, PS, 1982, 566); screw(x, PS, 1414, 1124); screw(x, PS, 1982, 1124);
     x.fillStyle = PS.socket; x.beginPath(); x.arc(L.calLamp.x, L.calLamp.y, 17, 0, TAU); x.fill();
-    label(x, PS, t('machine.calib'), L.calLamp.x + 32, L.calLamp.y, { size: 15 });
+    label(x, lampInk, t('machine.calib'), L.calLamp.x + 32, L.calLamp.y, { size: 15 });
     knob(x, 1770, 1066); knob(x, 1890, 1066);
 
     // sensör kolu
@@ -90,8 +123,8 @@ export default {
     x.fillStyle = lg(x, 0, 418, 0, 452, [[0, '#3a3d3e'], [1, '#151617']]);
     rr(x, 690, 418, 668, 34, 8); x.fill();
     x.fillStyle = 'rgba(255,255,255,0.18)'; x.fillRect(704, 420, 640, 2);
+    bezel(x, PC, L.crt, { pad: 44, radius: 40, hood: T });
     x.fillStyle = PC.socket; rr(x, L.led.x - 14, L.led.y - 11, L.led.w + 28, L.led.h + 22, 8); x.fill();
-    bezel(x, PC, L.crt, { pad: 44, radius: 40 });
     for (let r = 0; r < 7; r++) for (let q = 0; q < 3; q++) {
       x.fillStyle = PC.slot; x.beginPath(); x.arc(1354 + q * 16, 584 + r * 20, 4.2, 0, TAU); x.fill();
     }
@@ -100,11 +133,21 @@ export default {
     label(x, PC, t('machine.focus'), L.crt.x + L.crt.w + 6, 972, { size: 17, align: 'right' });
     slots(x, PC, 760, 1006, 520, 72, 24);
     x.fillStyle = PC.socket; rr(x, 660, 1100, 60, 28, 6); x.fill();
+    if (T) {
+      // disket yuvası ve çıkarma düğmesi
+      x.fillStyle = '#0a0b0b'; rr(x, 760, 1104, 300, 18, 4); x.fill();
+      x.fillStyle = 'rgba(255,255,255,0.12)'; x.fillRect(762, 1122, 296, 1.5);
+      x.fillStyle = lg(x, 0, 1102, 0, 1124, [[0, '#d9d6cf'], [1, '#8f8c86']]); rr(x, 1074, 1104, 44, 18, 4); x.fill();
+      // renk şeritli rozet
+      x.fillStyle = '#1b1c1d'; rr(x, 1196, 1098, 150, 30, 3); x.fill();
+      ['#e0a43a', '#d9cf5a', '#6bb07c', '#5a8fbf'].forEach((c, i) => { x.fillStyle = c; x.fillRect(1206 + i * 16, 1106, 12, 14); });
+      label(x, DARK, t('brand.model'), 1336, 1113, { size: 13, align: 'right', spacing: 0.12 });
+    }
     screw(x, PC, 652, 474); screw(x, PC, 1396, 474); screw(x, PC, 652, 1124); screw(x, PC, 1396, 1124);
 
     // kablo
     x.strokeStyle = '#141412'; x.lineWidth = 16;
-    x.beginPath(); x.moveTo(40, 1240); x.bezierCurveTo(16, 1252, 4, 1268, -10, 1280); x.stroke();
+    x.beginPath(); x.moveTo(40, 1236); x.bezierCurveTo(16, 1250, 4, 1268, -10, 1280); x.stroke();
 
     weather(x, W, H, PC, { from: 320 });
   },
