@@ -11,6 +11,14 @@ export const PAL = {
     bezel: ['#b9bcba', '#949896'], bezelShade: '20,24,24', recess: '#222525', socket: '#1b1d1d',
     screw: ['#eef0ee', '#a7aba9', '#5e6260'], dirt: ['60,62,58', '40,44,44'], key: '#d9dcd8',
   },
+  // kırmızı boyalı metal (beyaz yazılı), içte siyah ekran çerçevesi
+  kirmizi: {
+    hi: '#d8473c', top: '#c2372e', face: '#a92920', mid: '#90201a', low: '#691712',
+    side: ['rgba(40,4,2,0.3)', 'rgba(30,2,0,0.48)'], edge: 'rgba(30,4,2,0.75)', glint: 'rgba(255,205,195,0.45)',
+    slot: '#1a0705', slotHi: 'rgba(255,190,180,0.22)', ink: 'rgba(255,238,232,0.82)', inkHi: 'rgba(60,0,0,0.5)',
+    bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#140605',
+    screw: ['#b9bcbe', '#5e6264', '#202224'], dirt: ['40,10,8', '0,0,0'], key: '#d9dcd8',
+  },
   siyah: {
     hi: '#46494a', top: '#35383a', face: '#232627', mid: '#1c1e1f', low: '#141516',
     side: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.45)'], edge: 'rgba(0,0,0,0.85)', glint: 'rgba(255,255,255,0.2)',
