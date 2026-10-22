@@ -4,6 +4,7 @@ import data from '../../data/strings.tr.json';
 
 const brandVars = () => ({
   test: data.brand.testName,
+  testShort: data.brand.testShort,
   game: data.brand.gameTitle,
   unit: data.brand.unit,
   era: data.brand.era,

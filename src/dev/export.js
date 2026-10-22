@@ -6,34 +6,89 @@ import { withScale, mk, seeded } from '../scene/paint.js';
 import { paintBody, paintKey, SCHEMES } from '../machine/body.js';
 import { makeIris, makeSclera } from '../machine/eye.js';
 import { BODY, L } from '../machine/layout.js';
+import * as THREE from 'three';
 import { t } from '../core/strings.js';
 import player from '../../data/subjects/player.json';
 
 const S = 2;
 
-// [klasör, ad, üretici]
+// [klasör, ad, üretici] — sıra, odadaki yerleşimi izler (arkadan öne)
 const JOBS = [
+  // oda kabuğu ve arka duvar
   ['oda', 'wall', () => withScale(S, P.paintWall)],
-  ['oda', 'window', () => withScale(S, P.paintWindow)],
-  ['oda', 'mirror', () => withScale(S, P.paintMirror)],
+  ['oda', 'side-wall', () => withScale(S, P.paintSideWall)],
+  ['oda', 'ceiling', () => withScale(S, P.paintCeiling)],
+  ['oda', 'lamp', () => withScale(S, P.paintLamp)],
+  ['oda', 'behind-room', () => withScale(S, P.paintBehindRoom)],
+  ['oda', 'chair-behind', () => withScale(S, P.paintEmptyChair)],
+  ['oda', 'glass', () => withScale(S, P.paintGlass)],
+  ['oda', 'door', () => withScale(S, P.paintDoor)],
+  ['oda', 'access-panel', () => withScale(S, P.paintAccessPanel)],
+  ['oda', 'cabinet', () => withScale(S, P.paintCabinet)],
+  ['oda', 'vent', () => withScale(S, P.paintVent)],
+  ['oda', 'sign', () => withScale(S, P.paintSign)],
+  ['oda', 'camera', () => withScale(S, P.paintWallCamera)],
+  // masa ve üstündekiler
   ['oda', 'desk', () => withScale(S, P.paintDesk)],
   ['oda', 'desk-edge', () => withScale(S, P.paintDeskEdge)],
-  ['oda', 'folder', () => withScale(S, () => P.paintFolder())],
-  ['oda', 'report', () => withScale(S, P.paintReportPaper)],
-  ['oda', 'ashtray', () => withScale(S, P.paintAshtray)],
+  ['oda', 'files', () => withScale(S, P.paintFiles)],
+  ['oda', 'sheet', () => withScale(S, P.paintSheet)],
+  ['oda', 'pen', () => withScale(S, P.paintPen)],
   ['oda', 'cassette', () => withScale(S, P.paintCassettePlayer)],
-  ['oda', 'pencup', () => withScale(S, P.paintPenCup)],
-  ['oda', 'chair-left', () => withScale(S, () => P.paintChairBack(false))],
-  ['oda', 'chair-right', () => withScale(S, () => P.paintChairBack(true))],
+  ['oda', 'mug', () => withScale(S, P.paintMug)],
+  ['oda', 'ashtray', () => withScale(S, P.paintAshtray)],
+  ['oda', 'chair-front', () => withScale(S, P.paintChairFront)],
+  // makine
   ['oda', 'machine', () => withScale(S, paintBody)],
-  // renk şeması sürümleri (karşılaştırma için)
   ...Object.keys(SCHEMES).map((k) => ['oda', `machine-${k}`, () => withScale(S, () => paintBody(k))]),
   ['oda', 'machine-key', () => withScale(4, () => paintKey(false))],
   ['oda', 'machine-key-lit', () => withScale(4, () => paintKey(true))],
   ['goz', 'iris', () => makeIris(1024, { fleck: '#ead08a', ...player.eye }, player.eye.seed)],
   ['goz', 'sclera', () => withScale(S, () => makeSclera(720, 560, seeded(player.eye.seed)))],
   ['_rehber', 'machine-rehber', () => withScale(S, machineGuide)],
+  ['_rehber', 'oda-yerlesim', (stage) => layoutGuide(stage)],
 ];
+
+// Odanın geniş planını 1920×1080 çizer ve her katmanın üstüne dosya adını yazar.
+export function layoutGuide(stage) {
+  if (!stage) return null;
+  const Wd = 1920, Hd = 1080;
+  const { renderer, rig, post } = stage;
+  const prevPR = renderer.getPixelRatio();
+  const prevShot = rig.name;
+  const prevInsets = { ...rig.size };
+  renderer.setPixelRatio(1);
+  renderer.setSize(Wd, Hd, false);
+  post.setSize(Wd, Hd, 1);
+  rig.cut('wide');
+  // oyundaki gibi: üstte HUD, altta altyazı/cevap boşluğu
+  rig.size.top = 40; rig.size.bottom = Math.round(Math.min(260, Math.max(120, Hd * 0.24)));
+  rig.resize(Wd, Hd);
+  stage.render();
+  const c = mk(Wd, Hd), x = c.getContext('2d');
+  x.drawImage(renderer.domElement, 0, 0, Wd, Hd);
+  // etiketler
+  const v = new THREE.Vector3();
+  const label = (name, p) => {
+    v.copy(p).project(rig.camera);
+    if (v.z > 1 || Math.abs(v.x) > 1.05 || Math.abs(v.y) > 1.05) return;
+    const sx = (v.x * 0.5 + 0.5) * Wd, sy = (1 - (v.y * 0.5 + 0.5)) * Hd;
+    x.font = '600 18px "Plex Mono", monospace';
+    const w = x.measureText(name).width + 14;
+    x.fillStyle = 'rgba(200,0,200,0.85)'; x.fillRect(sx - w / 2, sy - 13, w, 26);
+    x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(name, sx, sy);
+  };
+  stage.room.group.children.forEach((m) => { if (m.name) label(m.name, m.userData.labelAt ?? m.getWorldPosition(new THREE.Vector3())); });
+  label('machine', stage.machine.group.getWorldPosition(new THREE.Vector3()));
+  x.font = '400 20px "Plex Mono", monospace'; x.textAlign = 'left'; x.fillStyle = '#fff';
+  x.fillText(t('dev.guide.layout'), 24, 34);
+  // geri al
+  renderer.setPixelRatio(prevPR);
+  rig.cut(prevShot);
+  rig.size.top = prevInsets.top; rig.size.bottom = prevInsets.bottom;
+  stage.resize();
+  return c;
+}
 
 // Makine gövdesinin üstüne konacak rehber katman: canlı parçaların yerleri.
 function machineGuide() {
@@ -70,7 +125,7 @@ function machineGuide() {
 
 const toBlob = (canvas) => new Promise((r) => canvas.toBlob(r, 'image/png'));
 
-export async function runExport() {
+export async function runExport(stage) {
   const box = document.createElement('div');
   Object.assign(box.style, { position: 'fixed', left: '16px', bottom: '16px', zIndex: 99, padding: '10px 14px', background: '#000c', color: '#e8bf7a', font: '12px monospace' });
   box.textContent = t('dev.exportTitle');
@@ -80,7 +135,8 @@ export async function runExport() {
   const done = { n: 0, s: 0, k: 0 };
   for (const [dir, name, make] of JOBS) {
     try {
-      const canvas = make();
+      const canvas = make(stage);
+      if (!canvas) continue;
       const blob = await toBlob(canvas);
       const q = `yol=${encodeURIComponent(`${dir}/${name}.png`)}${overwrite ? '&uzerine=1' : ''}`;
       const res = await fetch(`/__disa-aktar?${q}`, { method: 'POST', body: blob });

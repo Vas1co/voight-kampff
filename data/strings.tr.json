@@ -5,7 +5,8 @@
     "unit": "Sorgu Birimi 4",
     "era": "Kasım 2019",
     "machine": "EMPATİ ANALİZ ÜNİTESİ",
-    "model": "MK·VI"
+    "model": "MK·VI",
+    "testShort": "VK"
   },
   "title": {
     "kicker": "Empati ölçüm birimi · {era}",
@@ -272,7 +273,7 @@
   },
   "dev": {
     "exportTitle": "Dokular dışa aktarılıyor…",
-    "exportDone": "Bitti: {n} yazıldı, {s} atlandı (zaten var), {k} yazılamadı (dosya açık/kilitli olabilir).",
+    "exportDone": "Bitti: {n} yazıldı, {s} korundu (senin düzenlediklerin), {k} yazılamadı (dosya açık/kilitli olabilir).",
     "exportFail": "Dışa aktarma başarısız: {msg}",
     "guide": {
       "crt": "ANA CRT — göz burada görünür (koyu bırak)",
@@ -285,7 +286,37 @@
       "stress": "GERGİNLİK lambası",
       "cal": "KAL lambası",
       "rec": "KAYIT lambası",
-      "note": "Mor alanlar oyunda canlı parçalarla örtülür. Kasayı ve çerçeveleri serbestçe çizebilirsin."
+      "note": "Mor alanlar oyunda canlı parçalarla örtülür. Kasayı ve çerçeveleri serbestçe çizebilirsin.",
+      "layout": "YERLEŞİM — katman adları (tasarim/oda/<ad>.png)"
     }
+  },
+  "room": {
+    "doorSign": [
+      "{testShort}",
+      "TEST ODASI 03"
+    ],
+    "doorStencil": "YETKİLİ PERSONEL",
+    "panel": "ERİŞİM",
+    "observation": [
+      "GÖZLEM",
+      "BÖLMESİ",
+      "A2"
+    ],
+    "sign": [
+      "SORGU PROSEDÜRÜ 4-B",
+      "1. Denek oturur, eller masada.",
+      "2. Temel ölçüm alınır.",
+      "3. Sorular kayıt altındadır.",
+      "4. Karar sorgucuya aittir."
+    ],
+    "cabinet": [
+      "DOSYA",
+      "A–F",
+      "G–M",
+      "N–Z"
+    ],
+    "files": "TEST DOSYALARI",
+    "sheet": "TEST VERİSİ",
+    "mug": "B4"
   }
 }

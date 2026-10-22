@@ -1,8 +1,8 @@
 // Vite geliştirme eklentisi: tasarim/ klasörü ile oyunun assets/ klasörü arasındaki köprü.
 //
 // 1) Dışa aktarma: tarayıcıda çizilen dokular POST /__disa-aktar ile tasarim/ altına yazılır
-//    (src/dev/export.js, adres: /?disa-aktar). Var olan dosyaların üzerine yalnızca
-//    &uzerine ile yazılır.
+//    (src/dev/export.js, adres: /?disa-aktar). Düzenlenmiş dosyalar asla ezilmez; dokunulmamış
+//    olanlar tazelenir. &uzerine ile hepsinin üzerine yazılır.
 // 2) Canlı uygulama: tasarim/ içinde düzenlenip kaydedilen PNG, oyunun okuduğu klasöre
 //    otomatik kopyalanır (oda/ → assets/images/room/, goz/ → assets/images/eye/).
 //    Dışa aktarmanın yazdığı, hiç dokunulmamış dosyalar kopyalanmaz; böylece yalnızca
@@ -31,8 +31,10 @@ export function tasarimPlugin() {
     const src = path.join(dir, relPath);
     let st;
     try { st = fs.statSync(src); } catch { return; }
+    // yalnızca oyunun tanıdığı (dışa aktarmanın yazdığı) adlar; yedek/ek dosyalar kopyalanmaz
+    if (!(relPath in stamp)) return;
     // dışa aktarmanın yazdığı haliyle duruyorsa (dokunulmamış) atla
-    if (stamp[relPath] && Math.abs(stamp[relPath] - st.mtimeMs) < 2) return;
+    if (Math.abs(stamp[relPath] - st.mtimeMs) < 2) return;
     const dst = path.join(root, MAP[sub], rest[0]);
     try {
       const dstSt = fs.existsSync(dst) ? fs.statSync(dst) : null;
@@ -86,7 +88,13 @@ export function tasarimPlugin() {
         req.on('data', (c) => chunks.push(c));
         req.on('end', () => {
           const out = path.join(dir, r);
-          if (fs.existsSync(out) && q.get('uzerine') !== '1') { res.statusCode = 409; res.end('var'); return; }
+          // Var olan dosya: senin düzenlediğin bir dosyaysa (kayıttaki zamandan farklı) asla ezilmez;
+          // dışa aktarmanın yazdığı haliyle duruyorsa tazelenir. &uzerine hepsinin üzerine yazar.
+          if (fs.existsSync(out) && q.get('uzerine') !== '1') {
+            loadStamp();
+            const m = fs.statSync(out).mtimeMs;
+            if (!(stamp[r] && Math.abs(stamp[r] - m) < 2)) { res.statusCode = 409; res.end('duzenlenmis'); return; }
+          }
           try {
             fs.mkdirSync(path.dirname(out), { recursive: true });
             fs.writeFileSync(out, Buffer.concat(chunks));

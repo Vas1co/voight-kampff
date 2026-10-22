@@ -24,7 +24,10 @@ export class Stage {
 
     this.machine = new Machine();
     // makine masanın ortasında: ne dibimizde ne arka uçta
-    this.machine.group.position.set(0, 0.76 + BODY.worldH / 2, 0.35);
+    // (konseptteki gibi baskın: %20 büyük)
+    const MS = 1.2;
+    this.machine.group.scale.setScalar(MS);
+    this.machine.group.position.set(0, 0.76 + (BODY.worldH * MS) / 2, 0.35);
 
 
     this.scene.add(this.machine.group);
@@ -66,6 +69,7 @@ export class Stage {
 
   update(dt, t, ctx = {}) {
     this.rig.update(dt);
+    this.room.chairFront.visible = this.rig.name === 'wide';
     this.room.dust.pull = this.machine.bellows.pulling ? 1 : 0;
     this.room.update(dt, t, ctx);
     this.machine.update(dt, t);
