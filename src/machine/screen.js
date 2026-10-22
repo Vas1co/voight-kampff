@@ -10,10 +10,11 @@
 import { mk, rr } from '../scene/paint.js';
 import { t } from '../core/strings.js';
 import { sgn } from './gauges.js';
+import { EKRAN } from './tema.js';
 
 // yatay dikdörtgen ekran; göz tuvali de aynı boyutta (crt.js)
 export const W = 768, H = 440;
-const INK = '#6dffc9', DIM = 'rgba(109,255,201,0.45)', FAINT = 'rgba(109,255,201,0.16)';
+const INK = EKRAN.ink(), DIM = EKRAN.ink(0.45), FAINT = EKRAN.ink(0.16);
 const RED = '#ff4a3a', RED_DIM = 'rgba(255,74,58,0.45)';
 const MONO = '"Plex Mono", ui-monospace, monospace';
 const TAU = Math.PI * 2;
@@ -90,9 +91,9 @@ export class CrtScreen {
     const { s: S, ox, oy } = this.eyeBox;
     x.drawImage(src, ox, oy, W * S, H * S);
     x.globalCompositeOperation = 'color';
-    x.fillStyle = '#1fc796'; x.fillRect(0, 0, W, H);
+    x.fillStyle = EKRAN.tint; x.fillRect(0, 0, W, H);
     x.globalCompositeOperation = 'multiply';
-    x.fillStyle = '#4f9f87'; x.fillRect(0, 0, W, H);
+    x.fillStyle = EKRAN.wash; x.fillRect(0, 0, W, H);
     x.globalCompositeOperation = 'source-over';
     // kenarlara doğru kararma
     const v = x.createRadialGradient(W / 2, H / 2 + 8, H * 0.22, W / 2, H / 2 + 8, H * 0.62);
@@ -113,21 +114,21 @@ export class CrtScreen {
     const { s: S, ox, oy } = this.eyeBox;
     const cx = ox + e.cx * S, cy = oy + e.cy * S, R = e.R * S, pr = e.pr * S;
     // ızgara (tarama katmanı)
-    x.strokeStyle = 'rgba(109,255,201,0.06)'; x.lineWidth = 1;
+    x.strokeStyle = EKRAN.ink(0.06); x.lineWidth = 1;
     x.beginPath();
     for (let gx = 40; gx < W; gx += 40) { x.moveTo(gx, 96); x.lineTo(gx, H - 70); }
     for (let gy = 96; gy < H - 70; gy += 40) { x.moveTo(40, gy); x.lineTo(W - 40, gy); }
     x.stroke();
     // artı çizgileri göz bebeği merkezinden
-    x.strokeStyle = 'rgba(109,255,201,0.5)'; x.lineWidth = 1.3;
+    x.strokeStyle = EKRAN.ink(0.5); x.lineWidth = 1.3;
     x.beginPath(); x.moveTo(70, cy); x.lineTo(W - 70, cy); x.moveTo(cx, 112); x.lineTo(cx, H - 80); x.stroke();
     // halkalar
-    x.strokeStyle = 'rgba(109,255,201,0.55)'; x.lineWidth = 1.5;
+    x.strokeStyle = EKRAN.ink(0.55); x.lineWidth = 1.5;
     x.beginPath(); x.arc(cx, cy, R * 1.02, 0, TAU); x.stroke();
     x.setLineDash([4, 6]);
     x.beginPath(); x.arc(cx, cy, R * 1.28, 0, TAU); x.stroke();
     x.setLineDash([]);
-    x.strokeStyle = 'rgba(109,255,201,0.75)';
+    x.strokeStyle = EKRAN.ink(0.75);
     x.beginPath(); x.arc(cx, cy, pr * 1.35, 0, TAU); x.stroke();
     // halka üstünde açı işaretleri
     for (let i = 0; i < 36; i++) {
@@ -141,14 +142,14 @@ export class CrtScreen {
     x.strokeStyle = INK; x.lineWidth = 2;
     x.beginPath(); x.moveTo(cx - 9, cy); x.lineTo(cx + 9, cy); x.moveTo(cx, cy - 9); x.lineTo(cx, cy + 9); x.stroke();
     // odak köşeleri
-    this.corners(84, 116, W - 84, H - 84, 26, 'rgba(109,255,201,0.8)');
+    this.corners(84, 116, W - 84, H - 84, 26, EKRAN.ink(0.8));
     // tarama bandı
     if (this.mode === 'scan') {
       const sy = 120 + ((this.t * 90) % (H - 210));
       const g = x.createLinearGradient(0, sy - 30, 0, sy + 4);
-      g.addColorStop(0, 'rgba(109,255,201,0)'); g.addColorStop(1, 'rgba(109,255,201,0.22)');
+      g.addColorStop(0, EKRAN.ink(0)); g.addColorStop(1, EKRAN.ink(0.22));
       x.fillStyle = g; x.fillRect(84, sy - 30, W - 168, 34);
-      x.fillStyle = 'rgba(160,255,220,0.5)'; x.fillRect(84, sy + 3, W - 168, 1.5);
+      x.fillStyle = EKRAN.hi(0.5); x.fillRect(84, sy + 3, W - 168, 1.5);
     }
   }
 
