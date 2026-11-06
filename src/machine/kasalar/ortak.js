@@ -11,6 +11,14 @@ export const PAL = {
     bezel: ['#2a2c2e', '#141516'], bezelShade: '0,0,0', recess: '#0c0d0d', socket: '#1c1d1d',
     screw: ['#f6f6f2', '#b4b4ae', '#6a6a64'], dirt: ['90,85,70', '50,50,46'], key: '#e6e6e0',
   },
+  // soğuk tonlu, kirli gri-beyaz boyalı metal
+  metal: {
+    hi: '#d8d9d4', top: '#cbccc6', face: '#bdbeb7', mid: '#b0b1aa', low: '#8f908a',
+    side: ['rgba(20,24,24,0.24)', 'rgba(14,18,18,0.38)'], edge: 'rgba(30,34,34,0.6)', glint: 'rgba(255,255,255,0.5)',
+    slot: '#2a2926', slotHi: 'rgba(255,250,235,0.35)', ink: 'rgba(44,42,38,0.82)', inkHi: 'rgba(255,250,235,0.35)',
+    bezel: ['#2a2c2e', '#141516'], bezelShade: '0,0,0', recess: '#0c0d0d', socket: '#1c1d1d',
+    screw: ['#e8e4d8', '#a8a498', '#5e5a50'], dirt: ['70,70,64', '40,42,40'], key: '#ddd8ca',
+  },
   siyah: {
     hi: '#46494a', top: '#35383a', face: '#232627', mid: '#1c1e1f', low: '#141516',
     side: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.45)'], edge: 'rgba(0,0,0,0.85)', glint: 'rgba(255,255,255,0.2)',

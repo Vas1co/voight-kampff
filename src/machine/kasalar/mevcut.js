@@ -4,7 +4,7 @@
 // Renk şeması tek yerden seçilir: VARSAYILAN_RENK (geliştirirken adres çubuğunda ?renk=<ad>).
 // "terminal" şemalarında 80'ler ayrıntıları var: ortada ekran siperliği, yan modüllerin
 // altında koyu bant, rozet; her modülün üst şeridinde üretici logosu ve ünite adı,
-// LED çubuğu orta modülün altındaki yuvada. "wear" yıpranmış metal görünümü verir.
+// LED çubuğu orta modülün altındaki yuvada. "wear" kullanılmış boyalı metal görünümü verir.
 import { lg, rg, rr, seeded } from '../../scene/paint.js';
 import { t } from '../../core/strings.js';
 import { PAL, TAU, label, screw, slots, box, bezel, knob, weather } from './ortak.js';
@@ -25,11 +25,11 @@ export const L = {
 };
 
 export const RENKLER = {
-  beyaz80: { name: 'Beyaz · eskitilmiş', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, wear: 1 },
+  metalKirli: { name: 'Kirli gri-beyaz metal', center: 'metal', sides: 'metal', arm: 'metal', terminal: true, clean: true, wear: true },
   beyazTemiz: { name: 'Beyaz · temiz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, clean: true },
   siyah80: { name: 'Siyah', center: 'siyah', sides: 'siyah', arm: 'siyah', terminal: true },
 };
-const VARSAYILAN_RENK = 'beyazTemiz';
+const VARSAYILAN_RENK = 'metalKirli';
 const fromUrl = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('renk') : null;
 export const RENK_NAME = RENKLER[fromUrl] ? fromUrl : VARSAYILAN_RENK;
 export const RENK = RENKLER[RENK_NAME];
@@ -83,32 +83,48 @@ function header(x, p, x0, x1, y, unit, size = 30) {
   label(x, p, unit, x1, y, { size: 16, align: 'right', spacing: 0.3 });
 }
 
-// Yıpranmış metal: kenar sıyrıkları, çizikler, yukarıdan akan kir izleri.
-function wear(x, rects, k = 1, seed = 31) {
-  const R = seeded(seed);
+// Kullanılmış boyalı metal: kir mantıklı yerlerde birikir. Modül kenar ve köşelerinde
+// koyuluk, köşelerden kalkmış boya, yukarıdan aşağı ince kir akıntıları, üst kenarda toz,
+// tuş ve düğmelerin çevresinde parmak izi, vidaların altında hafif pas akıntısı, çizikler.
+const MODS = [[40, 540, 620, 610], [1388, 540, 620, 610], [628, 452, 792, 698], [1774, 156, 182, 116]];
+function wear(x) {
+  const R = seeded(202);
   x.save();
   x.globalCompositeOperation = 'source-atop';
-  for (const [px, py, w, h] of rects) {
-    // kir izleri
-    for (let i = 0; i < 10 * k; i++) {
-      const sx = px + R() * w, sw = 6 + R() * 26, sh = 40 + R() * h * 0.6, sy = py + R() * h * 0.3;
-      x.fillStyle = lg(x, 0, sy, 0, sy + sh, [[0, `rgba(60,52,40,${0.05 + R() * 0.07})`], [1, 'rgba(60,52,40,0)']]);
-      x.fillRect(sx, sy, sw, sh);
+  for (const [px, py, w, h] of MODS) {
+    for (let i = 0; i < 12; i++) {
+      const k = i / 12, inset = 2 + k * 26;
+      x.strokeStyle = `rgba(40,32,20,${0.45 * (1 - k) * 0.22})`; x.lineWidth = 4;
+      rr(x, px + inset, py + inset, w - inset * 2, h - inset * 2, Math.max(4, 22 - inset * 0.5)); x.stroke();
     }
-    // kenar sıyrıkları (boya kalkmış koyu metal)
-    for (let i = 0; i < 60 * k; i++) {
+    x.fillStyle = lg(x, 0, py + h - 60, 0, py + h, [[0, 'rgba(50,40,26,0)'], [1, 'rgba(50,40,26,0.22)']]); x.fillRect(px, py + h - 60, w, 60);
+    for (let i = 0; i < 70; i++) {
       const side = Math.floor(R() * 4);
-      const ex = side === 0 ? px + R() * 10 : side === 1 ? px + w - R() * 10 : px + R() * w;
-      const ey = side === 2 ? py + R() * 10 : side === 3 ? py + h - R() * 10 : py + R() * h;
-      x.fillStyle = `rgba(${R() < 0.6 ? '58,56,52' : '120,112,98'},${0.25 + R() * 0.45})`;
-      x.beginPath(); x.ellipse(ex, ey, 1 + R() * 5, 1 + R() * 3, R() * 3, 0, TAU); x.fill();
+      const ex = side === 0 ? px + R() * 8 : side === 1 ? px + w - R() * 8 : px + R() * w;
+      const ey = side === 2 ? py + R() * 8 : side === 3 ? py + h - R() * 8 : py + R() * h;
+      x.fillStyle = `rgba(${R() < 0.7 ? '62,62,58' : '130,116,90'},${0.35 + R() * 0.45})`;
+      x.beginPath(); for (let k = 0; k < 6; k++) { const a = (k / 6) * TAU, r = 1 + R() * 4; x.lineTo(ex + Math.cos(a) * r * 1.4, ey + Math.sin(a) * r); } x.closePath(); x.fill();
     }
-    // çizikler
-    for (let i = 0; i < 40 * k; i++) {
-      const sx = px + R() * w, sy = py + R() * h, l = 6 + R() * 50, a = (R() - 0.5) * 1.2;
-      x.strokeStyle = R() < 0.5 ? 'rgba(255,255,250,0.22)' : 'rgba(40,38,34,0.16)'; x.lineWidth = 1;
-      x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + Math.cos(a) * l, sy + Math.sin(a) * l); x.stroke();
+    for (let i = 0; i < 16; i++) {
+      const sx = px + 10 + R() * (w - 20), sw = 2 + R() * 8, sy = py + R() * h * 0.4, sh = 60 + R() * h * 0.6;
+      x.fillStyle = lg(x, 0, sy, 0, sy + sh, [[0, `rgba(60,62,56,${0.1 * (0.5 + R())})`], [1, 'rgba(60,62,56,0)']]); x.fillRect(sx, sy, sw, sh);
     }
+    for (let i = 0; i < 160; i++) { const dy = Math.pow(R(), 2) * 40; x.fillStyle = `rgba(${R() < 0.6 ? '200,196,186' : '120,112,96'},${0.2 * (0.3 + R() * 0.7)})`; x.fillRect(px + R() * w, py - 28 + dy, 1 + R() * 1.6, 1 + R() * 1.2); }
+    for (let i = 0; i < 40; i++) { const sx = px + R() * w, sy = py + R() * h, l = 6 + R() * 40, a = (R() - 0.5) * 1.2; x.strokeStyle = R() < 0.5 ? 'rgba(255,255,255,0.18)' : 'rgba(30,32,32,0.18)'; x.lineWidth = 1; x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + Math.cos(a) * l, sy + Math.sin(a) * l); x.stroke(); }
+  }
+  // parmak izleri: tuşlar ve düğmeler
+  const print = (cx, cy, s, a, rot) => {
+    x.save(); x.translate(cx, cy); x.rotate(rot);
+    x.fillStyle = rg(x, 0, 0, 0, 0, 0, 16 * s, [[0, `rgba(70,60,44,${a})`], [1, 'rgba(70,60,44,0)']]); x.beginPath(); x.ellipse(0, 0, 12 * s, 16 * s, 0, 0, TAU); x.fill();
+    x.strokeStyle = `rgba(60,52,38,${a * 0.7})`; x.lineWidth = 0.8;
+    for (let i = 1; i < 6; i++) { x.beginPath(); x.ellipse(0, 1, i * 2 * s, i * 2.7 * s, 0, Math.PI * (1.1 + R() * 0.2), Math.PI * (1.9 + R() * 0.2)); x.stroke(); }
+    x.restore();
+  };
+  for (const k of L.keys) print(k.x + 26 + (R() - 0.5) * 20, k.y + 39, 1.1, 0.22, R());
+  for (const kx of [1770, 1890]) print(kx - 18, 1042, 1, 0.18, -0.4);
+  // vidaların altına akan pas
+  for (const [sx, sy] of [[66, 566], [634, 566], [652, 474], [1396, 474], [1414, 566], [1982, 566]]) {
+    x.fillStyle = lg(x, 0, sy, 0, sy + 60, [[0, 'rgba(120,70,30,0.25)'], [1, 'rgba(120,70,30,0)']]); x.fillRect(sx - 2, sy + 4, 4, 60);
   }
   x.restore();
 }
@@ -228,7 +244,7 @@ export default {
     x.strokeStyle = '#141412'; x.lineWidth = 16;
     x.beginPath(); x.moveTo(40, 1236); x.bezierCurveTo(16, 1250, 4, 1268, -10, 1280); x.stroke();
 
-    if (renk.wear) wear(x, [[40, 540, 620, 490], [1388, 540, 620, 490], [628, 452, 792, 698], [1774, 156, 182, 116], [28, 1158, W - 56, 100]], renk.wear);
+    if (renk.wear) wear(x);
     weather(x, W, H, PC, { from: 320, dirt: !renk.clean });
   },
 };

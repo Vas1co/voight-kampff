@@ -15,7 +15,7 @@ Dosya adları oyunun beklediği adlarla aynıdır.
 Yalnızca **senin değiştirdiğin** dosyalar oyuna geçer; dokunmadıkların kodla çizilmeye devam eder.
 
 Makinenin renk şemaları yan yana: `_rehber/renk-secenekleri.png`. Oyunda denemek için adrese `?renk=siyah80` gibi ekle
-(adlar: beyaz80, beyazTemiz, siyah80). Kalıcı seçim: `src/machine/kasalar/mevcut.js` → `VARSAYILAN_RENK`.
+(adlar: metalKirli, beyazTemiz, siyah80). Kalıcı seçim: `src/machine/kasalar/mevcut.js` → `VARSAYILAN_RENK`.
 Her şemanın gövdesi ayrı dosya: `oda/machine-<ad>.png` (ör. `machine-siyah80.png`). Düzenleyip kaydettiğin dosya,
 o şema seçiliyken oyuna geçer (ör. `?renk=siyah80`). Ekran, lamba ve tuş yerleri için `_rehber/machine-rehber.png`.
 
