@@ -35,8 +35,16 @@ export class AudioEngine {
     if (this.ctx) { this.resume(); return true; }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return false;
+    // iPhone: ses "medya" sayılsın, yan taraftaki sessiz düğmesi açıkken de çalsın
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* desteklenmiyor */ }
     try { this.ctx = new AC(); } catch { return false; }
     const ctx = this.ctx;
+    // Telefonlarda bağlam dokunuşla kurulsa da askıda başlayabilir: aynı dokunuşun
+    // içinde uyandır ve tek örneklik sessiz bir ses çal (eski iOS'ta kilidi açar).
+    this.resume();
+    const unlock = ctx.createBufferSource();
+    unlock.buffer = ctx.createBuffer(1, 1, 22050);
+    unlock.connect(ctx.destination); unlock.start(0);
     this.master = ctx.createGain(); this.master.gain.value = 0;
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 3; comp.attack.value = 0.01; comp.release.value = 0.3;
@@ -68,7 +76,8 @@ export class AudioEngine {
     return true;
   }
 
-  resume() { if (this.ctx?.state === 'suspended') this.ctx.resume(); }
+  // iOS arama ya da arka plana geçişte bağlamı "interrupted" durumuna alır.
+  resume() { if (this.ctx && this.ctx.state !== 'running' && this.ctx.state !== 'closed') this.ctx.resume().catch(() => {}); }
 
   apply(s) {
     this.settings = s;
