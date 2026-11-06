@@ -29,7 +29,7 @@ export const RENKLER = {
   beyazTemiz: { name: 'Beyaz · temiz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, clean: true },
   siyah80: { name: 'Siyah', center: 'siyah', sides: 'siyah', arm: 'siyah', terminal: true },
 };
-const VARSAYILAN_RENK = 'beyaz80';
+const VARSAYILAN_RENK = 'beyazTemiz';
 const fromUrl = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('renk') : null;
 export const RENK_NAME = RENKLER[fromUrl] ? fromUrl : VARSAYILAN_RENK;
 export const RENK = RENKLER[RENK_NAME];
