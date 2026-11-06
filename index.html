@@ -5,18 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#020506">
   <meta name="color-scheme" content="dark">
-  <title>Voight-Kampff · Blade Runner'dan esinlenen empati testi</title>
-  <meta name="description" content="Voight-Kampff: Blade Runner'dan esinlenen, tarayıcıda oynanan sinematik bir empati testi. Yedi soru; göz bebeğin, kızarman, nabzın ve tepki süren ölçülür. Makine hüküm vermez, kararı karşındaki verir.">
-  <meta name="keywords" content="Voight-Kampff, Voight-Kampff testi, Blade Runner, empati testi, replikant, tarayıcı oyunu, fan oyunu">
-  <meta name="robots" content="index, follow">
+  <title>Voight-Kampff Testi · Blade Runner Empati Testi Oyunu</title>
+  <meta name="description" content="Voight-Kampff testini tarayıcında çöz: Blade Runner'dan esinlenen ücretsiz, sinematik bir empati testi oyunu. Yedi soru boyunca göz bebeğin, kızarman, nabzın ve tepki süren ölçülür. İnsan mısın, replikant mı? Kararı sorgucu verir.">
+  <meta name="keywords" content="Voight-Kampff, Voight-Kampff test, Voight-Kampff testi, Blade Runner test, Blade Runner game, Blade Runner oyunu, replicant test, replikant testi, empathy test, empati testi, fan game">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://voight-kampff.peekdock.com/">
+  <link rel="alternate" hreflang="x-default" href="https://voight-kampff.peekdock.com/">
+  <link rel="alternate" hreflang="tr" href="https://voight-kampff.peekdock.com/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Voight-Kampff">
-  <meta property="og:title" content="Voight-Kampff · Blade Runner'dan esinlenen empati testi">
-  <meta property="og:description" content="Sorgu odasındasın. Yedi soru, bir makine ve kararı veren biri. Blade Runner'dan esinlenen bir fan projesi.">
+  <meta property="og:url" content="https://voight-kampff.peekdock.com/">
+  <meta property="og:title" content="Voight-Kampff Testi · Blade Runner Empati Testi Oyunu">
+  <meta property="og:description" content="Sorgu odasındasın. Yedi soru, bir makine ve kararı veren biri. Tarayıcıda oynanan ücretsiz bir Blade Runner fan oyunu.">
+  <meta property="og:image" content="https://voight-kampff.peekdock.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Voight-Kampff: sorgu odasında üç ekranlı empati analiz ünitesi">
   <meta property="og:locale" content="tr_TR">
+  <meta property="og:locale:alternate" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Voight-Kampff · Blade Runner'dan esinlenen empati testi">
-  <meta name="twitter:description" content="Sorgu odasındasın. Yedi soru, bir makine ve kararı veren biri. Blade Runner'dan esinlenen bir fan projesi.">
+  <meta name="twitter:title" content="Voight-Kampff Testi · Blade Runner Empati Testi Oyunu">
+  <meta name="twitter:description" content="Sorgu odasındasın. Yedi soru, bir makine ve kararı veren biri. Tarayıcıda oynanan ücretsiz bir Blade Runner fan oyunu.">
+  <meta name="twitter:image" content="https://voight-kampff.peekdock.com/og-image.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Voight-Kampff",
+    "alternateName": ["Voight-Kampff Test", "Voight-Kampff Testi", "Blade Runner Test"],
+    "url": "https://voight-kampff.peekdock.com/",
+    "image": "https://voight-kampff.peekdock.com/og-image.jpg",
+    "description": "Blade Runner'dan esinlenen, tarayıcıda oynanan sinematik bir empati testi. Yedi soru boyunca bir makine göz bebeğini, kızarmanı, nabzını ve tepki süreni ölçer; kararı sorgucu verir.",
+    "inLanguage": "tr",
+    "genre": ["Interactive fiction", "Narrative", "Science fiction"],
+    "gamePlatform": ["Web browser", "Desktop", "Mobile"],
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "isBasedOn": { "@type": "Movie", "name": "Blade Runner", "datePublished": "1982" }
+  }
+  </script>
 </head>
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
@@ -69,6 +102,14 @@
 
   <!-- ayarlar -->
   <div id="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden></div>
+
+  <noscript>
+    <main style="max-width:640px;margin:15vh auto;padding:0 16px;color:#cfe0db;font:16px/1.6 system-ui,sans-serif">
+      <h1>Voight-Kampff Testi</h1>
+      <p>Blade Runner'dan esinlenen, tarayıcıda oynanan sinematik bir empati testi. Yedi soru boyunca bir makine göz bebeğini, kızarmanı, nabzını ve tepki süreni ölçer. Makine hüküm vermez; insan mı replikant mı olduğuna masanın karşısındaki sorgucu karar verir.</p>
+      <p>Oynamak için JavaScript'i açman gerekiyor. <a href="/hakkinda/" style="color:#6dffc9">Oyun hakkında</a> · <a href="/about/" hreflang="en" style="color:#6dffc9">About the Voight-Kampff test (English)</a></p>
+    </main>
+  </noscript>
 
   <script type="module" src="/src/main.js"></script>
 </body>

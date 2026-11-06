@@ -16,7 +16,11 @@ export const gate = {
         canContinue ? h('button', { type: 'button', class: 'ghost', text: t('title.continue'), onclick: () => onContinue() }) : null,
         h('button', { type: 'button', class: 'ghost quiet', text: t('title.settings'), onclick: () => onSettings() })),
       h('p', { class: 'hint', text: t('title.hint') }),
-      h('p', { class: 'disclaimer', lang: 'en', text: t('title.disclaimer') }),
+      h('div', { class: 'disclaimer' },
+        h('p', { lang: 'en', text: t('title.disclaimer') }),
+        h('nav', { class: 'links' },
+          h('a', { href: '/hakkinda/', text: t('title.about') }),
+          h('a', { href: '/about/', hreflang: 'en', lang: 'en', text: 'About' }))),
     );
     this.el.hidden = false;
     this.el.classList.remove('gone');
