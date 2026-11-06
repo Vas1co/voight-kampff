@@ -35,6 +35,10 @@ const stage = new Stage(document.getElementById('scene'), { quality: s.quality, 
 const subs = new Subtitles();
 const game = new Game({ stage, subs });
 
+// Sesi kapatmak yalnızca o oturum için: telefonda küçük düğmeye yanlışlıkla dokunulunca
+// ses sonraki ziyaretlerde de kapalı kalıyordu.
+s.muted = false;
+
 hud.init({
   onSound: () => { s.muted = !s.muted; save.write(); audio.apply(s); hud.sound(!s.muted); },
   onSettings: () => settingsUI.toggle(),
@@ -69,6 +73,8 @@ loop.start();
 game.start();
 
 document.addEventListener('visibilitychange', () => { if (!document.hidden) audio.resume(); });
+// telefonda ses bir kesintiden sonra susarsa ilk dokunuş yeniden açar (tarayıcılar yalnızca dokunuşla izin verir)
+for (const ev of ['pointerdown', 'touchend', 'keydown']) addEventListener(ev, () => audio.resume(), { passive: true });
 
 if (import.meta.env.DEV) {
   window.__sapma = { stage, game, save };
