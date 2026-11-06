@@ -4,56 +4,12 @@ import { rr, lg, rg, grain, seeded } from '../../scene/paint.js';
 export const TAU = Math.PI * 2;
 
 export const PAL = {
-  gri: {
-    hi: '#d3d5d3', top: '#c4c6c4', face: '#aeb1af', mid: '#9ea19f', low: '#848886',
-    side: ['rgba(30,34,34,0.28)', 'rgba(20,24,24,0.42)'], edge: 'rgba(30,34,34,0.65)', glint: 'rgba(255,255,255,0.65)',
-    slot: '#262929', slotHi: 'rgba(255,255,255,0.4)', ink: 'rgba(28,32,32,0.82)', inkHi: 'rgba(255,255,255,0.35)',
-    bezel: ['#b9bcba', '#949896'], bezelShade: '20,24,24', recess: '#222525', socket: '#1b1d1d',
-    screw: ['#eef0ee', '#a7aba9', '#5e6260'], dirt: ['60,62,58', '40,44,44'], key: '#d9dcd8',
-  },
-  // kırmızı boyalı metal (beyaz yazılı), içte siyah ekran çerçevesi
-  kirmizi: {
-    hi: '#d8473c', top: '#c2372e', face: '#a92920', mid: '#90201a', low: '#691712',
-    side: ['rgba(40,4,2,0.3)', 'rgba(30,2,0,0.48)'], edge: 'rgba(30,4,2,0.75)', glint: 'rgba(255,205,195,0.45)',
-    slot: '#1a0705', slotHi: 'rgba(255,190,180,0.22)', ink: 'rgba(255,238,232,0.82)', inkHi: 'rgba(60,0,0,0.5)',
-    bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#140605',
-    screw: ['#b9bcbe', '#5e6264', '#202224'], dirt: ['40,10,8', '0,0,0'], key: '#d9dcd8',
-  },
   beyaz: {
     hi: '#f3f3ef', top: '#e9e9e4', face: '#dddcd6', mid: '#d0cfc8', low: '#b3b2ab',
     side: ['rgba(40,40,36,0.2)', 'rgba(30,30,26,0.34)'], edge: 'rgba(50,50,46,0.5)', glint: 'rgba(255,255,255,0.8)',
     slot: '#2a2b2b', slotHi: 'rgba(255,255,255,0.5)', ink: 'rgba(40,42,44,0.8)', inkHi: 'rgba(255,255,255,0.5)',
     bezel: ['#2a2c2e', '#141516'], bezelShade: '0,0,0', recess: '#0c0d0d', socket: '#1c1d1d',
     screw: ['#f6f6f2', '#b4b4ae', '#6a6a64'], dirt: ['90,85,70', '50,50,46'], key: '#e6e6e0',
-  },
-  sari: {
-    hi: '#f0c94a', top: '#e3b836', face: '#d1a327', mid: '#bb8f1f', low: '#8f6b14',
-    side: ['rgba(50,36,0,0.26)', 'rgba(40,28,0,0.42)'], edge: 'rgba(60,44,6,0.6)', glint: 'rgba(255,246,205,0.62)',
-    slot: '#2a210a', slotHi: 'rgba(255,240,190,0.35)', ink: 'rgba(30,26,14,0.86)', inkHi: 'rgba(255,240,190,0.4)',
-    bezel: ['#2a2c2e', '#141516'], bezelShade: '0,0,0', recess: '#0c0d0d', socket: '#1e1808',
-    screw: ['#f2ecd8', '#a8a088', '#5a5440'], dirt: ['90,70,20', '30,25,10'], key: '#ebe6da',
-  },
-  // grafit / soluk metal gri / eskimiş bordo
-  grafit: {
-    hi: '#4c5554', top: '#414948', face: '#343b3a', mid: '#2c3231', low: '#1f2423',
-    side: ['rgba(0,0,0,0.26)', 'rgba(0,0,0,0.44)'], edge: 'rgba(0,0,0,0.8)', glint: 'rgba(220,235,230,0.22)',
-    slot: '#0b0e0d', slotHi: 'rgba(220,235,230,0.1)', ink: 'rgba(214,222,216,0.6)', inkHi: 'rgba(0,0,0,0.6)',
-    bezel: ['#2a2f2e', '#161a19'], bezelShade: '0,0,0', recess: '#0c0e0e', socket: '#0a0c0c',
-    screw: ['#9aa29f', '#525a58', '#222827'], dirt: ['70,72,64', '0,0,0'], key: '#cfd3cc',
-  },
-  metal: {
-    hi: '#a9b0a9', top: '#9aa19a', face: '#89918a', mid: '#7c847d', low: '#646b65',
-    side: ['rgba(20,24,22,0.26)', 'rgba(14,18,16,0.4)'], edge: 'rgba(30,34,32,0.6)', glint: 'rgba(255,255,250,0.5)',
-    slot: '#202523', slotHi: 'rgba(255,255,250,0.3)', ink: 'rgba(26,30,28,0.8)', inkHi: 'rgba(255,255,250,0.28)',
-    bezel: ['#2a2e2d', '#151817'], bezelShade: '0,0,0', recess: '#0c0e0d', socket: '#1a1d1c',
-    screw: ['#e2e6e0', '#9aa19a', '#545a55'], dirt: ['60,62,54', '40,44,40'], key: '#d6d9d2',
-  },
-  bordo: {
-    hi: '#7a3a31', top: '#6a322a', face: '#572923', mid: '#4a221d', low: '#341815',
-    side: ['rgba(20,2,0,0.3)', 'rgba(14,0,0,0.46)'], edge: 'rgba(20,4,2,0.75)', glint: 'rgba(255,210,195,0.3)',
-    slot: '#160806', slotHi: 'rgba(255,200,185,0.16)', ink: 'rgba(240,226,218,0.78)', inkHi: 'rgba(30,0,0,0.5)',
-    bezel: ['#2a2c2e', '#131415'], bezelShade: '0,0,0', recess: '#0b0c0c', socket: '#130605',
-    screw: ['#b9b6b2', '#5e5a56', '#221f1d'], dirt: ['50,20,14', '0,0,0'], key: '#d9d4cc',
   },
   siyah: {
     hi: '#46494a', top: '#35383a', face: '#232627', mid: '#1c1e1f', low: '#141516',

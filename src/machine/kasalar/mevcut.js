@@ -25,19 +25,9 @@ export const L = {
 };
 
 export const RENKLER = {
-  kirmizi80: { name: 'Hepsi kırmızı', center: 'kirmizi', sides: 'kirmizi', arm: 'kirmizi', terminal: true },
-  kirmiziGri: { name: 'Orta kırmızı · yanlar gri', center: 'kirmizi', sides: 'gri', arm: 'kirmizi', terminal: true },
-  griKirmizi: { name: 'Orta gri · yanlar kırmızı', center: 'gri', sides: 'kirmizi', arm: 'gri', terminal: true },
-  sari: { name: 'Hepsi sarı', center: 'sari', sides: 'sari', arm: 'sari', terminal: true },
-  sariGri: { name: 'Orta sarı · yanlar gri', center: 'sari', sides: 'gri', arm: 'sari', terminal: true },
-  griSari: { name: 'Orta gri · yanlar sarı', center: 'gri', sides: 'sari', arm: 'gri', terminal: true },
-  siyah80: { name: 'Hepsi siyah', center: 'siyah', sides: 'siyah', arm: 'siyah', terminal: true },
-  beyaz80: { name: 'Hepsi beyaz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, wear: 1 },
-  beyazTemiz: { name: 'Hepsi beyaz · temiz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, clean: true },
-  // gövde grafit, orta soluk metal gri, yanlar eskimiş bordo; fosforlu olmayan CRT yeşili, az amber
-  grafitBordo: { name: 'Grafit · metal gri · bordo', center: 'metal', sides: 'bordo', base: 'grafit', arm: 'metal', terminal: true, ink: '#54b99a', amber: '#d5ad63' },
-  kirmizisiyah: { name: 'Orta kırmızı · yanlar siyah', center: 'kirmizi', sides: 'siyah', arm: 'kirmizi' },
-  grisiyah: { name: 'Orta gri · yanlar siyah', center: 'gri', sides: 'siyah', arm: 'gri' },
+  beyaz80: { name: 'Beyaz · eskitilmiş', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, wear: 1 },
+  beyazTemiz: { name: 'Beyaz · temiz', center: 'beyaz', sides: 'beyaz', arm: 'beyaz', terminal: true, clean: true },
+  siyah80: { name: 'Siyah', center: 'siyah', sides: 'siyah', arm: 'siyah', terminal: true },
 };
 const VARSAYILAN_RENK = 'beyaz80';
 const fromUrl = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('renk') : null;
@@ -127,7 +117,7 @@ export default {
   name: 'Mevcut',
   tint: '#f4f3f1',
   L,
-  key: RENK.terminal ? '#e6e2da' : PAL[RENK.center].key,
+  key: '#e6e2da',
   paint(x, W, H, renk = RENK) {
     const PB = PAL[renk.base ?? 'siyah'], PS = PAL[renk.sides], PC = PAL[renk.center], PA = PAL[renk.arm];
     const T = !!renk.terminal;
