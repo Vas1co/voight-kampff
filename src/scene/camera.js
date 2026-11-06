@@ -2,14 +2,17 @@
 // Her plan, bakılan noktadaki uzaklıkta görünmesi gereken genişlik/yüksekliği
 // tanımlar; görüş açısı ekran oranına göre hesaplanır. Alttaki kontrol paneli
 // için görüntü merkezi yukarı kaydırılır (setViewOffset).
+// mw: dar (dikey telefon) ekranda bile görünmesi gereken genişlik. Ekran daraldıkça
+// kadraj w'den mw'ye iner: kenarlar kesilir, sahne ekranı doldurur ve yaklaşır.
+// my: dar ekranda kadrajın yukarı kayması (m); konu alta oturur, üstte oda görünür.
 import * as THREE from 'three';
 import { damp } from '../core/rng.js';
 
 export const SHOTS = {
-  wide: { pos: [0, 1.55, 2.6], look: [0, 1.62, -3.0], w: 6.9, h: 3.7, push: 0.04 },
-  machine: { pos: [0, 1.29, 2.5], look: [0, 1.21, 0.35], w: 1.68, h: 1.07, push: 0.035 },
-  crt: { pos: [0, 1.144, 1.35], look: [0, 1.144, 0.36], w: 0.5, h: 0.3, push: 0.05 },
-  desk: { pos: [-0.2, 1.6, 2.0], look: [-0.4, 0.8, 0.5], w: 1.8, h: 1.1, push: 0.03 },
+  wide: { pos: [0, 1.55, 2.6], look: [0, 1.62, -3.0], w: 6.9, h: 3.7, mw: 3.1, push: 0.04 },
+  machine: { pos: [0, 1.29, 2.5], look: [0, 1.21, 0.35], w: 1.68, h: 1.07, mw: 0.98, my: 0.24, push: 0.035 },
+  crt: { pos: [0, 1.144, 1.35], look: [0, 1.144, 0.36], w: 0.5, h: 0.3, mw: 0.44, push: 0.05 },
+  desk: { pos: [-0.2, 1.6, 2.0], look: [-0.4, 0.8, 0.5], w: 1.8, h: 1.1, mw: 1.1, push: 0.03 },
 };
 
 export class CameraRig {
@@ -57,7 +60,8 @@ export class CameraRig {
     const pos = new THREE.Vector3(...s.pos), look = new THREE.Vector3(...s.look);
     const k = this.reduce ? 0 : Math.min(1, this.shotT / 22) * s.push;
     pos.lerp(look, k);
-    return { pos, look, w: s.w * (1 - k * 0.8), h: s.h * (1 - k * 0.8) };
+    const z = 1 - k * 0.8;
+    return { pos, look, w: s.w * z, h: s.h * z, mw: (s.mw ?? s.w) * z };
   }
 
   apply() {
@@ -70,12 +74,18 @@ export class CameraRig {
       cur = {
         pos: this.from.pos.clone().lerp(cur.pos, e), look: this.from.look.clone().lerp(cur.look, e),
         w: this.from.w + (cur.w - this.from.w) * e, h: this.from.h + (cur.h - this.from.h) * e,
+        mw: this.from.mw + (cur.mw - this.from.mw) * e,
       };
     }
     const d = cur.pos.distanceTo(cur.look);
     const Ha = Math.max(1, h - top - bottom);
     const aspA = w / Ha;
-    const tanH = Math.max(cur.h / 2 / d, cur.w / 2 / d / aspA);
+    // geniş ekranda (≥1.6) tam genişlik, dikey telefonda (≤0.8) yalnızca mw
+    const narrow = Math.min(1, Math.max(0, (1.6 - aspA) / 0.8));
+    const needW = cur.w + (cur.mw - cur.w) * narrow;
+    const tanH = Math.max(cur.h / 2 / d, needW / 2 / d / aspA);
+    const lift = (SHOTS[this.name].my ?? 0) * narrow;
+    if (lift) { cur.pos = cur.pos.clone(); cur.look = cur.look.clone(); cur.pos.y += lift; cur.look.y += lift; }
     const yc = top + Ha / 2;
     let F, offY;
     if (yc <= h / 2) { F = 2 * (h - yc); offY = h - 2 * yc; } else { F = 2 * yc; offY = 0; }

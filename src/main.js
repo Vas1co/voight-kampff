@@ -49,7 +49,11 @@ bus.on('settings', ({ key }) => {
 });
 
 // Altyazı ve seçenekler için görüntünün altı boş kalır; sahne yukarı kayar.
-const insets = () => stage.setInsets(40, Math.round(Math.min(260, Math.max(120, innerHeight * 0.24))));
+// Dikey telefonda şıklar daha çok satıra yayılır: alt boşluk daha büyük.
+const insets = () => {
+  const portrait = innerWidth / innerHeight < 0.8;
+  stage.setInsets(40, Math.round(portrait ? innerHeight * 0.36 : Math.min(260, Math.max(120, innerHeight * 0.24))));
+};
 insets();
 addEventListener('resize', insets);
 
