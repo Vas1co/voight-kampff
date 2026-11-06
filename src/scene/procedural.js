@@ -148,25 +148,26 @@ export function paintGlass() {
   x.fillRect(W * 0.2, 18, W * 0.6, 6);
   x.globalCompositeOperation = 'source-over';
   grime(x, W, H, 14, 'rgba(180,190,180,A)', 60, 0.05, 11);
-  glassSign(x, t('room.glassSign'), 104, 112);
+  glassSign(x, t('room.glassSign'), W / 2, 40);
   return c;
 }
 
 // Camın üstüne boyanmış şablon yazı: geniş aralıklı ince harfler, şablon köprüleriyle
-// kesik, boyası yer yer dökülmüş. (px, py) ilk satırın sol üstü.
-function glassSign(x, lines, px, py) {
+// kesik, boyası yer yer dökülmüş. Satırlar cx etrafında ortalı; py ilk satırın üstü.
+function glassSign(x, lines, cx, py) {
   const size = 34, lead = 46;
   const c = mk(420, 140), y = c.getContext('2d');
   y.font = `400 ${size}px "Jost", "Plex Mono", sans-serif`;
   if ('letterSpacing' in y) y.letterSpacing = `${size * 0.42}px`;
-  y.textBaseline = 'top'; y.fillStyle = 'rgba(214,224,220,0.82)';
-  lines.forEach((l, i) => y.fillText(l, 4, 6 + i * lead));
+  y.textBaseline = 'top'; y.textAlign = 'center'; y.fillStyle = 'rgba(214,224,220,0.82)';
+  // harf aralığı son harften sonra da boşluk bırakır; ortalarken onu telafi et
+  lines.forEach((l, i) => y.fillText(l, 210 + size * 0.21, 6 + i * lead));
   // şablon köprüleri ve dökülmüş boya
   const R = seeded(13);
   y.globalCompositeOperation = 'destination-out';
   for (let bx = 10; bx < 420; bx += 13 + R() * 9) { y.fillStyle = 'rgba(0,0,0,0.9)'; y.fillRect(bx, 0, 1.6, 140); }
   for (let i = 0; i < 160; i++) { y.fillStyle = `rgba(0,0,0,${0.3 + R() * 0.6})`; y.fillRect(R() * 420, R() * 140, 1 + R() * 3, 1 + R() * 2); }
-  x.save(); x.globalAlpha = 0.85; x.drawImage(c, px, py, 420, 140); x.restore();
+  x.save(); x.globalAlpha = 0.85; x.drawImage(c, cx - 210, py, 420, 140); x.restore();
 }
 
 // ---------------------------------------------------------------- duvar objeleri
