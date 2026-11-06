@@ -97,13 +97,29 @@ export function slots(x, p, px, py, w, h, n, vertical = true) {
 }
 
 // Kasa: üst eğimli yüz, ön yüz, yuvarlak köşeler, kenar parlaması ve gölge.
+// Üst yüzün yanları ön yüzün yuvarlak köşelerinden yumuşakça yukarı kıvrılır ve arka
+// kenara yuvarlak döner (düz kesik yamuk yerine yuvarlak kasa görünümü).
+function topFace(x, px, py, w, top, radius) {
+  const ins = Math.min(radius, 24);
+  x.beginPath();
+  x.moveTo(px, py + radius);
+  x.bezierCurveTo(px, py - top * 0.55, px + ins * 0.35, py - top, px + ins + radius * 0.6, py - top);
+  x.lineTo(px + w - ins - radius * 0.6, py - top);
+  x.bezierCurveTo(px + w - ins * 0.35, py - top, px + w, py - top * 0.55, px + w, py + radius);
+  x.closePath();
+}
 export function box(x, p, px, py, w, h, { top = 30, radius = 22 } = {}) {
   x.fillStyle = 'rgba(0,0,0,0.35)';
   rr(x, px + 6, py + 10, w, h, radius); x.fill();
   x.fillStyle = lg(x, 0, py - top, 0, py + 4, [[0, p.hi], [1, p.top]]);
-  x.beginPath();
-  x.moveTo(px + 18, py - top); x.lineTo(px + w - 18, py - top); x.lineTo(px + w, py + 4); x.lineTo(px, py + 4);
-  x.closePath(); x.fill();
+  topFace(x, px, py, w, top, radius); x.fill();
+  // arka kenarda ince parlama, yanlarda hafif koyuluk (kıvrım hissi)
+  x.save(); topFace(x, px, py, w, top, radius); x.clip();
+  x.fillStyle = lg(x, px, 0, px + w, 0, [[0, p.side[0]], [0.1, 'rgba(0,0,0,0)'], [0.9, 'rgba(0,0,0,0)'], [1, p.side[1]]]);
+  x.fillRect(px, py - top, w, top + radius);
+  x.restore();
+  x.strokeStyle = p.glint; x.lineWidth = 1.5;
+  x.beginPath(); x.moveTo(px + Math.min(radius, 24) + radius * 0.6, py - top + 1); x.lineTo(px + w - Math.min(radius, 24) - radius * 0.6, py - top + 1); x.stroke();
   x.fillStyle = lg(x, 0, py, 0, py + h, [[0, p.face], [0.6, p.mid], [1, p.low]]);
   rr(x, px, py, w, h, radius); x.fill();
   x.fillStyle = lg(x, px, 0, px + w, 0, [[0, p.side[0]], [0.12, 'rgba(0,0,0,0)'], [0.88, 'rgba(0,0,0,0)'], [1, p.side[1]]]);
