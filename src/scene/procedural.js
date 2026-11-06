@@ -148,13 +148,31 @@ export function paintGlass() {
   x.fillRect(W * 0.2, 18, W * 0.6, 6);
   x.globalCompositeOperation = 'source-over';
   grime(x, W, H, 14, 'rgba(180,190,180,A)', 60, 0.05, 11);
+  glassSign(x, t('room.glassSign'), 104, 112);
   return c;
+}
+
+// Camın üstüne boyanmış şablon yazı: geniş aralıklı ince harfler, şablon köprüleriyle
+// kesik, boyası yer yer dökülmüş. (px, py) ilk satırın sol üstü.
+function glassSign(x, lines, px, py) {
+  const size = 34, lead = 46;
+  const c = mk(420, 140), y = c.getContext('2d');
+  y.font = `400 ${size}px "Jost", "Plex Mono", sans-serif`;
+  if ('letterSpacing' in y) y.letterSpacing = `${size * 0.42}px`;
+  y.textBaseline = 'top'; y.fillStyle = 'rgba(214,224,220,0.82)';
+  lines.forEach((l, i) => y.fillText(l, 4, 6 + i * lead));
+  // şablon köprüleri ve dökülmüş boya
+  const R = seeded(13);
+  y.globalCompositeOperation = 'destination-out';
+  for (let bx = 10; bx < 420; bx += 13 + R() * 9) { y.fillStyle = 'rgba(0,0,0,0.9)'; y.fillRect(bx, 0, 1.6, 140); }
+  for (let i = 0; i < 160; i++) { y.fillStyle = `rgba(0,0,0,${0.3 + R() * 0.6})`; y.fillRect(R() * 420, R() * 140, 1 + R() * 3, 1 + R() * 2); }
+  x.save(); x.globalAlpha = 0.85; x.drawImage(c, px, py, 420, 140); x.restore();
 }
 
 // ---------------------------------------------------------------- duvar objeleri
 
 // Metal kapı (0.95 × 2.15 m): fırçalanmış metal kanat, menteşeler, kapı kapatıcı, kollu kilit,
-// tekme plakası, soluk boya yazılar. Sağ üst köşeye yakın ince uzun buzlu cam; içindeki
+// tekme plakası (yazısız). Sağ üst köşeye yakın ince uzun buzlu cam; içindeki
 // koridor ve oradan geçen adam ayrı, canlı bir katmandır (peeker.js), burada yalnızca boş
 // koridor çizilir.
 export function paintDoor() {
@@ -193,10 +211,6 @@ export function paintDoor() {
   x.restore();
   x.strokeStyle = '#1b2222'; x.lineWidth = 4; rr(x, wx - 5, wy - 5, ww + 10, wh + 10, 4); x.stroke();
   for (const sy of [wy - 5, wy + wh / 2, wy + wh + 5]) { screw(wx - 5, sy, 2.4); screw(wx + ww + 5, sy, 2.4); }
-  // boya yazılar
-  const sign = t('room.doorSign'), cxw = lx + (lw - 90) / 2;
-  stencil(x, sign[0], cxw, 400, { size: 84, align: 'center', color: 'rgba(160,178,174,0.17)', spacing: 0.2 });
-  stencil(x, sign[1], cxw, 430, { size: 19, align: 'center', color: 'rgba(160,178,174,0.24)', weight: 600, spacing: 0.12 });
   // kol, rozet, kilit; kolun çevresinde el izi kiri
   const hx = lx + lw - 44;
   x.fillStyle = '#0c1010'; rr(x, hx - 14, 446, 30, 110, 6); x.fill();
@@ -209,7 +223,6 @@ export function paintDoor() {
   x.fillStyle = lg(x, 0, ky, 0, H - 20, [[0, '#3a4545'], [1, '#202828']]); x.fillRect(lx + 10, ky, lw - 20, 96);
   for (let i = 0; i < 70; i++) { x.fillStyle = `rgba(${R() < 0.5 ? '255,255,255' : '0,0,0'},${0.03 + R() * 0.05})`; x.fillRect(lx + 10, ky + R() * 96, lw - 20, 1); }
   for (const sx of [lx + 20, lx + lw / 2, lx + lw - 20]) { screw(sx, ky + 8); screw(sx, ky + 88); }
-  stencil(x, t('room.doorStencil'), lx + lw / 2, 782, { size: 17, align: 'center', color: 'rgba(160,178,174,0.15)', weight: 600, spacing: 0.25 });
   // çizikler
   for (let i = 0; i < 140; i++) { const px = lx + R() * lw, py = ly + R() * lh, l = 4 + R() * 26, a = (R() - 0.5) * 1.4; x.strokeStyle = R() < 0.5 ? 'rgba(200,215,210,0.08)' : 'rgba(0,0,0,0.18)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke(); }
   // kapı altından sızan koridor ışığı
