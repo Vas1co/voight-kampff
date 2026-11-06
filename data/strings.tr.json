@@ -15,7 +15,8 @@
     "settings": "Ayarlar",
     "hint": "Kulaklık önerilir. Ses, odaya girdiğinde açılır. Cevaplar: 1–4 ya da tıkla.",
     "inspired": "Blade Runner'dan esinlenen bir empati testi",
-    "disclaimer": "Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate."
+    "disclaimer": "Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate.",
+    "about": "Hakkında"
   },
   "hud": {
     "rec": "KAYIT",
