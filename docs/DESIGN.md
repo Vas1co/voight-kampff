@@ -1,11 +1,11 @@
-# SAPMA — Tasarım Planı
+# Voight-Kampff — Tasarım Planı
 
 Tarayıcıda çalışan, sinematik bir empati sorgusu. **Oyuncu denektir**: masaya oturur, karşıdaki
 sorgucu sorular sorar, oyuncu cevaplar. Makine yalan ölçmez; empatik tepkiyi ölçer ve **hüküm vermez**,
 yalnızca temel ölçüme göre **sapma** gösterir. Kararı makine değil, sorgucu verir.
 
 > Test adı ("Voight-Kampff") yalnızca saygı göndermesidir ve tek bir yerden yönetilir:
-> `data/strings.tr.json → brand.testName`. Oyun adı `brand.gameTitle` ("SAPMA").
+> `data/strings.tr.json → brand.testName`. Oyun adı `brand.gameTitle` ("Voight-Kampff").
 
 ---
 

@@ -84,9 +84,10 @@ html.sub-large #subtitles.intercom #sub-line { font-size: clamp(17px, 2vw, 23px)
   transition: opacity 1s;
 }
 #gate.gone { opacity: 0; pointer-events: none; }
-#gate h1 { margin: 0; font: 200 clamp(40px, 9vw, 120px)/1 var(--f-title); letter-spacing: .42em; padding-left: .42em; text-transform: uppercase; color: #eaf2ef; }
+#gate h1 { margin: 0; font: 200 clamp(30px, 6vw, 84px)/1 var(--f-title); letter-spacing: .22em; padding-left: .22em; text-transform: uppercase; color: #eaf2ef; }
 #gate .note { margin: 0; max-width: 32em; font: 400 clamp(14px, 1.3vw, 17px)/1.6 var(--f-sub); color: rgba(225, 238, 234, .7); text-wrap: balance; }
-#gate .homage { margin: 0; font: 400 11px/1 var(--f-mono); letter-spacing: .2em; color: rgba(160, 205, 198, .4); }
+#gate .inspired { margin: -6px 0 0; font: 400 11px/1.4 var(--f-mono); letter-spacing: .28em; text-transform: uppercase; color: rgba(160, 205, 198, .55); }
+#gate .disclaimer { position: absolute; left: var(--gutter); right: var(--gutter); bottom: max(16px, env(safe-area-inset-bottom)); margin: 0; font: 400 10px/1.5 var(--f-mono); letter-spacing: .04em; color: rgba(160, 205, 198, .32); text-wrap: balance; }
 #gate .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
 .ghost {
   font: 400 12px/1 var(--f-title); letter-spacing: .45em; text-transform: uppercase; color: #e7f2ef; background: transparent;
