@@ -291,11 +291,6 @@
     }
   },
   "room": {
-    "doorSign": [
-      "{testShort}",
-      "TEST ODASI 03"
-    ],
-    "doorStencil": "YETKİLİ PERSONEL",
     "panel": "ERİŞİM",
     "observation": [
       "GÖZLEM",
@@ -333,7 +328,11 @@
     ],
     "formRow": "Q",
     "notes": "NOTES:",
-    "examiner": "EXAMINER"
+    "examiner": "EXAMINER",
+    "glassSign": [
+      "TYRELL",
+      "CORP."
+    ]
   },
   "screen": {
     "header": "{test}",
