@@ -9,7 +9,6 @@ import { Stage } from './scene/stage.js';
 import { Loop } from './core/loop.js';
 import { bus } from './core/events.js';
 import { save } from './core/save.js';
-import { brand } from './core/strings.js';
 import { initInput } from './core/input.js';
 import { Game } from './core/game.js';
 import { Subtitles } from './ui/subtitles.js';
@@ -17,7 +16,6 @@ import { hud } from './ui/overlay.js';
 import { settingsUI } from './ui/settings.js';
 import { audio } from './audio/engine.js';
 
-document.title = brand.gameTitle;
 
 // Kanvas yazıları (göstergeler, gövde etiketleri) için fontlar hazır olmalı.
 await Promise.race([

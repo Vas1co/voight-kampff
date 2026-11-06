@@ -1,4 +1,4 @@
-# SAPMA
+# Voight-Kampff
 
 Tarayıcıda çalışan, sinematik bir empati sorgusu oyunu. Makine yalan ölçmez; empatik tepkiyi
 ölçer ve yalnızca temele göre sapmayı gösterir. Kararı oyuncu verir.
