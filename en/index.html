@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#020506">
+  <meta name="color-scheme" content="dark">
+  <title>Voight-Kampff Test · Blade Runner Empathy Test Game</title>
+  <meta name="description" content="Take the Voight-Kampff test in your browser: a free, cinematic Blade Runner-inspired empathy test game. Seven questions while a machine measures your pupil, flush, pulse and reaction time. Human or replicant? The examiner decides.">
+  <meta name="keywords" content="Voight-Kampff, Voight-Kampff test, Voight Kampff test online, Blade Runner test, Blade Runner game, replicant test, empathy test, browser game, fan game">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://voight-kampff.peekdock.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://voight-kampff.peekdock.com/">
+  <link rel="alternate" hreflang="tr" href="https://voight-kampff.peekdock.com/">
+  <link rel="alternate" hreflang="en" href="https://voight-kampff.peekdock.com/en/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Voight-Kampff">
+  <meta property="og:url" content="https://voight-kampff.peekdock.com/en/">
+  <meta property="og:title" content="Voight-Kampff Test · Blade Runner Empathy Test Game">
+  <meta property="og:description" content="Sit in the interrogation room. Seven questions, one machine and an examiner who decides. A free Blade Runner fan game you play in your browser.">
+  <meta property="og:image" content="https://voight-kampff.peekdock.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Voight-Kampff: a three-screen empathy analysis unit in an interrogation room">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Voight-Kampff Test · Blade Runner Empathy Test Game">
+  <meta name="twitter:description" content="Sit in the interrogation room. Seven questions, one machine and an examiner who decides. A free Blade Runner fan game you play in your browser.">
+  <meta name="twitter:image" content="https://voight-kampff.peekdock.com/og-image.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Voight-Kampff",
+    "alternateName": ["Voight-Kampff Test", "Voight-Kampff Testi", "Blade Runner Test"],
+    "url": "https://voight-kampff.peekdock.com/en/",
+    "image": "https://voight-kampff.peekdock.com/og-image.jpg",
+    "description": "A cinematic empathy test inspired by Blade Runner, played in the browser. Over seven questions a machine measures your pupil, flush, pulse and reaction time; the examiner decides.",
+    "inLanguage": "en",
+    "genre": ["Interactive fiction", "Narrative", "Science fiction"],
+    "gamePlatform": ["Web browser", "Desktop", "Mobile"],
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "isBasedOn": { "@type": "Movie", "name": "Blade Runner", "datePublished": "1982" }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <!-- seçenekler görünürken alttaki karartma -->
+  <div id="shade" aria-hidden="true"></div>
+
+  <!-- sinema bantları ve kararma -->
+  <div id="bars" aria-hidden="true"><i class="bar top"></i><i class="bar bottom"></i></div>
+  <div id="fade" aria-hidden="true"></div>
+
+  <!-- üst bilgi -->
+  <header id="hud" hidden>
+    <div class="hud-left">
+      <span class="rec-dot" aria-hidden="true"></span>
+      <span id="hud-rec"></span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span id="hud-subject"></span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span id="hud-counter" aria-live="polite"></span>
+      <span class="sep tc-sep" aria-hidden="true">·</span>
+      <span id="hud-tc" class="tc" aria-hidden="true">00:00:00:00</span>
+    </div>
+    <div class="hud-right">
+      <button id="btn-sound" type="button" class="hud-btn"></button>
+      <button id="btn-settings" type="button" class="hud-btn"></button>
+    </div>
+  </header>
+
+  <!-- cevap seçenekleri ve süre -->
+  <div id="answer">
+    <div id="choices" role="group"></div>
+    <div id="timer" aria-hidden="true"><i></i></div>
+  </div>
+
+  <!-- altyazılar -->
+  <div id="subtitles" aria-live="polite" aria-atomic="true">
+    <p id="sub-speaker"></p>
+    <p id="sub-line"></p>
+  </div>
+
+  <!-- sonuç raporu -->
+  <div id="result" role="dialog" aria-labelledby="result-title" hidden></div>
+
+  <!-- sahne başlıkları -->
+  <div id="titlecard" aria-live="polite"></div>
+
+  <!-- giriş ekranı -->
+  <div id="gate"></div>
+
+  <!-- ayarlar -->
+  <div id="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden></div>
+
+  <noscript>
+    <main style="max-width:640px;margin:15vh auto;padding:0 16px;color:#cfe0db;font:16px/1.6 system-ui,sans-serif">
+      <h1>Voight-Kampff Test</h1>
+      <p>A cinematic empathy test inspired by Blade Runner, played in your browser. Over seven questions a machine measures your pupil, flush, pulse and reaction time. The machine passes no judgement; the examiner across the desk decides whether you are human or a replicant.</p>
+      <p>You need JavaScript to play. <a href="/about/" style="color:#6dffc9">About the game</a> · <a href="/hakkinda/" hreflang="tr" style="color:#6dffc9">Oyun hakkında (Türkçe)</a></p>
+    </main>
+  </noscript>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+{
+  "brand": {
+    "testName": "Voight-Kampff",
+    "gameTitle": "Voight-Kampff",
+    "unit": "Interrogation Unit 4",
+    "era": "November 2019",
+    "machine": "EMPATHY ANALYSIS UNIT",
+    "model": "MK·VI",
+    "testShort": "VK"
+  },
+  "title": {
+    "kicker": "Empathy measurement unit · {era}",
+    "note": "Seven questions. Your pupil, flush, pulse and reaction time will be measured. The machine passes no judgement; the person across the desk decides.",
+    "start": "Enter the room",
+    "settings": "Settings",
+    "hint": "Headphones recommended. Sound starts when you enter the room. Answers: 1–4 or tap.",
+    "inspired": "An empathy test inspired by Blade Runner",
+    "disclaimer": "Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate.",
+    "about": "About",
+    "aboutHref": "/about/",
+    "otherLang": "Türkçe"
+  },
+  "hud": {
+    "rec": "REC",
+    "subject": "SUBJECT {n}",
+    "question": "QUESTION",
+    "baseline": "BASELINE",
+    "sound": "SOUND",
+    "soundOn": "ON",
+    "soundOff": "OFF",
+    "settings": "SETTINGS"
+  },
+  "speakers": {
+    "interrogator": "",
+    "you": "YOU",
+    "narration": ""
+  },
+  "choices": {
+    "aria": "Your answer",
+    "none": "…"
+  },
+  "channels": {
+    "resp": "RESPIRATION",
+    "pulse": "PULSE",
+    "blush": "FLUSH",
+    "pupil": "PUPIL",
+    "latency": "REACTION TIME",
+    "particles": "PARTICLES"
+  },
+  "units": {
+    "resp": "br/min",
+    "pulse": "bpm",
+    "sec": "s",
+    "mm": "mm"
+  },
+  "machine": {
+    "baseline": "BASELINE",
+    "anomaly": "ANOMALY",
+    "sampling": "SAMPLING",
+    "idle": "STANDBY",
+    "off": "OFF",
+    "warming": "WARMING UP",
+    "bellows": "BELLOWS DRAW",
+    "noBaseline": "NO BASELINE",
+    "onset": "LAT",
+    "calib": "CAL",
+    "channel": "CH",
+    "focus": "FOCUS",
+    "panelLeft": "RESPIRATION · PULSE",
+    "panelRight": "RESPONSE ANALYSIS",
+    "stress": "STR"
+  },
+  "report": {
+    "title": "INTERROGATION REPORT",
+    "subject": "Subject",
+    "operator": "Examiner",
+    "operatorName": "Badge 4-117",
+    "date": "Date",
+    "baselineTitle": "BASELINE",
+    "readingsTitle": "READINGS (deviation from baseline)",
+    "cols": {
+      "n": "No",
+      "q": "Question",
+      "rt": "Time",
+      "pupil": "Pup%",
+      "onset": "Lat",
+      "blush": "Fl%",
+      "pulse": "Pls",
+      "particles": "Prt%"
+    },
+    "noAnswer": "no answer",
+    "anomaly": "anomaly",
+    "crossTitle": "CROSS-REFERENCE",
+    "crossHint": "The same emotional core, in different scenes. The machine does not interpret.",
+    "decisionTitle": "EXAMINER'S DECISION",
+    "decisionHint": "The machine passes no judgement. This decision is the examiner's.",
+    "stamp": {
+      "human": "HUMAN",
+      "replicant": "REPLICANT",
+      "unsure": "UNDETERMINED"
+    },
+    "again": "Sit down again"
+  },
+  "settings": {
+    "title": "SETTINGS",
+    "audio": "SOUND",
+    "master": "Master",
+    "music": "Music",
+    "sfx": "Effects",
+    "ambience": "Ambience",
+    "voice": "Voice",
+    "mute": "Mute",
+    "muted": "Mute",
+    "display": "DISPLAY",
+    "reduceMotion": "Reduce motion",
+    "quality": "Picture quality",
+    "qualityLow": "Low",
+    "qualityHigh": "High",
+    "qualityNote": "Quality changes apply the next time you open the game.",
+    "subSize": "Subtitle size",
+    "subNormal": "Normal",
+    "subLarge": "Large",
+    "subtitlesAlways": "Subtitles are always on.",
+    "lang": "Language",
+    "keysTitle": "KEYBOARD",
+    "keys": [
+      [
+        "1–4",
+        "choose an answer"
+      ],
+      [
+        "Space",
+        "skip subtitle"
+      ],
+      [
+        "Esc",
+        "settings / close"
+      ]
+    ],
+    "reset": "Erase save and start over",
+    "resetConfirm": "Are you sure? Press again.",
+    "close": "Close"
+  },
+  "intro": {
+    "card1": "{unit}",
+    "card2": "{era}"
+  },
+  "lines": {
+    "sit": "Sit down, please.",
+    "relax": "Relax. I'm going to ask you a few questions, that's all.",
+    "eye": "The eye on the screen is yours. The machine records every reaction.",
+    "speed": "How quickly you answer is measured too. Pay attention.",
+    "baseline": "First I'll take a reading. Don't say anything. Just look at the screen.",
+    "baselineDone": "Good. Let's begin.",
+    "next": [
+      "Moving on.",
+      "Next.",
+      "One more.",
+      "All right."
+    ],
+    "noAnswer": "You didn't answer.",
+    "fast": "You answered without thinking.",
+    "end": "Thank you. That will do.",
+    "verdict": {
+      "human": "You may go.",
+      "replicant": "Stay where you are.",
+      "unsure": "I can't say for certain. We'll need more questions."
+    }
+  },
+  "questions": {
+    "q1": {
+      "short": "Tortoise",
+      "lines": [
+        "A hot afternoon. You're walking along a dry creek bed.",
+        "There's a small tortoise at your feet. You crouch down and turn it onto its back.",
+        "The sun is high. Its legs paddle at the air. It can't turn itself over."
+      ],
+      "prompt": "And you just walk on. Why?",
+      "options": {
+        "a": "I wouldn't. I'd stop and turn it back over.",
+        "b": "Why would I flip it in the first place? I wouldn't do that.",
+        "c": "This is a question. It isn't real.",
+        "d": "Tortoises are tough. It'll be fine."
+      }
+    },
+    "q2": {
+      "short": "Wallet",
+      "lines": [
+        "It's your birthday. A small, carefully wrapped package sits on the table.",
+        "You open it. Inside is a soft wallet, made of calfskin."
+      ],
+      "prompt": "What do you do?",
+      "options": {
+        "a": "Say thank you, but I won't use it. It's an animal's skin.",
+        "b": "Thank whoever brought it and put it away in a drawer.",
+        "c": "Nice leather. Looks well made.",
+        "d": "Wonder how much it cost."
+      }
+    },
+    "q3": {
+      "short": "Fox",
+      "lines": [
+        "Night. You're driving down an empty road.",
+        "A fox darts into your headlights. You brake, but you still hear a dull thud."
+      ],
+      "prompt": "In the mirror, something moves by the roadside.",
+      "options": {
+        "a": "I stop and go back.",
+        "b": "I stop. But I can't bring myself to get out.",
+        "c": "I keep driving. It's late already.",
+        "d": "I wonder if it left a mark on the bumper."
+      }
+    },
+    "q4": {
+      "short": "Butterflies",
+      "lines": [
+        "You have a young son. He calls you into his room.",
+        "He shows you his butterfly collection. Beside it stands the glass jar he used to kill them."
+      ],
+      "prompt": "He looks up at you, proud.",
+      "options": {
+        "a": "Sit with him and tell him how they flew when they were alive.",
+        "b": "Say nothing. Quietly take the jar away.",
+        "c": "Tell him it looks beautiful.",
+        "d": "Ask which species he caught."
+      }
+    },
+    "q5": {
+      "short": "Wasp",
+      "lines": [
+        "Evening. You're watching TV.",
+        "Suddenly you notice a wasp walking across your wrist."
+      ],
+      "prompt": "What do you do?",
+      "options": {
+        "a": "Stay still. Wait for it to fly off on its own.",
+        "b": "Slowly hold my arm out to the open window.",
+        "c": "Shake it off hard.",
+        "d": "Crush it."
+      }
+    },
+    "q6": {
+      "short": "Photograph",
+      "lines": [
+        "In a drawer you find an old photograph.",
+        "You're a child, holding a woman's hand in a garden. You remember neither the woman nor the garden."
+      ],
+      "prompt": "But the child in the photo is definitely you.",
+      "options": {
+        "a": "My hands shake. I ask someone right away.",
+        "b": "I look at it for a long time. I try to remember something.",
+        "c": "I put it back. It doesn't matter.",
+        "d": "I burn the photograph."
+      }
+    },
+    "q7": {
+      "short": "Banquet",
+      "lines": [
+        "You're watching a play. On stage there is a long dinner table.",
+        "The first course is raw oysters. Then a waiter lifts a large lid: on the platter, a boiled dog."
+      ],
+      "prompt": "No one in the audience moves. What about you?",
+      "options": {
+        "a": "I get up and leave the theatre.",
+        "b": "I close my eyes and wait for the scene to end.",
+        "c": "It's a play. I keep watching.",
+        "d": "I wonder what it tastes like."
+      }
+    }
+  },
+  "pairs": {
+    "hayvan-aci": "A helpless animal",
+    "hayvan-kullanim": "An animal turned into an object",
+    "cocukluk": "Children and innocence"
+  },
+  "end": {
+    "again": "Sit down again"
+  },
+  "room": {
+    "panel": "ACCESS",
+    "observation": [
+      "OBSERVATION",
+      "BAY",
+      "A2"
+    ],
+    "sign": [
+      "INTERROGATION PROCEDURE 4-B",
+      "1. Subject sits, hands on the desk.",
+      "2. A baseline reading is taken.",
+      "3. All questions are recorded.",
+      "4. The decision rests with the examiner."
+    ],
+    "cabinet": [
+      "FILES",
+      "A–F",
+      "G–M",
+      "N–Z"
+    ],
+    "mug": "B4",
+    "folderLabel": "SUBJECT 04 · {testShort}",
+    "classified": "CLASSIFIED",
+    "form": "{testShort} · EMPATHY TEST FORM",
+    "formFields": [
+      "SUBJECT NO: 04",
+      "SESSION: 03",
+      "DATE: 11.14.2019"
+    ],
+    "formCols": [
+      "Q",
+      "PUPIL",
+      "FLUSH",
+      "PULSE",
+      "TIME"
+    ],
+    "formRow": "Q",
+    "notes": "NOTES:",
+    "examiner": "EXAMINER",
+    "glassSign": [
+      "TYRELL",
+      "CORP."
+    ]
+  },
+  "screen": {
+    "header": "{test}",
+    "model": "{model}",
+    "awaiting": "AWAITING SUBJECT",
+    "scanTitle": "EYE SCAN ANALYSIS",
+    "baselineTitle": "BASELINE READING",
+    "id": "ID: {id}",
+    "phase": "Q{n}",
+    "phaseBaseline": "B0",
+    "subject": "SUBJECT",
+    "scan": "SCAN",
+    "temp": "T: {t}°C",
+    "complete": "ANALYSIS COMPLETE",
+    "dataTitle": "DATA ANALYSIS",
+    "rows": {
+      "pupil": "PUPIL",
+      "blush": "FLUSH",
+      "pulse": "PULSE",
+      "latency": "REACTION TIME"
+    },
+    "response": "EMOTIONAL RESPONSE",
+    "error": "ERROR",
+    "errorLost": "EYE TRACKING LOST",
+    "errorAdjust": "PLEASE ADJUST POSITION",
+    "errorAnomaly": "UNEXPLAINED READING",
+    "errorRecheck": "CHECK CALIBRATION",
+    "scanPct": "SCAN {p}%"
+  },
+  "kasa": {
+    "maker": "SONI",
+    "machine": "EMPATHY ANALYSIS UNIT",
+    "model": "MK-VI",
+    "unitLeft": "ANALOG INPUT UNIT",
+    "unitCenter": "VISUAL PROCESSING UNIT",
+    "unitRight": "DATA ANALYSIS UNIT",
+    "panelLeft": "RESPIRATION · PULSE",
+    "panelRight": "RESPONSE ANALYSIS",
+    "anomaly": "ANOMALY",
+    "stress": "GRG-7",
+    "calib": "CAL",
+    "channel": "CH",
+    "focus": "FOCUS"
+  }
+}

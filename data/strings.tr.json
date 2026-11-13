@@ -16,7 +16,9 @@
     "hint": "Kulaklık önerilir. Ses, odaya girdiğinde açılır. Cevaplar: 1–4 ya da tıkla.",
     "inspired": "Blade Runner'dan esinlenen bir empati testi",
     "disclaimer": "Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate.",
-    "about": "Hakkında"
+    "about": "Hakkında",
+    "aboutHref": "/hakkinda/",
+    "otherLang": "English"
   },
   "hud": {
     "rec": "KAYIT",
@@ -136,7 +138,8 @@
     ],
     "reset": "Kaydı sil ve baştan başla",
     "resetConfirm": "Emin misin? Tekrar bas.",
-    "close": "Kapat"
+    "close": "Kapat",
+    "lang": "Dil"
   },
   "intro": {
     "card1": "{unit}",
@@ -361,7 +364,8 @@
     "errorLost": "GÖZ TAKİBİ KAYBOLDU",
     "errorAdjust": "LÜTFEN POZİSYONU DÜZELTİN",
     "errorAnomaly": "AÇIKLANAMAYAN OKUMA",
-    "errorRecheck": "KALİBRASYONU DENETLEYİN"
+    "errorRecheck": "KALİBRASYONU DENETLEYİN",
+    "scanPct": "TARAMA %{p}"
   },
   "kasa": {
     "maker": "SONI",
