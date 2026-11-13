@@ -1,7 +1,7 @@
 // Ayarlar: ayrı ses düzeyleri, sesi kapat, hareketi azalt, görüntü kalitesi, altyazı boyutu.
 // Altyazılar her zaman açıktır (kapatma seçeneği yok).
 import { $, h } from './dom.js';
-import { t } from '../core/strings.js';
+import { t, LANG, setLang } from '../core/strings.js';
 import { save } from '../core/save.js';
 import { bus } from '../core/events.js';
 
@@ -49,6 +49,11 @@ export const settingsUI = {
       seg('quality', [['low', t('settings.qualityLow')], ['high', t('settings.qualityHigh')]]),
       h('p', { class: 'note', text: t('settings.qualityNote') }),
       seg('subSize', [['normal', t('settings.subNormal')], ['large', t('settings.subLarge')]]),
+      h('div', { class: 'row' },
+        h('span', { text: t('settings.lang') }),
+        h('div', { class: 'seg', role: 'group', 'aria-label': t('settings.lang') }, [['en', 'English'], ['tr', 'Türkçe']].map(([v, label]) => h('button', {
+          type: 'button', lang: v, 'aria-pressed': String(LANG === v), text: label, onclick: () => setLang(v),
+        }))), h('span')),
       h('p', { class: 'note', text: t('settings.subtitlesAlways') }),
       h('h3', { text: t('settings.keysTitle') }),
       h('dl', {}, t('settings.keys').flatMap(([k, d]) => [h('dt', { text: k }), h('dd', { text: d })])),

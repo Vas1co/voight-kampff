@@ -172,7 +172,7 @@ export class CrtScreen {
       if (on) this.text(t('screen.complete'), 58, y, { size: 17, weight: 600 });
     } else {
       const p = Math.round(this.progress * 100);
-      this.text(`${t('screen.scan')} %${String(p).padStart(2, '0')}`, 58, y, { size: 17, weight: 600 });
+      this.text(t('screen.scanPct', { p: String(p).padStart(2, '0') }), 58, y, { size: 17, weight: 600 });
       const n = 12, bx = 200, bw = 9, gap = 3;
       for (let i = 0; i < n; i++) {
         x.fillStyle = i < Math.round(this.progress * n) ? INK : FAINT;

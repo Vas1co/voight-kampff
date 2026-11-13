@@ -5,7 +5,7 @@ sorgucu sorular sorar, oyuncu cevaplar. Makine yalan ölçmez; empatik tepkiyi �
 yalnızca temel ölçüme göre **sapma** gösterir. Kararı makine değil, sorgucu verir.
 
 > Test adı ("Voight-Kampff") yalnızca saygı göndermesidir ve tek bir yerden yönetilir:
-> `data/strings.tr.json → brand.testName`. Oyun adı `brand.gameTitle` ("Voight-Kampff").
+> `data/strings.<dil>.json → brand.testName`. Oyun adı `brand.gameTitle` ("Voight-Kampff").
 
 ---
 

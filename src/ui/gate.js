@@ -1,6 +1,6 @@
 // Giriş ekranı. Ses yalnızca "Başla"ya basıldığında açılır.
 import { $, h } from './dom.js';
-import { t } from '../core/strings.js';
+import { t, LANG, setLang } from '../core/strings.js';
 
 export const gate = {
   el: $('#gate'),
@@ -19,8 +19,9 @@ export const gate = {
       h('div', { class: 'disclaimer' },
         h('p', { lang: 'en', text: t('title.disclaimer') }),
         h('nav', { class: 'links' },
-          h('a', { href: '/hakkinda/', text: t('title.about') }),
-          h('a', { href: '/about/', hreflang: 'en', lang: 'en', text: 'About' }))),
+          h('a', { href: t('title.aboutHref'), text: t('title.about') }),
+          h('a', { href: LANG === 'en' ? '/?lang=tr' : '/en/', hreflang: LANG === 'en' ? 'tr' : 'en', lang: LANG === 'en' ? 'tr' : 'en', text: t('title.otherLang'),
+            onclick: (e) => { e.preventDefault(); setLang(LANG === 'en' ? 'tr' : 'en'); } }))),
     );
     this.el.hidden = false;
     this.el.classList.remove('gone');
