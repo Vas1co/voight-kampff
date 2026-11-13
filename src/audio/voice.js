@@ -1,16 +1,25 @@
-// Seslendirme: assets/audio/voice/<kimlik>.(ogg|mp3|wav) varsa satırla birlikte çalar.
-// Kimlik = metin anahtar yolu, noktalar tireye dönüşür (ör. lines-tutorial-welcome,
-// questions-k01a-0, subjects-s1-answers-k01a). Dosya yoksa hiçbir şey çalmaz.
+// Seslendirme: assets/audio/voice/<dil>/<kimlik>.(ogg|mp3|wav) varsa satırla birlikte çalar.
+// Kimlik = metin anahtar yolu, noktalar tireye dönüşür (ör. lines-sit, questions-q1-lines-0).
+// Önce oyunun dilindeki kayıt aranır, yoksa İngilizce kayıt çalar (Türkçe altyazıyla,
+// filmdeki gibi). Hiç kayıt yoksa hiçbir şey çalmaz.
 import { audio } from './engine.js';
+import { LANG } from '../core/strings.js';
 
 let current = null;
 
+function dir(id) {
+  if (!id || !audio.ready) return null;
+  for (const d of [`voice/${LANG}`, 'voice/en']) if (audio.has(d, id)) return d;
+  return null;
+}
+
 export const voice = {
-  has: (id) => !!id && audio.ready && audio.has('voice', id),
+  has: (id) => !!dir(id),
   // Çalınan sesin süresini (sn) döndürür, yoksa null.
   async play(id) {
-    if (!this.has(id)) return null;
-    const buf = await audio.load('voice', id);
+    const d = dir(id);
+    if (!d) return null;
+    const buf = await audio.load(d, id);
     if (!buf) return null;
     current?.stop(0.05);
     current = audio.playBuffer(buf, audio.voice);

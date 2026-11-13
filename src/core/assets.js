@@ -23,7 +23,7 @@ function find(dir, base, exts) {
 export const assets = {
   image: (dir, base) => find(dir, base, IMAGE),
   video: (dir, base) => find(dir, base, VIDEO),
-  audio: (dir, base) => find(dir, base, AUDIO),
+  audio: (dir, base) => find(`audio/${dir}`, base, AUDIO),
   list: (prefix) => Object.keys(files).filter((k) => k.startsWith(`/assets/${prefix}`)),
 };
 
