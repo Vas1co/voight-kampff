@@ -11,7 +11,7 @@ Seçenekler:
   --sadece lines-sit,questions-q3-prompt   yalnızca bunları (yeniden) üret
   --tohum 7                                farklı okuma için
   --hepsi                                  var olanların da üzerine yaz
-  --hiz 1.12 / --hoparlor 1                sonradan işlem (varsayılan: %12 hızlı, hoparlörlü)
+  --hiz 1.12 / --hoparlor 1                sonradan işlem (varsayılan: normal hız, hoparlörlü)
 
 Ses: referans-en.wav = tasarim/ses-adaylari/2-pruzlu-yorgun-23.wav (yalnızca yazılı tarifle
 tasarlandı, kimsenin sesi klonlanmadı). Eski ses: referans-en-soguk.wav, --hiz 1 --hoparlor 0.
@@ -84,7 +84,7 @@ def main():
     p.add_argument("--tohum", type=int, default=5)
     p.add_argument("--hepsi", action="store_true")
     p.add_argument("--cfg", type=float, default=2.0)
-    p.add_argument("--hiz", type=float, default=1.12)
+    p.add_argument("--hiz", type=float, default=1.0)
     p.add_argument("--hoparlor", type=int, default=1)
     p.add_argument("--referans", default=str(REFERANS))
     a = p.parse_args()
