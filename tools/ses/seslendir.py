@@ -11,6 +11,10 @@ Seçenekler:
   --sadece lines-sit,questions-q3-prompt   yalnızca bunları (yeniden) üret
   --tohum 7                                farklı okuma için
   --hepsi                                  var olanların da üzerine yaz
+  --hiz 1.12 / --hoparlor 1                sonradan işlem (varsayılan: %12 hızlı, hoparlörlü)
+
+Ses: referans-en.wav = tasarim/ses-adaylari/2-pruzlu-yorgun-23.wav (yalnızca yazılı tarifle
+tasarlandı, kimsenin sesi klonlanmadı). Eski ses: referans-en-soguk.wav, --hiz 1 --hoparlor 0.
 """
 
 import argparse
@@ -23,6 +27,9 @@ sys.path.insert(0, str(VOICE_LOOP / "araclar"))
 
 import numpy as np
 import soundfile as sf
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from islem import hizlandir, hoparlor
 
 PROJE = Path(__file__).resolve().parents[2]
 REFERANS = Path(__file__).resolve().parent / "referans-en.wav"
@@ -77,10 +84,14 @@ def main():
     p.add_argument("--tohum", type=int, default=5)
     p.add_argument("--hepsi", action="store_true")
     p.add_argument("--cfg", type=float, default=2.0)
+    p.add_argument("--hiz", type=float, default=1.12)
+    p.add_argument("--hoparlor", type=int, default=1)
+    p.add_argument("--referans", default=str(REFERANS))
     a = p.parse_args()
 
-    if not REFERANS.exists():
-        raise SystemExit(f"HATA: {REFERANS} yok. Önce aday.py ile bir ses seçip buraya kopyalayın.")
+    referans = Path(a.referans)
+    if not referans.exists():
+        raise SystemExit(f"HATA: {referans} yok. Önce aday.py ile bir ses seçip buraya kopyalayın.")
 
     from hisirti_temizle import temizle
     from voxcpm_motor import ornekleme_hizi, parca_seslendir
@@ -100,8 +111,11 @@ def main():
         if yol.exists() and not (a.hepsi or secili):
             print(f"  [{n}/{len(is_listesi)}] {kimlik}: var, geçildi", flush=True)
             continue
-        ses = parca_seslendir(metin, referans=str(REFERANS), tohum=a.tohum + n, cfg=a.cfg)
-        ses = seviyele(kirp(temizle(ses, sr, 1.2), sr))
+        ses = parca_seslendir(metin, referans=str(referans), tohum=a.tohum + n, cfg=a.cfg)
+        ses = hizlandir(kirp(temizle(ses, sr, 1.2), sr), a.hiz)
+        if a.hoparlor:
+            ses = hoparlor(ses, sr)
+        ses = seviyele(ses)
         sf.write(yol, ses, sr, format="MP3")
         print(f"  [{n}/{len(is_listesi)}] {kimlik}: {len(ses) / sr:.1f} sn  \"{metin}\"", flush=True)
     print("BİTTİ")
