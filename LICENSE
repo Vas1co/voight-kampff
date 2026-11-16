@@ -1,0 +1,41 @@
+Voight-Kampff — https://voight-kampff.peekdock.com
+Copyright (c) 2026 peekdock.com (GitHub: Vas1co). All rights reserved.
+
+This repository is public so the game can be hosted and so people can read
+how it is made. Being able to see the source does not give you a license
+to use it.
+
+Everything in this repository is proprietary and protected by copyright,
+including the source code, the question texts and all other writing, the
+voice recordings, the images, the textures, the sounds, the music and the
+design. Unless you have prior written permission from the copyright holder,
+you may not:
+
+  - copy, reproduce or mirror this project or any part of it;
+  - modify it or create derivative works from it;
+  - publish, distribute, sublicense or sell it, or host it on any other
+    domain or platform;
+  - use any part of it, including its texts and recordings, in another
+    product, game, website or video, or to train machine learning models.
+
+The only things you may do are view this repository on GitHub, and create a
+fork through GitHub's own interface as GitHub's Terms of Service allow. A
+fork carries none of the rights listed above.
+
+Playing the game at https://voight-kampff.peekdock.com is free.
+
+Third-party components keep their own licenses: three.js (MIT) and the web
+fonts in assets/fonts (SIL Open Font License, license files included). The voice
+recordings were generated with VoxCPM2 (Apache-2.0); the recordings
+themselves are covered by this notice.
+
+Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel
+"Do Androids Dream of Electric Sheep?". Not affiliated with or endorsed by
+Alcon Entertainment, Warner Bros. or the Philip K. Dick estate. All names
+and trademarks belong to their respective owners. All questions and texts
+in the game are original.
+
+For permission requests, contact the owner through https://peekdock.com.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED.

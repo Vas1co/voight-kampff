@@ -1,37 +1,28 @@
 // Tüm görünür metinler data/strings.<dil>.json içindedir (tr, en).
 // t('a.b.c', {n: 3}) → yer tutucular doldurulmuş metin (ya da dizi).
-// Dil açılışta bir kez seçilir (dokular o dille çizilir); değiştirmek sayfayı yeniler:
-//   /en/ adresi her zaman İngilizce · ?lang=tr|en · kayıtlı tercih · tarayıcı dili (tr değilse en)
+// Dil açılışta bir kez seçilir (dokular o dille çizilir); adres belirler:
+//   / İngilizce (varsayılan) · /tr/ Türkçe · ?lang=tr|en geliştirme için zorlar
 // İngilizcede eksik anahtar Türkçeden gelir.
 import tr from '../../data/strings.tr.json';
 import en from '../../data/strings.en.json';
 
 const PACKS = { tr, en };
-const SAVE_KEY = 'sapma.save.v1';
-const savedLang = () => { try { return JSON.parse(localStorage.getItem(SAVE_KEY))?.settings?.lang ?? null; } catch { return null; } };
 function pickLang() {
-  if (typeof location === 'undefined') return 'tr';
-  if (/^\/en(\/|$)/.test(location.pathname)) return 'en';
+  if (typeof location === 'undefined') return 'en';
   const q = new URLSearchParams(location.search).get('lang');
   if (PACKS[q]) return q;
-  const s = savedLang();
-  if (PACKS[s]) return s;
-  const langs = navigator.languages?.length ? navigator.languages : [navigator.language || 'en'];
-  return /^tr\b/i.test(langs[0]) ? 'tr' : 'en';
+  return /^\/tr(\/|$)/.test(location.pathname) ? 'tr' : 'en';
 }
 export const LANG = pickLang();
 const data = PACKS[LANG];
 if (typeof document !== 'undefined') document.documentElement.lang = LANG;
 
-// Dili değiştirir: tercihi kaydeder ve oyunu o dilde yeniden açar.
+export const langHref = (lang) => (lang === 'tr' ? '/tr/' : '/');
+
+// Dili değiştirir: oyunu o dilin adresinde yeniden açar.
 export function setLang(lang) {
   if (!PACKS[lang] || lang === LANG) return;
-  try {
-    const raw = JSON.parse(localStorage.getItem(SAVE_KEY)) || { settings: {} };
-    (raw.settings ||= {}).lang = lang;
-    localStorage.setItem(SAVE_KEY, JSON.stringify(raw));
-  } catch { /* kayıt yoksa adres yeter */ }
-  location.href = lang === 'en' ? '/en/' : '/?lang=tr';
+  location.href = langHref(lang);
 }
 
 const brandVars = () => ({

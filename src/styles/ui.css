@@ -94,6 +94,8 @@ html.sub-large #subtitles.intercom #sub-line { font-size: clamp(17px, 2vw, 23px)
 #gate .disclaimer .links { display: flex; gap: 16px; justify-content: center; }
 #gate .disclaimer a { color: rgba(160, 205, 198, .55); text-decoration: none; letter-spacing: .14em; text-transform: uppercase; }
 #gate .disclaimer a:hover, #gate .disclaimer a:focus-visible { color: #cfe8e2; outline: none; }
+#gate .disclaimer .credit { margin: 8px 0 0; }
+#gate .disclaimer .credit a { letter-spacing: inherit; text-transform: none; }
 #gate .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
 .ghost {
   font: 400 12px/1 var(--f-title); letter-spacing: .45em; text-transform: uppercase; color: #e7f2ef; background: transparent;
