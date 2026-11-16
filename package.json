@@ -1,6 +1,7 @@
 {
   "name": "voight-kampff",
   "private": true,
+  "license": "UNLICENSED",
   "version": "0.1.0",
   "type": "module",
   "description": "Sinematik empati sorgusu oyunu",

@@ -3,7 +3,7 @@
     "testName": "Voight-Kampff",
     "gameTitle": "Voight-Kampff",
     "unit": "Sorgu Birimi 4",
-    "era": "Kasım 2019",
+    "era": "Kasım 1999",
     "machine": "EMPATİ ANALİZ ÜNİTESİ",
     "model": "MK·VI",
     "testShort": "VK"
@@ -322,7 +322,7 @@
     "formFields": [
       "SUBJECT NO: 04",
       "SESSION: 03",
-      "DATE: 11.14.2019"
+      "DATE: 11.14.1999"
     ],
     "formCols": [
       "Q",
