@@ -3,7 +3,7 @@
     "testName": "Voight-Kampff",
     "gameTitle": "Voight-Kampff",
     "unit": "Interrogation Unit 4",
-    "era": "November 1999",
+    "era": "November 2019",
     "machine": "EMPATHY ANALYSIS UNIT",
     "model": "MK·VI",
     "testShort": "VK"
@@ -303,7 +303,7 @@
     "formFields": [
       "SUBJECT NO: 04",
       "SESSION: 03",
-      "DATE: 11.14.1999"
+      "DATE: 11.14.2019"
     ],
     "formCols": [
       "Q",
