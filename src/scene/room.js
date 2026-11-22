@@ -2,7 +2,7 @@
 //
 //  TAVAN ── uzun floresan armatür ve altında yavaş dönen pervane
 //  DUVARLAR ── fütüristik krem paneller, yuvarlak köşeler, zemine kavisle inen alt bant
-//  ARKA DUVAR ── orta: pencere (camında TYRELL CORP. yazısı, dışarıda gece şehri)
+//  ARKA DUVAR ── orta: pencere (camında TYRELL CORP. yazısı, dışarıda sisli gece şehri)
 //               │ sağ: havalandırma │ sağ üst köşe: tavana asılı taret kamera
 //  MASA ── sol: dosya yığını, test kâğıdı + kalem │ orta: test makinesi (stage.js)
 //          │ sağ: kaset kaydedici, metal kupa, küllük (aralarında boşluk)
@@ -59,16 +59,16 @@ export class Room {
     // zemin: koyu arduvaz gri (krem duvarların altında)
     add(flat(plane(W, 9, new THREE.MeshBasicMaterial({ color: 0x1f2428 }))), 0, 0, -2);
 
-    // --- pencerenin dışı: gece şehri (assets/images/room/window-city.jpg, kare atlası).
-    // Uzakta ve geniş durur; kamera kaydıkça pencereden farklı bir kesiti görünür.
+    // --- pencerenin dışı: sisli gece şehri (assets/images/room/window-city-sis.jpg, kare
+    // atlası; tools/pencere_atlas.py üretir). Uzakta ve geniş durur; kamera kaydıkça
+    // pencereden farklı bir kesiti görünür.
     {
-      const CW = 9, CH = CW * 9 / 16, url = assets.image('images/room', 'window-city');
-      let mat = new THREE.MeshBasicMaterial({ color: 0x05080c });
+      const CW = 9, CH = CW * 9 / 16, url = assets.image('images/room', 'window-city-sis');
+      let mat = new THREE.MeshBasicMaterial({ color: 0x3a3934 });
       if (url) {
         const tx = new THREE.TextureLoader().load(url);
         tx.colorSpace = THREE.SRGBColorSpace;
-        // kareler yan yana: mipmap komşu kareye taşmasın
-        tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter;
+        tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; // kareler yan yana: komşuya taşmasın
         tx.repeat.set(1 / CITY.cols, 1 / CITY.rows);
         mat = new THREE.MeshBasicMaterial({ map: tx, color: new THREE.Color(0.82, 0.84, 0.9) });
         this.city = { tex: tx, t: 0, frame: -1 };

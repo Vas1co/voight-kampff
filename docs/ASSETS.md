@@ -25,7 +25,7 @@ Boyutlar önerilen en az değerlerdir; oran korunmalı. Renk uzayı sRGB.
 | `side-wall` | 2720×1280 | hayır | Sol ve sağ yan duvarlar |
 | `ceiling` | 2048×2048 | hayır | Tavan |
 | `glass` | 1520×640 | evet (yarı) | Gözlem camı: yansıma çizgileri, kir; büyük ölçüde saydam |
-| `window-city` | 3072×2160 jpg | hayır | Pencereden görünen gece şehri: 8×10 kare atlası (src/scene/window-city.json) |
+| `window-city-sis` | 3072×2160 jpg | hayır | Pencereden görünen sisli gece şehri: 8×10 kare atlası (tools/pencere_atlas.py üretir) |
 | `vent` | 480×280 | evet | Sağ: havalandırma ızgarası |
 | `camera` | 660×456 | evet | Sağ üst köşe: güvenlik kamerası, aşağı ve masaya bakar (kırmızı kayıt ışığı oyunda) |
 | `desk` | 2048×1536 | hayır | Masa üstü, koyu metal (4×3 m, tepeden) |
