@@ -10,6 +10,7 @@
   },
   "title": {
     "kicker": "Empati ölçüm birimi · {era}",
+    "heading": "Voight-Kampff Testi",
     "note": "Yedi soru. Göz bebeğin, kızarman, nabzın ve tepki süren ölçülecek. Makine hüküm vermez; kararı karşındaki verir.",
     "start": "Odaya gir",
     "settings": "Ayarlar",
@@ -18,7 +19,8 @@
     "disclaimer": "Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate.",
     "about": "Hakkında",
     "aboutHref": "/hakkinda/",
-    "otherLang": "English"
+    "otherLang": "English",
+    "guideLink": "Nasıl oynanır"
   },
   "hud": {
     "rec": "KAYIT",

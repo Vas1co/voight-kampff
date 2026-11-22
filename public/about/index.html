@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Voight-Kampff Test · A Blade Runner-Inspired Empathy Test Game</title>
-  <meta name="description" content="Take the Voight-Kampff test in your browser. A free, cinematic Blade Runner-inspired game: seven questions while a machine reads your pupil, flush, pulse and reaction time. Human or replicant? The examiner decides.">
+  <title>About the Voight-Kampff Fan Project | peekdock</title>
+  <meta name="description" content="Who made the Voight-Kampff test fan game, how it was built, and what it is and is not. An unofficial Blade Runner fan project by peekdock.">
   <link rel="canonical" href="https://voight-kampff.peekdock.com/about/">
   <link rel="alternate" hreflang="en" href="https://voight-kampff.peekdock.com/about/">
   <link rel="alternate" hreflang="tr" href="https://voight-kampff.peekdock.com/hakkinda/">
   <link rel="alternate" hreflang="x-default" href="https://voight-kampff.peekdock.com/about/">
   <meta name="robots" content="index, follow">
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="Voight-Kampff">
+  <meta property="og:site_name" content="Voight-Kampff · peekdock">
   <meta property="og:url" content="https://voight-kampff.peekdock.com/about/">
-  <meta property="og:title" content="Voight-Kampff Test · A Blade Runner-Inspired Empathy Test Game">
-  <meta property="og:description" content="Sit in the interrogation room. Seven questions, one machine and an examiner who decides. A free Blade Runner fan game you play in your browser.">
+  <meta property="og:title" content="About the Voight-Kampff Fan Project">
+  <meta property="og:description" content="How a small Blade Runner fan game was built: the room, the machine, the questions and the voice.">
   <meta property="og:image" content="https://voight-kampff.peekdock.com/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -31,15 +31,12 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      { "@type": "Question", "name": "What is the Voight-Kampff test?",
-        "acceptedAnswer": { "@type": "Answer", "text": "In Blade Runner, the Voight-Kampff test is an interrogation that measures involuntary emotional responses (pupil dilation, blush, pulse and reaction time) to provocative questions, to tell humans from replicants. It is not a lie detector: it measures empathy." } },
-      { "@type": "Question", "name": "Can I take a Voight-Kampff test online?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. This free browser game puts you in the subject's chair: you answer seven questions while a machine records your readings, and at the end the examiner stamps a report. No download or account is needed." } },
-      { "@type": "Question", "name": "Is this an official Blade Runner game?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. It is a fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. All questions and texts are original. It is not affiliated with or endorsed by the rights holders." } }
-    ]
+    "@type": "AboutPage",
+    "name": "About the Voight-Kampff Fan Project",
+    "inLanguage": "en",
+    "isPartOf": { "@id": "https://voight-kampff.peekdock.com/#website" },
+    "about": { "@id": "https://voight-kampff.peekdock.com/#game" },
+    "publisher": { "@type": "Organization", "name": "peekdock", "url": "https://peekdock.com/" }
   }
   </script>
   <style>
@@ -67,30 +64,24 @@
   <main>
     <a class="lang" href="/hakkinda/" hreflang="tr" lang="tr">Türkçe</a>
     <a class="brand" href="/"><img src="/brand/eye.png" alt="" width="640" height="352"><img src="/brand/wordmark.png" alt="Voight-Kampff" width="1400" height="117"></a>
-    <p class="kicker">Empathy test · Blade Runner fan game</p>
-    <h1>Voight-Kampff: take the Blade Runner test in your browser</h1>
-    <p>You sit across the desk in a dim interrogation room. A machine watches your eye. Seven questions, and somebody on the other side of the table decides whether you are human or a replicant.</p>
-    <a class="play" href="/">Play the test</a>
-    <img src="/og-image.jpg" alt="The interrogation room: a three-screen empathy analysis unit on a metal desk, an eye-scan display glowing green" width="1200" height="630" loading="lazy">
+    <p class="kicker">About · Blade Runner fan project</p>
+    <h1>About this fan project</h1>
+    <p>Voight-Kampff Test is a small, unofficial fan game by <a href="https://peekdock.com/">peekdock</a>. It started from one wish: to sit in that chair from <em>Blade Runner</em> (1982) and be the one being tested.</p>
+    <a class="play" href="/">Play the Voight-Kampff test</a>
 
-    <h2>What is the Voight-Kampff test?</h2>
-    <p>In <em>Blade Runner</em> (1982), based on Philip K. Dick's novel <em>Do Androids Dream of Electric Sheep?</em>, the Voight-Kampff test is used to tell humans from replicants. It is not a lie detector. The examiner asks emotionally provocative questions and the machine measures involuntary responses: pupil dilation, blush, pulse and how long you take to answer. Empathy is what it looks for.</p>
-
-    <h2>How this game works</h2>
+    <h2>How it is made</h2>
     <ul>
-      <li><strong>Baseline first.</strong> The machine records your resting readings before any question.</li>
-      <li><strong>Seven questions.</strong> Each one is a short scenario with four possible answers and a time limit. Answer with the keys 1–4 or by clicking.</li>
-      <li><strong>Raw data, no verdict.</strong> The screens show only deviations from your baseline. The machine never decides.</li>
-      <li><strong>Unreliable instruments.</strong> Calibration drifts and anomalies happen, as they would with real hardware.</li>
-      <li><strong>The examiner decides.</strong> At the end you receive a stamped report: human, replicant, or undetermined.</li>
+      <li><strong>The room and the machine</strong> are drawn in code and rendered live in the browser with three.js. The three-screen empathy analysis unit, the fan, the smoke and the haze are all part of one scene.</li>
+      <li><strong>The sound</strong> is mostly synthesized with the Web Audio API: room tone, relays, bellows and the heartbeat.</li>
+      <li><strong>The questions</strong> are original. None are taken from the film or the novel.</li>
+      <li><strong>The interrogator's voice</strong> was generated with an AI text-to-speech model (VoxCPM2), running locally. Subtitles are always on.</li>
     </ul>
 
-    <h2>Atmosphere</h2>
-    <p>A fluorescent tube flickers, a ceiling fan turns slowly, the observation glass is dark, and sometimes someone walks past the door. The game is built for headphones; subtitles are always on, and there is a reduced-motion setting.</p>
+    <h2>What it is not</h2>
+    <p>It is not a psychological test and it says nothing real about you. It is not affiliated with the film, the studios or the estate of Philip K. Dick. It recreates the idea of the Voight-Kampff test as a short piece of interactive fiction.</p>
 
-    <h2>Free, no download</h2>
-    <p>The test runs in any modern browser on desktop or mobile. No account, no installation. The game is available in English and Turkish; the test takes about five minutes.</p>
-    <a class="play" href="/">Start the Voight-Kampff test</a>
+    <h2>Play and guide</h2>
+    <p>The game, the rules and example questions are on the main page: <a href="/">Voight-Kampff Test</a> (with a <a href="/#guide">How to play</a> section below the title screen). It is also available <a href="/tr/" hreflang="tr" lang="tr">in Turkish</a>.</p>
 
     <footer>
       Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate. All questions and texts in the game are original.<br>&copy; 2026 <a href="https://peekdock.com/" style="color:inherit">peekdock.com</a>

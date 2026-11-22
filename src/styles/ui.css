@@ -79,11 +79,16 @@ html.sub-large #subtitles.intercom #sub-line { font-size: clamp(17px, 2vw, 23px)
 #titlecard .lines p { margin: 0 0 .6em; }
 
 /* ---------- giriş ekranı ---------- */
+/* #gate kaydırılabilir: ilk ekran (.gate-hero) + altında rehber (#guide) */
 #gate {
-  position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 18px; text-align: center; padding: 0 var(--gutter);
-  background: radial-gradient(ellipse at 50% 45%, rgba(2, 8, 9, .35), rgba(0, 0, 0, .88) 75%);
+  position: fixed; inset: 0; z-index: 30; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: rgba(160, 205, 198, .25) transparent;
   transition: opacity 1s;
+}
+#gate .gate-hero {
+  position: relative; min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; text-align: center; padding: 24px var(--gutter) 150px;
+  background: radial-gradient(ellipse at 50% 45%, rgba(2, 8, 9, .35), rgba(0, 0, 0, .88) 75%);
 }
 #gate.gone { opacity: 0; pointer-events: none; }
 #gate h1 { margin: 4px 0 6px; line-height: 0; }
@@ -162,3 +167,21 @@ html.reduce *, html.reduce *::before, html.reduce *::after { animation-duration:
 #timer.on { opacity: 1; }
 #timer i { display: block; height: 100%; background: rgba(232, 191, 122, .85); transform-origin: center; }
 html.sub-large .ch { font-size: clamp(18px, 2vw, 25px); }
+
+/* ---------- rehber: nasıl oynanır, sorular, SSS (giriş ekranının altında) ---------- */
+#guide {
+  background: #030708; border-top: 1px solid rgba(160, 205, 198, .12);
+  padding: 56px var(--gutter) 72px; text-align: left;
+  font: 400 16px/1.7 var(--f-sub); color: rgba(225, 238, 234, .82);
+}
+#guide > * { max-width: 680px; margin-left: auto; margin-right: auto; }
+#guide h2 { font: 300 clamp(22px, 3vw, 30px)/1.25 var(--f-title); letter-spacing: .04em; color: #eef6f3; margin: 44px auto 12px; }
+#guide h2:first-child { margin-top: 0; }
+#guide h3 { font: 500 17px/1.4 var(--f-sub); color: #eef6f3; margin: 22px auto 4px; }
+#guide p, #guide li { margin-top: 0; margin-bottom: 12px; }
+#guide ol, #guide ul { padding-left: 1.3em; }
+#guide .example { border-left: 2px solid rgba(254, 177, 6, .55); padding: 2px 0 2px 16px; margin: 0 auto 16px; }
+#guide .example b { display: block; font: 400 11px/1.6 var(--f-mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(254, 177, 6, .8); }
+#guide a { color: #9fe8d6; }
+#guide .cta { text-align: center; margin-top: 40px; }
+#guide .fine { font: 400 11px/1.6 var(--f-mono); letter-spacing: .04em; color: rgba(160, 205, 198, .45); margin-top: 36px; text-align: center; }

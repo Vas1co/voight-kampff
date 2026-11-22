@@ -10,6 +10,7 @@
   },
   "title": {
     "kicker": "Empathy measurement unit · {era}",
+    "heading": "Voight-Kampff Test",
     "note": "Seven questions. Your pupil, flush, pulse and reaction time will be measured. The machine passes no judgement; the person across the desk decides.",
     "start": "Enter the room",
     "settings": "Settings",
@@ -18,7 +19,8 @@
     "disclaimer": "Fan project inspired by Blade Runner (1982) and Philip K. Dick's novel. Not affiliated with or endorsed by Alcon Entertainment, Warner Bros. or the Philip K. Dick estate.",
     "about": "About",
     "aboutHref": "/about/",
-    "otherLang": "Türkçe"
+    "otherLang": "Türkçe",
+    "guideLink": "How to play"
   },
   "hud": {
     "rec": "REC",
