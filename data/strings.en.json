@@ -277,25 +277,6 @@
     "again": "Sit down again"
   },
   "room": {
-    "panel": "ACCESS",
-    "observation": [
-      "OBSERVATION",
-      "BAY",
-      "A2"
-    ],
-    "sign": [
-      "INTERROGATION PROCEDURE 4-B",
-      "1. Subject sits, hands on the desk.",
-      "2. A baseline reading is taken.",
-      "3. All questions are recorded.",
-      "4. The decision rests with the examiner."
-    ],
-    "cabinet": [
-      "FILES",
-      "A–F",
-      "G–M",
-      "N–Z"
-    ],
     "mug": "B4",
     "folderLabel": "SUBJECT 04 · {testShort}",
     "classified": "CLASSIFIED",

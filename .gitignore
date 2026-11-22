@@ -15,3 +15,5 @@ Thumbs.db
 /tasarim/**/*.png
 /tasarim/.aktarim.json
 /tasarim/ses-adaylari/
+# Logo, favicon ve pencere gifinin orijinalleri (oyundaki kopyalar: public/, assets/images/brand, assets/images/room/window-city.jpg)
+/tasarim/marka/

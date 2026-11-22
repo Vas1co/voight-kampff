@@ -23,8 +23,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://voight-kampff.peekdock.com/og-image.jpg">
   <meta name="theme-color" content="#020506">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <script type="application/ld+json">
@@ -56,12 +57,16 @@
     .play:hover, .play:focus-visible { background: rgba(109,255,201,.1); outline: none; }
     img { width: 100%; height: auto; display: block; margin: 28px 0; border: 1px solid rgba(160,205,198,.15); }
     .lang { float: right; font-size: 14px; }
+    .brand { display: flex; align-items: center; gap: 14px; margin: 0 0 28px; }
+    .brand img:first-child { width: 52px; height: auto; }
+    .brand img:last-child { width: min(300px, 60vw); height: auto; }
     footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid rgba(160,205,198,.15); font: 400 12px/1.6 ui-monospace, Consolas, monospace; color: rgba(160,205,198,.5); }
   </style>
 </head>
 <body>
   <main>
     <a class="lang" href="/hakkinda/" hreflang="tr" lang="tr">Türkçe</a>
+    <a class="brand" href="/"><img src="/brand/eye.png" alt="" width="640" height="352"><img src="/brand/wordmark.png" alt="Voight-Kampff" width="1400" height="117"></a>
     <p class="kicker">Empathy test · Blade Runner fan game</p>
     <h1>Voight-Kampff: take the Blade Runner test in your browser</h1>
     <p>You sit across the desk in a dim interrogation room. A machine watches your eye. Seven questions, and somebody on the other side of the table decides whether you are human or a replicant.</p>

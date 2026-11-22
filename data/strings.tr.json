@@ -296,25 +296,6 @@
     }
   },
   "room": {
-    "panel": "ERİŞİM",
-    "observation": [
-      "GÖZLEM",
-      "BÖLMESİ",
-      "A2"
-    ],
-    "sign": [
-      "SORGU PROSEDÜRÜ 4-B",
-      "1. Denek oturur, eller masada.",
-      "2. Temel ölçüm alınır.",
-      "3. Sorular kayıt altındadır.",
-      "4. Karar sorgucuya aittir."
-    ],
-    "cabinet": [
-      "DOSYA",
-      "A–F",
-      "G–M",
-      "N–Z"
-    ],
     "mug": "B4",
     "folderLabel": "SUBJECT 04 · {testShort}",
     "classified": "CLASSIFIED",

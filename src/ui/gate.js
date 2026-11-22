@@ -1,14 +1,18 @@
 // Giriş ekranı. Ses yalnızca "Başla"ya basıldığında açılır.
 import { $, h } from './dom.js';
 import { t, LANG, setLang, langHref } from '../core/strings.js';
+import eyeUrl from '/assets/images/brand/eye.png';
+import wordmarkUrl from '/assets/images/brand/wordmark.png';
 
 export const gate = {
   el: $('#gate'),
   show({ canContinue = false, onStart, onContinue, onSettings }) {
     const start = h('button', { type: 'button', class: 'ghost', text: t('title.start'), onclick: () => onStart() });
     this.el.replaceChildren(
+      h('img', { class: 'logo-eye', src: eyeUrl, alt: '', width: 640, height: 352, decoding: 'async' }),
       h('p', { class: 't-kicker', text: t('title.kicker') }),
-      h('h1', { lang: 'en', text: t('brand.gameTitle') }),   // büyük harfte i → İ olmasın
+      // başlık: yazı logosu (metin alt'ta; arama motorları ve ekran okuyucular için h1 kalır)
+      h('h1', { lang: 'en' }, h('img', { class: 'wordmark', src: wordmarkUrl, alt: t('brand.gameTitle'), width: 1400, height: 117, decoding: 'async' })),
       h('p', { class: 'inspired', text: t('title.inspired') }),
       h('p', { class: 'note', text: t('title.note') }),
       h('div', { class: 'row' },

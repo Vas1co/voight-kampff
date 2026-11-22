@@ -1,22 +1,22 @@
 // Sorgu odası. Kamera masaya karşıdan, göz hizasından bakar; oda simetrik.
 //
 //  TAVAN ── uzun floresan armatür ve altında yavaş dönen pervane
-//  ARKA DUVAR ── sol: metal kapı (ince buzlu camından arada bir biri geçip içeri bakar)
-//               + erişim paneli │ orta: gözlem camı (arkasında loş oda,
-//               boş sandalye) │ sağ: dosya dolabı, havalandırma, tabela │ sağ üst köşe: tavana asılı taret kamera
+//  DUVARLAR ── kirli beyaz klinik boyası, alt kısımda beyaz fayans
+//  ARKA DUVAR ── orta: pencere (camında TYRELL CORP. yazısı, dışarıda gece şehri)
+//               │ sağ: havalandırma │ sağ üst köşe: tavana asılı taret kamera
 //  MASA ── sol: dosya yığını, test kâğıdı + kalem │ orta: test makinesi (stage.js)
 //          │ sağ: kaset kaydedici, metal kupa, küllük (aralarında boşluk)
 //  ÖN PLAN ── sandalye sırtı silüeti
 //
 // Her katmanın dokusu assets/images/room/<ad>.png ile değiştirilebilir.
 import * as THREE from 'three';
-import { textureOr } from '../core/assets.js';
+import { textureOr, assets } from '../core/assets.js';
 import { litMaterial, fogMaterial, glowMaterial, roomUniforms } from '../fx/materials.js';
 import { lightUniforms } from '../fx/shaders/common.js';
 import * as P from './procedural.js';
 import { Dust, Smoke } from './particles.js';
 import { CeilingFan } from './fan.js';
-import { DoorWindow, DOOR } from './peeker.js';
+import CITY from './window-city.json';
 
 export const DESK_Y = 0.76;
 const BACK_Z = -4.2;
@@ -56,36 +56,30 @@ export class Room {
     }
     const ceil = add(plane(W, 7, litMaterial(tex('ceiling', P.paintCeiling), { ambient: 0.2, lamp: 0.8, transparent: false })), 0, H, BACK_Z + 3.5);
     ceil.rotation.x = Math.PI / 2;
-    add(flat(plane(W, 9, new THREE.MeshBasicMaterial({ color: 0x040707 }))), 0, 0, -2);
+    // zemin: koyu gri linolyum (beyaz odada siyah boşluk gibi durmasın)
+    add(flat(plane(W, 9, new THREE.MeshBasicMaterial({ color: 0x23272a }))), 0, 0, -2);
 
-    // --- gözlem camının arkası: loş bitişik oda ve boş sandalye
-    const behindZ = -6.4;
-    named(add(plane(6, H, litMaterial(tex('behind-room', P.paintBehindRoom), { ambient: 1.6, lamp: 0.1, transparent: false })), 0, H / 2, behindZ), 'behind-room');
-    for (const s of [-1, 1]) {
-      const sw = add(plane(2.2, H, new THREE.MeshBasicMaterial({ color: 0x050909 })), s * 3, H / 2, (BACK_Z + behindZ) / 2);
-      sw.rotation.y = -s * Math.PI / 2;
+    // --- pencerenin dışı: gece şehri (assets/images/room/window-city.jpg, kare atlası).
+    // Uzakta ve geniş durur; kamera kaydıkça pencereden farklı bir kesiti görünür.
+    {
+      const CW = 9, CH = CW * 9 / 16, url = assets.image('images/room', 'window-city');
+      let mat = new THREE.MeshBasicMaterial({ color: 0x05080c });
+      if (url) {
+        const tx = new THREE.TextureLoader().load(url);
+        tx.colorSpace = THREE.SRGBColorSpace;
+        // kareler yan yana: mipmap komşu kareye taşmasın
+        tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter;
+        tx.repeat.set(1 / CITY.cols, 1 / CITY.rows);
+        mat = new THREE.MeshBasicMaterial({ map: tx, color: new THREE.Color(0.82, 0.84, 0.9) });
+        this.city = { tex: tx, t: 0, frame: -1 };
+      }
+      named(add(plane(CW, CH, mat), 0, 1.9, -8), 'window-city');
     }
-    add(flat(plane(6, 2.2, new THREE.MeshBasicMaterial({ color: 0x030505 }))), 0, 0.001, (BACK_Z + behindZ) / 2);
-    stand('chair-behind', P.paintEmptyChair, 0.8, 1.45, 0, 0, -5.7, { ambient: 1.0, lamp: 0.1 });
     // cam: hafif yansımalar
     named(add(plane(3.8, 1.6, new THREE.MeshBasicMaterial({ map: tex('glass', P.paintGlass), transparent: true, depthWrite: false })), 0, 1.75, BACK_Z + 0.01), 'glass');
 
-    // --- sol duvar: metal kapı ve erişim paneli (yeşil gösterge)
-    stand('door', P.paintDoor, 0.95, 2.15, -2.85, 0, BACK_Z + 0.02, { ambient: 0.55, transparent: false });
-    // kapı penceresi: koridor ve oradan geçip içeri bakan adam (canlı katman, camın tam üstünde)
-    this.doorWindow = new DoorWindow();
-    {
-      const k = 0.95 / DOOR.W, { x: wx, y: wy, w: ww, h: wh } = DOOR.win;
-      add(plane(ww * k, wh * k, litMaterial(this.doorWindow.texture, { ambient: 0.55, transparent: false })),
-        -2.85 + (wx + ww / 2 - DOOR.W / 2) * k, (DOOR.H - wy - wh / 2) * k, BACK_Z + 0.022);
-    }
-    stand('access-panel', P.paintAccessPanel, 0.16, 0.24, -2.2, 1.13, BACK_Z + 0.02, { ambient: 0.35 });
-    this.panelLed = add(plane(0.05, 0.05, glowMaterial('#5dff9c', 0.9)), -2.2, 1.3, BACK_Z + 0.03);
-
-    // --- sağ duvar: dosya dolabı, havalandırma, tabela
-    stand('cabinet', P.paintCabinet, 0.8, 1.35, 2.85, 0, BACK_Z + 0.2, { ambient: 0.55 });
+    // --- sağ duvar: havalandırma ızgarası
     stand('vent', P.paintVent, 0.6, 0.35, 2.85, 1.575, BACK_Z + 0.02, { ambient: 0.3 });
-    stand('sign', P.paintSign, 0.55, 0.38, 2.75, 2.11, BACK_Z + 0.02, { ambient: 0.32, lamp: 0.8 });
 
     // --- sağ üst köşe: güvenlik kamerası (kırmızı kayıt ışığı)
     // güvenlik kamerası: sağ üst köşede tavana asılı, merceği masaya dönük
@@ -171,8 +165,15 @@ export class Room {
     this.ember.material.uniforms.uI.value = 0.7 + 0.35 * Math.sin(t * 1.7) * Math.sin(t * 0.7 + 1);
     this.cassetteRec.material.uniforms.uI.value = recording ? 0.6 + 0.3 * Math.sin(t * 3) : 0;
     this.camLed.material.uniforms.uI.value = 0.45 + 0.4 * (Math.sin(t * 3.1) > 0 ? 1 : 0.2);
-    this.doorWindow.reduce = this.reduce;
-    this.doorWindow.update(dt);
+    if (this.city) {
+      // hareketi azalt açıkken şehir durur (ilk karede kalır)
+      if (!this.reduce) this.city.t += dt;
+      const f = Math.floor(this.city.t * CITY.fps) % CITY.frames;
+      if (f !== this.city.frame) {
+        this.city.frame = f;
+        this.city.tex.offset.set((f % CITY.cols) / CITY.cols, 1 - (Math.floor(f / CITY.cols) + 1) / CITY.rows);
+      }
+    }
     this.smoke.update(dt, t, motion);
     this.dust.update(dt, t, motion);
   }

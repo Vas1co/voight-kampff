@@ -3,11 +3,10 @@
 // (dosya adları ve boyutlar için docs/ASSETS.md, düzenleme için tasarim/OKU.md).
 //
 // Ölçek: duvarlarda ~200 px = 1 m (dışa aktarımda 2×).
-// Palet: koyu kömür metal, doygunluğu düşük teal-gri duvar, soluk krem kâğıt,
+// Palet: kirli beyaz klinik duvar ve tavan, koyu metal masa, soluk krem kâğıt,
 // küçük amber göstergeler. Kırmızı yalnızca kayıt ışığında.
 import { mk, rr, lg, rg, seeded, grain, grime } from './paint.js';
 import { t } from '../core/strings.js';
-import { DOOR, paintCorridor, paintFrostedGlass } from './peeker.js';
 
 const TAU = Math.PI * 2;
 
@@ -40,96 +39,85 @@ function metalPanel(x, px, py, w, h, base = ['#25302f', '#1a2221'], seed = 1) {
 
 // ---------------------------------------------------------------- duvarlar
 
-// Arka duvar (7.2 × 3.2 m). Ortada gözlem camı için saydam boşluk ve kalın metal çerçeve.
+// Klinik duvar yüzeyi: üstte kirli beyaz yağlı boya, altta beyaz fayans (~1.2 m), en altta
+// koyu süpürgelik. Ölçek ~200 px = 1 m. Arka ve yan duvarlar aynı yüzeyi paylaşır.
+function clinicWall(x, W, H, seed = 1) {
+  const R = seeded(seed);
+  const tileTop = H - 300, base = H - 34;
+  // boya: tavana doğru hafif kararır (ışık aşağıdan, armatürden)
+  x.fillStyle = lg(x, 0, 0, 0, tileTop, [[0, '#b9bcb6'], [0.35, '#cfd2cb'], [1, '#d8dbd4']]);
+  x.fillRect(0, 0, W, tileTop);
+  // boyada yer yer sararma ve el izi lekeleri
+  grime(x, W, tileTop, Math.max(6, W / 90), 'rgba(120,112,86,A)', 140, 0.10, seed + 3);
+  grime(x, W, tileTop, Math.max(4, W / 160), 'rgba(60,64,60,A)', 90, 0.07, seed + 5);
+  // fayans: 15 cm kareler, açık gri derz
+  const T = 30;
+  x.fillStyle = '#c6cac3'; x.fillRect(0, tileTop, W, base - tileTop);
+  for (let ty = tileTop; ty < base; ty += T) {
+    for (let tx = 0; tx < W; tx += T) {
+      const v = 222 + Math.floor((R() - 0.5) * 10);
+      x.fillStyle = `rgb(${v},${v + 2},${v - 2})`;
+      x.fillRect(tx + 1.5, ty + 1.5, T - 3, T - 3);
+      x.fillStyle = 'rgba(255,255,255,0.25)'; x.fillRect(tx + 2, ty + 2, T - 6, 2); // sır parlaması
+    }
+  }
+  // fayansın üst kenarı: ince yuvarlak bordür
+  x.fillStyle = '#e6e9e3'; x.fillRect(0, tileTop - 6, W, 6);
+  x.fillStyle = 'rgba(0,0,0,0.18)'; x.fillRect(0, tileTop, W, 2);
+  // derzlerde ve alt sıralarda kir
+  grime(x, W, H, Math.max(5, W / 120), 'rgba(70,72,64,A)', 70, 0.08, seed + 7);
+  // süpürgelik
+  x.fillStyle = '#4a4e4b'; x.fillRect(0, base, W, H - base);
+  x.fillStyle = 'rgba(255,255,255,0.12)'; x.fillRect(0, base, W, 2);
+  // küçük çatlaklar ve boya kabarmaları
+  for (let i = 0; i < W / 60; i++) {
+    const px = R() * W, py = 30 + R() * (tileTop - 60);
+    x.strokeStyle = `rgba(70,70,62,${0.08 + R() * 0.1})`; x.lineWidth = 0.8 + R();
+    x.beginPath(); x.moveTo(px, py); x.lineTo(px + (R() - 0.5) * 18, py + 8 + R() * 30); x.stroke();
+  }
+  grain(x, W, H, 9, seed + 11);
+}
+
+// Arka duvar (7.2 × 3.2 m). Ortada pencere için saydam boşluk ve beyaz boyalı çelik çerçeve.
 export const WALL = { W: 1440, H: 640, win: { x: 340, y: 130, w: 760, h: 320 }, frame: 26 };
 export function paintWall() {
   const { W, H, win, frame } = WALL;
   const c = mk(W, H), x = c.getContext('2d');
-  // dikey panel sırası
-  const R = seeded(9);
-  const cols = [0, 150, 300, 340, 1100, 1140, 1290, 1440];
-  x.fillStyle = lg(x, 0, 0, 0, H, [[0, '#141b1b'], [0.4, '#1f2a2a'], [0.85, '#1a2323'], [1, '#0c1111']]);
-  x.fillRect(0, 0, W, H);
-  for (let i = 0; i < cols.length - 1; i++) {
-    const px = cols[i], w = cols[i + 1] - cols[i];
-    if (w < 60) continue;
-    metalPanel(x, px + 2, 6, w - 4, H - 70, ['#253131', '#1b2424'], 10 + i);
-  }
-  // yatay bant ve süpürgelik
-  x.fillStyle = '#0d1313'; x.fillRect(0, H - 62, W, 62);
-  x.fillStyle = 'rgba(170,190,186,0.08)'; x.fillRect(0, H - 62, W, 2);
-  x.fillStyle = '#121919'; x.fillRect(0, 0, W, 8);
-  // gözlem camı: kalın çerçeve
+  clinicWall(x, W, H, 9);
+  // pencere çerçevesi: kalın, beyaz boyalı çelik; iç kenarda gölge
   const fx = win.x - frame, fy = win.y - frame, fw = win.w + frame * 2, fh = win.h + frame * 2;
-  x.fillStyle = 'rgba(0,0,0,0.5)'; x.fillRect(fx + 6, fy + 8, fw, fh);
-  x.fillStyle = lg(x, 0, fy, 0, fy + fh, [[0, '#3a4544'], [0.5, '#262f2f'], [1, '#161c1c']]);
+  x.fillStyle = 'rgba(40,40,36,0.22)'; x.fillRect(fx + 5, fy + 7, fw, fh);
+  x.fillStyle = lg(x, 0, fy, 0, fy + fh, [[0, '#e3e6e0'], [0.5, '#d2d5ce'], [1, '#b9bcb5']]);
   x.fillRect(fx, fy, fw, fh);
-  x.strokeStyle = 'rgba(190,210,205,0.18)'; x.lineWidth = 2; x.strokeRect(fx + 2, fy + 2, fw - 4, fh - 4);
-  x.strokeStyle = 'rgba(0,0,0,0.7)'; x.lineWidth = 4; x.strokeRect(win.x - 3, win.y - 3, win.w + 6, win.h + 6);
+  x.strokeStyle = 'rgba(255,255,255,0.5)'; x.lineWidth = 2; x.strokeRect(fx + 2, fy + 2, fw - 4, fh - 4);
+  x.strokeStyle = 'rgba(0,0,0,0.45)'; x.lineWidth = 4; x.strokeRect(win.x - 3, win.y - 3, win.w + 6, win.h + 6);
   for (let i = 0; i < 10; i++) {
     const bx = fx + 14 + (i * (fw - 28)) / 9;
-    for (const by of [fy + 12, fy + fh - 12]) { x.fillStyle = 'rgba(160,175,170,0.3)'; x.beginPath(); x.arc(bx, by, 3, 0, TAU); x.fill(); }
+    for (const by of [fy + 12, fy + fh - 12]) { x.fillStyle = 'rgba(90,92,86,0.35)'; x.beginPath(); x.arc(bx, by, 3, 0, TAU); x.fill(); }
   }
-  // yaşlanma
-  grime(x, W, H, 40, 'rgba(0,0,0,A)', 160, 0.22, 4);
-  for (let i = 0; i < 26; i++) {
-    const px = R() * W, py = 40 + R() * (H - 120);
-    x.strokeStyle = `rgba(0,0,0,${0.08 + R() * 0.12})`; x.lineWidth = 1 + R() * 2;
-    x.beginPath(); x.moveTo(px, py); x.lineTo(px + (R() - 0.5) * 6, py + 20 + R() * 60); x.stroke();
-  }
-  grain(x, W, H, 10, 2);
+  grime(x, W, H, 10, 'rgba(60,60,52,A)', 120, 0.06, 4);
   // camın yeri saydam
   x.clearRect(win.x, win.y, win.w, win.h);
   return c;
 }
 
-// Yan duvarlar (koridor gibi derinliğe uzanan koyu paneller).
+// Yan duvarlar: arka duvarla aynı klinik yüzey.
 export function paintSideWall() {
   const W = 1360, H = 640, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = '#0e1414'; x.fillRect(0, 0, W, H);
-  for (let i = 0; i < 8; i++) metalPanel(x, i * 170 + 2, 6, 166, H - 70, ['#1b2424', '#121919'], 30 + i);
-  x.fillStyle = '#0a0f0f'; x.fillRect(0, H - 62, W, 62);
-  grain(x, W, H, 8, 3);
+  clinicWall(x, W, H, 30);
   return c;
 }
 
-// Tavan: koyu, ince panel çizgileri.
+// Tavan: beyaz akustik tavan karoları (60 cm), ince metal ızgara.
 export function paintCeiling() {
   const W = 1024, H = 1024, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = '#0d1212'; x.fillRect(0, 0, W, H);
-  x.strokeStyle = 'rgba(0,0,0,0.6)'; x.lineWidth = 3;
+  x.fillStyle = '#c9ccc5'; x.fillRect(0, 0, W, H);
+  const R = seeded(5);
+  for (let i = 0; i < 2400; i++) { x.fillStyle = `rgba(90,92,86,${0.05 + R() * 0.08})`; x.fillRect(R() * W, R() * H, 1.5, 1.5); }
+  x.strokeStyle = '#9da19a'; x.lineWidth = 4;
   for (let i = 0; i <= 8; i++) { x.beginPath(); x.moveTo(i * 128, 0); x.lineTo(i * 128, H); x.stroke(); x.beginPath(); x.moveTo(0, i * 128); x.lineTo(W, i * 128); x.stroke(); }
+  grime(x, W, H, 10, 'rgba(110,100,70,A)', 120, 0.1, 6);
   grain(x, W, H, 8, 5);
-  return c;
-}
-
-// Gözlem camının arkasındaki loş bitişik oda (arka duvar).
-export function paintBehindRoom() {
-  const W = 1200, H = 640, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = lg(x, 0, 0, 0, H, [[0, '#0b1112'], [0.45, '#162324'], [0.8, '#101818'], [1, '#070b0b']]);
-  x.fillRect(0, 0, W, H);
-  // ortada tek, zayıf tavan ışığının duvara düşen lekesi
-  x.fillStyle = rg(x, W / 2, H * 0.2, 10, W / 2, H * 0.35, W * 0.4, [[0, 'rgba(120,160,155,0.28)'], [1, 'rgba(120,160,155,0)']]);
-  x.fillRect(0, 0, W, H);
-  for (let i = 0; i < 7; i++) { x.fillStyle = 'rgba(0,0,0,0.3)'; x.fillRect(i * 180 + 90, 0, 3, H); }
-  x.fillStyle = '#050808'; x.fillRect(0, H - 90, W, 90);
-  grain(x, W, H, 10, 6);
-  return c;
-}
-
-// Camın arkasındaki boş sorgu sandalyesi (silüet).
-export function paintEmptyChair() {
-  const W = 320, H = 580, c = mk(W, H), x = c.getContext('2d');
-  const ink = '#070b0b';
-  x.fillStyle = ink;
-  rr(x, 50, 20, 220, 300, 22); x.fill();            // yüksek sırt
-  x.fillRect(40, 330, 240, 40);                      // oturak
-  x.fillRect(30, 300, 24, 90); x.fillRect(266, 300, 24, 90); // kolçaklar
-  x.fillRect(150, 370, 20, 140);                     // ayak
-  x.fillRect(70, 500, 180, 14);                      // taban
-  x.fillStyle = 'rgba(130,165,160,0.12)';            // üstten gelen zayıf ışık
-  x.fillRect(56, 22, 208, 3);
-  x.fillRect(42, 330, 236, 2);
   return c;
 }
 
@@ -172,98 +160,6 @@ function glassSign(x, lines, cx, py) {
 
 // ---------------------------------------------------------------- duvar objeleri
 
-// Metal kapı (0.95 × 2.15 m): fırçalanmış metal kanat, menteşeler, kapı kapatıcı, kollu kilit,
-// tekme plakası (yazısız). Sağ üst köşeye yakın ince uzun buzlu cam; içindeki
-// koridor ve oradan geçen adam ayrı, canlı bir katmandır (peeker.js), burada yalnızca boş
-// koridor çizilir.
-export function paintDoor() {
-  const { W, H, win } = DOOR, c = mk(W, H), x = c.getContext('2d');
-  const R = seeded(11);
-  const screw = (px, py, r = 3) => {
-    x.fillStyle = 'rgba(0,0,0,0.6)'; x.beginPath(); x.arc(px + 0.8, py + 1, r, 0, TAU); x.fill();
-    x.fillStyle = rg(x, px - 1, py - 1, 0, px, py, r, [[0, '#9aa5a3'], [1, '#3a4444']]); x.beginPath(); x.arc(px, py, r, 0, TAU); x.fill();
-  };
-  // kasa
-  x.fillStyle = '#0a0e0e'; x.fillRect(0, 0, W, H);
-  x.fillStyle = lg(x, 0, 0, W, 0, [[0, '#1a2323'], [0.5, '#2a3535'], [1, '#151c1c']]); x.fillRect(12, 12, W - 24, H - 12);
-  x.fillStyle = 'rgba(255,255,255,0.06)'; x.fillRect(12, 12, W - 24, 2);
-  // kanat
-  const lx = 26, lw = W - 52, ly = 26, lh = H - 26;
-  x.fillStyle = 'rgba(0,0,0,0.5)'; x.fillRect(lx + 4, ly + 6, lw, lh);
-  x.fillStyle = lg(x, lx, 0, lx + lw, 0, [[0, '#2c3838'], [0.55, '#25302f'], [1, '#1b2424']]); x.fillRect(lx, ly, lw, lh);
-  for (let i = 0; i < 260; i++) { const py = ly + R() * lh; x.fillStyle = `rgba(${R() < 0.5 ? '255,255,255' : '0,0,0'},${0.015 + R() * 0.03})`; x.fillRect(lx, py, lw, 1); }
-  x.fillStyle = lg(x, 0, ly, 0, ly + lh, [[0, 'rgba(200,220,215,0.06)'], [0.5, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.35)']]); x.fillRect(lx, ly, lw, lh);
-  // takviye panelleri (üstteki pencereye yer bırakır)
-  for (const [px, py, pw, ph] of [[lx + 26, ly + 44, lw - 120, 300], [lx + 26, ly + 520, lw - 52, 220]]) {
-    x.strokeStyle = 'rgba(0,0,0,0.5)'; x.lineWidth = 3; x.strokeRect(px, py, pw, ph);
-    x.strokeStyle = 'rgba(170,190,186,0.08)'; x.lineWidth = 1; x.strokeRect(px + 3, py + 3, pw - 6, ph - 6);
-  }
-  // menteşeler ve kapı kapatıcı
-  for (const hy of [70, 420, 770]) { x.fillStyle = '#0d1212'; rr(x, 14, hy, 14, 54, 3); x.fill(); x.fillStyle = 'rgba(170,190,186,0.18)'; x.fillRect(16, hy + 2, 2, 50); }
-  x.fillStyle = '#121818'; rr(x, lx + 40, ly + 10, 110, 26, 4); x.fill();
-  x.fillStyle = 'rgba(170,190,186,0.15)'; x.fillRect(lx + 42, ly + 12, 106, 2);
-  x.strokeStyle = '#0d1212'; x.lineWidth = 7; x.lineCap = 'round'; x.beginPath(); x.moveTo(lx + 130, ly + 24); x.lineTo(lx + 176, ly + 4); x.stroke(); x.lineCap = 'butt';
-  // ince uzun pencere: boş koridor ve buzlu cam (canlı katman bunun üstüne oturur)
-  const { x: wx, y: wy, w: ww, h: wh } = win;
-  x.fillStyle = '#040606'; rr(x, wx - 9, wy - 9, ww + 18, wh + 18, 5); x.fill();
-  x.save(); rr(x, wx, wy, ww, wh, 3); x.clip();
-  paintCorridor(x, wx, wy, ww, wh);
-  paintFrostedGlass(x, wx, wy, ww, wh);
-  x.restore();
-  x.strokeStyle = '#1b2222'; x.lineWidth = 4; rr(x, wx - 5, wy - 5, ww + 10, wh + 10, 4); x.stroke();
-  for (const sy of [wy - 5, wy + wh / 2, wy + wh + 5]) { screw(wx - 5, sy, 2.4); screw(wx + ww + 5, sy, 2.4); }
-  // kol, rozet, kilit; kolun çevresinde el izi kiri
-  const hx = lx + lw - 44;
-  x.fillStyle = '#0c1010'; rr(x, hx - 14, 446, 30, 110, 6); x.fill();
-  x.fillStyle = lg(x, 0, 456, 0, 486, [[0, '#8c9796'], [1, '#323b3b']]); rr(x, hx - 74, 468, 84, 17, 8); x.fill();
-  x.fillStyle = rg(x, hx - 1, 472, 0, hx, 476, 13, [[0, '#9aa5a3'], [1, '#2a3232']]); x.beginPath(); x.arc(hx, 476, 13, 0, TAU); x.fill();
-  x.fillStyle = '#070909'; x.beginPath(); x.arc(hx, 528, 7, 0, TAU); x.fill(); x.fillRect(hx - 1.5, 528, 3, 9);
-  x.fillStyle = rg(x, hx - 20, 486, 4, hx - 20, 486, 70, [[0, 'rgba(0,0,0,0.22)'], [1, 'rgba(0,0,0,0)']]); x.fillRect(hx - 100, 406, 160, 160);
-  // tekme plakası
-  const ky = H - 120;
-  x.fillStyle = lg(x, 0, ky, 0, H - 20, [[0, '#3a4545'], [1, '#202828']]); x.fillRect(lx + 10, ky, lw - 20, 96);
-  for (let i = 0; i < 70; i++) { x.fillStyle = `rgba(${R() < 0.5 ? '255,255,255' : '0,0,0'},${0.03 + R() * 0.05})`; x.fillRect(lx + 10, ky + R() * 96, lw - 20, 1); }
-  for (const sx of [lx + 20, lx + lw / 2, lx + lw - 20]) { screw(sx, ky + 8); screw(sx, ky + 88); }
-  // çizikler
-  for (let i = 0; i < 140; i++) { const px = lx + R() * lw, py = ly + R() * lh, l = 4 + R() * 26, a = (R() - 0.5) * 1.4; x.strokeStyle = R() < 0.5 ? 'rgba(200,215,210,0.08)' : 'rgba(0,0,0,0.18)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke(); }
-  // kapı altından sızan koridor ışığı
-  x.fillStyle = 'rgba(220,215,185,0.35)'; x.fillRect(lx, H - 3, lw, 3);
-  return c;
-}
-
-// Kapı yanındaki küçük erişim paneli (yeşil gösterge ışığı ayrı katman).
-export function paintAccessPanel() {
-  const W = 128, H = 192, c = mk(W, H), x = c.getContext('2d');
-  metalPanel(x, 4, 4, W - 8, H - 8, ['#232d2d', '#161d1d'], 31);
-  bolts(x, 4, 4, W - 8, H - 8, 12, 4);
-  x.fillStyle = '#050707'; rr(x, 36, 30, 56, 34, 4); x.fill();      // gösterge yuvası
-  for (let r = 0; r < 3; r++) for (let q = 0; q < 3; q++) { x.fillStyle = '#0b0f0f'; rr(x, 30 + q * 24, 84 + r * 26, 18, 18, 3); x.fill(); x.fillStyle = 'rgba(170,190,186,0.12)'; x.fillRect(31 + q * 24, 85 + r * 26, 16, 2); }
-  stencil(x, t('room.panel'), W / 2, 176, { size: 12, align: 'center', color: 'rgba(160,178,174,0.35)', weight: 600, spacing: 0.2, font: 'Plex Mono' });
-  return c;
-}
-
-// Metal dosya dolabı (0.8 × 1.35 m), önden.
-export function paintCabinet() {
-  const W = 320, H = 540, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = 'rgba(0,0,0,0.5)'; x.fillRect(8, 10, W - 8, H - 10);
-  metalPanel(x, 0, 0, W - 6, H - 6, ['#2a3434', '#1c2424'], 41);
-  const labels = t('room.cabinet');
-  for (let i = 0; i < 3; i++) {
-    const dy = 22 + i * 170;
-    x.fillStyle = lg(x, 0, dy, 0, dy + 150, [[0, '#2e3939'], [1, '#202929']]);
-    x.fillRect(16, dy, W - 38, 150);
-    x.strokeStyle = 'rgba(0,0,0,0.6)'; x.lineWidth = 2; x.strokeRect(16, dy, W - 38, 150);
-    x.fillStyle = '#d6cfb8'; x.fillRect(W / 2 - 40, dy + 24, 72, 26);      // etiket kartı
-    x.fillStyle = '#4a463c'; x.font = '700 16px "Courier Prime", monospace'; x.textAlign = 'center';
-    x.fillText(labels[i + 1], W / 2 - 4, dy + 43);
-    x.fillStyle = lg(x, 0, dy + 70, 0, dy + 86, [[0, '#7a8584'], [1, '#2d3535']]);
-    rr(x, W / 2 - 44, dy + 70, 80, 16, 6); x.fill();                        // kulp
-  }
-  x.textAlign = 'left';
-  grain(x, W, H, 10, 42);
-  return c;
-}
-
 // Havalandırma ızgarası.
 export function paintVent() {
   const W = 240, H = 140, c = mk(W, H), x = c.getContext('2d');
@@ -274,22 +170,6 @@ export function paintVent() {
     x.fillStyle = '#040606'; x.fillRect(22, y, W - 44, 6);
     x.fillStyle = 'rgba(170,190,186,0.12)'; x.fillRect(22, y + 6, W - 44, 1.5);
   }
-  return c;
-}
-
-// Soluk prosedür tabelası.
-export function paintSign() {
-  const W = 330, H = 228, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = '#b9b39d'; rr(x, 4, 4, W - 8, H - 8, 6); x.fill();
-  x.fillStyle = 'rgba(30,40,40,0.18)'; x.fillRect(4, 4, W - 8, H - 8);
-  x.fillStyle = '#2e3434'; x.fillRect(4, 4, W - 8, 40);
-  const lines = t('room.sign');
-  x.fillStyle = '#c9c3ad'; x.font = '700 17px "Plex Mono", monospace'; x.fillText(lines[0], 16, 31);
-  x.fillStyle = 'rgba(40,44,40,0.75)'; x.font = '400 15px "Courier Prime", monospace';
-  lines.slice(1).forEach((l, i) => x.fillText(l, 16, 78 + i * 34));
-  grime(x, W, H, 18, 'rgba(60,50,30,A)', 70, 0.22, 52);
-  bolts(x, 4, 4, W - 8, H - 8, 10, 3);
-  grain(x, W, H, 12, 53);
   return c;
 }
 

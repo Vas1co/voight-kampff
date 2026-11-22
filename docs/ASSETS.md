@@ -24,14 +24,9 @@ Boyutlar önerilen en az değerlerdir; oran korunmalı. Renk uzayı sRGB.
 | `wall` | 2880×1280 | **evet** | Arka duvar (7.2×3.2 m). Ortadaki gözlem camının yeri **saydam** kalmalı (x 680–2200, y 260–900) |
 | `side-wall` | 2720×1280 | hayır | Sol ve sağ yan duvarlar |
 | `ceiling` | 2048×2048 | hayır | Tavan |
-| `behind-room` | 2400×1280 | hayır | Gözlem camının arkasındaki loş bitişik oda |
-| `chair-behind` | 640×1160 | evet | Camın arkasındaki boş sorgu sandalyesi (silüet) |
 | `glass` | 1520×640 | evet (yarı) | Gözlem camı: yansıma çizgileri, kir; büyük ölçüde saydam |
-| `door` | 760×1720 | hayır | Sol: metal kapı, dar dikey pencere, "VK TEST ODASI 03" |
-| `access-panel` | 256×384 | evet | Kapının sağındaki küçük erişim paneli (yeşil gösterge ışığı oyunda) |
-| `cabinet` | 640×1080 | evet | Sağ: metal dosya dolabı |
+| `window-city` | 3072×2160 jpg | hayır | Pencereden görünen gece şehri: 8×10 kare atlası (src/scene/window-city.json) |
 | `vent` | 480×280 | evet | Sağ: havalandırma ızgarası |
-| `sign` | 660×456 | evet | Sağ: soluk prosedür tabelası |
 | `camera` | 660×456 | evet | Sağ üst köşe: güvenlik kamerası, aşağı ve masaya bakar (kırmızı kayıt ışığı oyunda) |
 | `desk` | 2048×1536 | hayır | Masa üstü, koyu metal (4×3 m, tepeden) |
 | `desk-edge` | 1024×64 | hayır | Masanın uzak kenarı |
