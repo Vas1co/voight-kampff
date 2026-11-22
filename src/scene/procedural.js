@@ -39,85 +39,81 @@ function metalPanel(x, px, py, w, h, base = ['#25302f', '#1a2221'], seed = 1) {
 
 // ---------------------------------------------------------------- duvarlar
 
-// Klinik duvar yüzeyi: üstte kirli beyaz yağlı boya, altta beyaz fayans (~1.2 m), en altta
-// koyu süpürgelik. Ölçek ~200 px = 1 m. Arka ve yan duvarlar aynı yüzeyi paylaşır.
-function clinicWall(x, W, H, seed = 1) {
+// Fütüristik krem oda yüzeyi: büyük, köşeleri yuvarlatılmış paneller; aralarında gömme ek
+// yerleri; altta duvarın zemine kavisle indiği bant. Ölçek ~200 px = 1 m.
+// cols: panel kenarlarının x konumları (px). Arka ve yan duvarlar aynı yüzeyi paylaşır.
+function creamWall(x, W, H, cols, seed = 1) {
   const R = seeded(seed);
-  const tileTop = H - 300, base = H - 34;
-  // boya: tavana doğru hafif kararır (ışık aşağıdan, armatürden)
-  x.fillStyle = lg(x, 0, 0, 0, tileTop, [[0, '#b9bcb6'], [0.35, '#cfd2cb'], [1, '#d8dbd4']]);
-  x.fillRect(0, 0, W, tileTop);
-  // boyada yer yer sararma ve el izi lekeleri
-  grime(x, W, tileTop, Math.max(6, W / 90), 'rgba(120,112,86,A)', 140, 0.10, seed + 3);
-  grime(x, W, tileTop, Math.max(4, W / 160), 'rgba(60,64,60,A)', 90, 0.07, seed + 5);
-  // fayans: 15 cm kareler, açık gri derz
-  const T = 30;
-  x.fillStyle = '#c6cac3'; x.fillRect(0, tileTop, W, base - tileTop);
-  for (let ty = tileTop; ty < base; ty += T) {
-    for (let tx = 0; tx < W; tx += T) {
-      const v = 222 + Math.floor((R() - 0.5) * 10);
-      x.fillStyle = `rgb(${v},${v + 2},${v - 2})`;
-      x.fillRect(tx + 1.5, ty + 1.5, T - 3, T - 3);
-      x.fillStyle = 'rgba(255,255,255,0.25)'; x.fillRect(tx + 2, ty + 2, T - 6, 2); // sır parlaması
-    }
+  const cove = 70, top = 10, seamY = Math.round(H * 0.22); // üstte yatay ek yeri
+  x.fillStyle = '#b8b2a2'; x.fillRect(0, 0, W, H);           // ek yeri dibi (paneller arası)
+  const panel = (px, py, w, h) => {
+    // panel yüzü: yukarıdan hafif aydınlık, kenarlara doğru yumuşak gölge (bombeli his)
+    x.save(); rr(x, px, py, w, h, 16); x.clip();
+    x.fillStyle = lg(x, 0, py, 0, py + h, [[0, '#ddd7c6'], [0.5, '#e6e0cf'], [1, '#d8d1bf']]);
+    x.fillRect(px, py, w, h);
+    x.fillStyle = lg(x, px, 0, px + w, 0, [[0, 'rgba(90,80,60,0.12)'], [0.12, 'rgba(90,80,60,0)'], [0.88, 'rgba(90,80,60,0)'], [1, 'rgba(90,80,60,0.14)']]);
+    x.fillRect(px, py, w, h);
+    x.translate(px, py); // lekeler panelin kendi koordinatında
+    grime(x, w, h, 3, 'rgba(120,105,75,A)', Math.min(w, h) * 0.7, 0.06, Math.floor(R() * 1000));
+    x.restore();
+    // kenar: üstte ince ışık, altta ince gölge
+    x.save(); rr(x, px + 0.5, py + 0.5, w - 1, h - 1, 16);
+    x.strokeStyle = 'rgba(255,252,240,0.55)'; x.lineWidth = 1.5; x.stroke(); x.restore();
+    x.fillStyle = 'rgba(70,62,46,0.25)'; x.fillRect(px + 14, py + h - 2, w - 28, 2);
+  };
+  for (let i = 0; i < cols.length - 1; i++) {
+    const px = cols[i] + 3, w = cols[i + 1] - cols[i] - 6;
+    if (w < 40) continue;
+    panel(px, top, w, seamY - top - 4);                 // üst şerit
+    panel(px, seamY + 2, w, H - cove - seamY - 6);      // ana panel
   }
-  // fayansın üst kenarı: ince yuvarlak bordür
-  x.fillStyle = '#e6e9e3'; x.fillRect(0, tileTop - 6, W, 6);
-  x.fillStyle = 'rgba(0,0,0,0.18)'; x.fillRect(0, tileTop, W, 2);
-  // derzlerde ve alt sıralarda kir
-  grime(x, W, H, Math.max(5, W / 120), 'rgba(70,72,64,A)', 70, 0.08, seed + 7);
-  // süpürgelik
-  x.fillStyle = '#4a4e4b'; x.fillRect(0, base, W, H - base);
-  x.fillStyle = 'rgba(255,255,255,0.12)'; x.fillRect(0, base, W, 2);
-  // küçük çatlaklar ve boya kabarmaları
-  for (let i = 0; i < W / 60; i++) {
-    const px = R() * W, py = 30 + R() * (tileTop - 60);
-    x.strokeStyle = `rgba(70,70,62,${0.08 + R() * 0.1})`; x.lineWidth = 0.8 + R();
-    x.beginPath(); x.moveTo(px, py); x.lineTo(px + (R() - 0.5) * 18, py + 8 + R() * 30); x.stroke();
-  }
-  grain(x, W, H, 9, seed + 11);
+  // alt kavis: duvar zemine eğrilerek iner (aydınlıktan gölgeye geçen bant)
+  const cy = H - cove;
+  x.fillStyle = lg(x, 0, cy, 0, H, [[0, '#ddd6c4'], [0.35, '#cfc8b5'], [0.75, '#a9a290'], [1, '#7d776a']]);
+  x.fillRect(0, cy, W, cove);
+  x.fillStyle = 'rgba(255,252,240,0.5)'; x.fillRect(0, cy, W, 1.5);
+  for (let i = 1; i < cols.length - 1; i++) { x.fillStyle = 'rgba(80,72,56,0.25)'; x.fillRect(cols[i] - 1, cy, 2, cove); }
+  // genel kullanım izi ve ince toz
+  grime(x, W, H, Math.max(4, W / 200), 'rgba(110,98,72,A)', 160, 0.05, seed + 7);
+  grain(x, W, H, 6, seed + 11);
 }
 
-// Arka duvar (7.2 × 3.2 m). Ortada pencere için saydam boşluk ve beyaz boyalı çelik çerçeve.
+// Arka duvar (7.2 × 3.2 m). Ortada pencere için saydam boşluk ve krem, yuvarlak köşeli çerçeve.
 export const WALL = { W: 1440, H: 640, win: { x: 340, y: 130, w: 760, h: 320 }, frame: 26 };
 export function paintWall() {
   const { W, H, win, frame } = WALL;
   const c = mk(W, H), x = c.getContext('2d');
-  clinicWall(x, W, H, 9);
-  // pencere çerçevesi: kalın, beyaz boyalı çelik; iç kenarda gölge
+  creamWall(x, W, H, [0, 170, 300, 1140, 1270, 1440], 9);
+  // pencere çerçevesi: panelin içine gömülü, yuvarlak köşeli krem çerçeve
   const fx = win.x - frame, fy = win.y - frame, fw = win.w + frame * 2, fh = win.h + frame * 2;
-  x.fillStyle = 'rgba(40,40,36,0.22)'; x.fillRect(fx + 5, fy + 7, fw, fh);
-  x.fillStyle = lg(x, 0, fy, 0, fy + fh, [[0, '#e3e6e0'], [0.5, '#d2d5ce'], [1, '#b9bcb5']]);
-  x.fillRect(fx, fy, fw, fh);
-  x.strokeStyle = 'rgba(255,255,255,0.5)'; x.lineWidth = 2; x.strokeRect(fx + 2, fy + 2, fw - 4, fh - 4);
-  x.strokeStyle = 'rgba(0,0,0,0.45)'; x.lineWidth = 4; x.strokeRect(win.x - 3, win.y - 3, win.w + 6, win.h + 6);
-  for (let i = 0; i < 10; i++) {
-    const bx = fx + 14 + (i * (fw - 28)) / 9;
-    for (const by of [fy + 12, fy + fh - 12]) { x.fillStyle = 'rgba(90,92,86,0.35)'; x.beginPath(); x.arc(bx, by, 3, 0, TAU); x.fill(); }
-  }
-  grime(x, W, H, 10, 'rgba(60,60,52,A)', 120, 0.06, 4);
+  x.save(); rr(x, fx - 6, fy - 6, fw + 12, fh + 12, 30); x.fillStyle = 'rgba(70,62,46,0.28)'; x.fill(); x.restore();
+  x.save(); rr(x, fx, fy, fw, fh, 26);
+  x.fillStyle = lg(x, 0, fy, 0, fy + fh, [[0, '#ebe5d4'], [0.5, '#e0d9c7'], [1, '#cbc4b1']]); x.fill();
+  x.strokeStyle = 'rgba(255,252,240,0.6)'; x.lineWidth = 2; x.stroke(); x.restore();
+  // camın oturduğu iç kenar: koyu, derin
+  x.save(); rr(x, win.x - 6, win.y - 6, win.w + 12, win.h + 12, 12); x.fillStyle = '#5e584b'; x.fill(); x.restore();
   // camın yeri saydam
   x.clearRect(win.x, win.y, win.w, win.h);
   return c;
 }
 
-// Yan duvarlar: arka duvarla aynı klinik yüzey.
+// Yan duvarlar: arka duvarla aynı krem panel yüzey.
 export function paintSideWall() {
   const W = 1360, H = 640, c = mk(W, H), x = c.getContext('2d');
-  clinicWall(x, W, H, 30);
+  creamWall(x, W, H, [0, 230, 460, 690, 920, 1150, 1360], 30);
   return c;
 }
 
-// Tavan: beyaz akustik tavan karoları (60 cm), ince metal ızgara.
+// Tavan: krem, büyük düz paneller; ince gömme ek yerleri.
 export function paintCeiling() {
   const W = 1024, H = 1024, c = mk(W, H), x = c.getContext('2d');
-  x.fillStyle = '#c9ccc5'; x.fillRect(0, 0, W, H);
-  const R = seeded(5);
-  for (let i = 0; i < 2400; i++) { x.fillStyle = `rgba(90,92,86,${0.05 + R() * 0.08})`; x.fillRect(R() * W, R() * H, 1.5, 1.5); }
-  x.strokeStyle = '#9da19a'; x.lineWidth = 4;
-  for (let i = 0; i <= 8; i++) { x.beginPath(); x.moveTo(i * 128, 0); x.lineTo(i * 128, H); x.stroke(); x.beginPath(); x.moveTo(0, i * 128); x.lineTo(W, i * 128); x.stroke(); }
-  grime(x, W, H, 10, 'rgba(110,100,70,A)', 120, 0.1, 6);
-  grain(x, W, H, 8, 5);
+  x.fillStyle = '#aaa494'; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
+    const px = i * 256 + 3, py = j * 256 + 3;
+    x.save(); rr(x, px, py, 250, 250, 14); x.fillStyle = '#d6d0bf'; x.fill(); x.restore();
+  }
+  grime(x, W, H, 8, 'rgba(110,98,72,A)', 160, 0.06, 6);
+  grain(x, W, H, 6, 5);
   return c;
 }
 

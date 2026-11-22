@@ -1,7 +1,7 @@
 // Sorgu odası. Kamera masaya karşıdan, göz hizasından bakar; oda simetrik.
 //
 //  TAVAN ── uzun floresan armatür ve altında yavaş dönen pervane
-//  DUVARLAR ── kirli beyaz klinik boyası, alt kısımda beyaz fayans
+//  DUVARLAR ── fütüristik krem paneller, yuvarlak köşeler, zemine kavisle inen alt bant
 //  ARKA DUVAR ── orta: pencere (camında TYRELL CORP. yazısı, dışarıda gece şehri)
 //               │ sağ: havalandırma │ sağ üst köşe: tavana asılı taret kamera
 //  MASA ── sol: dosya yığını, test kâğıdı + kalem │ orta: test makinesi (stage.js)
@@ -56,8 +56,8 @@ export class Room {
     }
     const ceil = add(plane(W, 7, litMaterial(tex('ceiling', P.paintCeiling), { ambient: 0.2, lamp: 0.8, transparent: false })), 0, H, BACK_Z + 3.5);
     ceil.rotation.x = Math.PI / 2;
-    // zemin: koyu gri linolyum (beyaz odada siyah boşluk gibi durmasın)
-    add(flat(plane(W, 9, new THREE.MeshBasicMaterial({ color: 0x23272a }))), 0, 0, -2);
+    // zemin: koyu arduvaz gri (krem duvarların altında)
+    add(flat(plane(W, 9, new THREE.MeshBasicMaterial({ color: 0x1f2428 }))), 0, 0, -2);
 
     // --- pencerenin dışı: gece şehri (assets/images/room/window-city.jpg, kare atlası).
     // Uzakta ve geniş durur; kamera kaydıkça pencereden farklı bir kesiti görünür.
